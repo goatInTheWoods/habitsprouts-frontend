@@ -3,7 +3,7 @@ import Page from './Page';
 import StateContext from '../StateContext';
 import { useImmer } from 'use-immer';
 import axios from 'axios';
-import LoadingDotsIcon from './LoadingDotsicon';
+import LoadingDotsIcon from './LoadingDotsIcon';
 import Post from './Post';
 
 function Home() {

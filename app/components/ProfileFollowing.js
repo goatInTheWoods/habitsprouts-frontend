@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import LoadingDotsIcon from './LoadingDotsicon';
+import LoadingDotsIcon from './LoadingDotsIcon';
 import { userImmer } from 'use-immer';
 
 function ProfileFollowing() {

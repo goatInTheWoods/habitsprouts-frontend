@@ -35,7 +35,7 @@ import NotFound from './components/NotFound';
 const Search = React.lazy(() => import('./components/Search'));
 const Chat = React.lazy(() => import('./components/Chat'));
 import axios from 'axios';
-import LoadingDotsIcon from './components/LoadingDotsicon';
+import LoadingDotsIcon from './components/LoadingDotsIcon';
 
 function Main() {
   const initialState = {

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Page from './Page';
-import LoadingDotsIcon from './LoadingDotsicon';
+import LoadingDotsIcon from './LoadingDotsIcon';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
