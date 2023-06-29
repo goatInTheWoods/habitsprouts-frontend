@@ -16,9 +16,7 @@ function Header(props) {
     <header className="header-bar bg-primary mb-3">
       <div className="container d-flex flex-column flex-md-row d-flex justify-content-between align-items-center p-3">
         <h4 className="my-0 mr-md-auto font-weight-normal">
-          <Link to="/" className="text-white">
-            TaskShare
-          </Link>
+          <Link to="/">TaskShare</Link>
         </h4>
         {!props.staticEmpty ? headerContent : ''}
       </div>
