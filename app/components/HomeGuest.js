@@ -298,7 +298,7 @@ function HomeGuest() {
     <Page title="Home" wide={true}>
       <div className="row align-items-center">
         <div className="col-lg-7 py-3 py-md-5">
-          <h1 className="display-3">Remember Writing?</h1>
+          <h1 className="display-3 text-green">Remember Writing?</h1>
           <p className="lead text-muted">
             Are you sick of short tweets and impersonal
             &ldquo;shared&rdquo; posts that are reminiscent of the
@@ -406,7 +406,7 @@ function HomeGuest() {
             </div>
             <button
               type="submit"
-              className="py-3 mt-4 btn btn-lg btn-success btn-block"
+              className="py-3 mt-4 btn btn-lg btn-primary btn-block"
             >
               Sign up for ComplexApp
             </button>

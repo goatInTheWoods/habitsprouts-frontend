@@ -99,7 +99,7 @@ function ViewSinglePost() {
               data-for="edit"
               className="text-primary mr-2"
             >
-              E<i className="fas fa-edit"></i>
+              <i className="fas fa-edit"></i>
             </Link>
             <ReactTooltip id="edit" className="costom-dash" />{' '}
             <a
@@ -108,7 +108,7 @@ function ViewSinglePost() {
               data-for="delete"
               className="delete-post-button text-danger"
             >
-              D<i className="fas fa-trash"></i>
+              <i className="fas fa-trash"></i>
             </a>
             <ReactTooltip id="delete" className="custom-dash" />
           </span>

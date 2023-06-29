@@ -27,7 +27,7 @@ class RunAfterCompile {
 }
 
 config = {
-  entry: './app/Main.js',
+  entry: './app/main.js',
   output: {
     publicPath: '/',
     path: path.resolve(__dirname, 'app'),
@@ -57,6 +57,28 @@ config = {
             ],
           },
         },
+      },
+      {
+        test: /\.(scss)$/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: () => [require('autoprefixer')],
+              },
+            },
+          },
+          {
+            loader: 'sass-loader',
+          },
+        ],
       },
     ],
   },
