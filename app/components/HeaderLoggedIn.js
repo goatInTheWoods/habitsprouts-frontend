@@ -11,8 +11,11 @@ function HeaderLoggedIn(props) {
   function handleLogOut() {
     appDispatch({ type: 'logout' });
     appDispatch({
-      type: 'flashMessage',
-      value: 'You have successfully logged out.',
+      type: 'alert/open',
+      payload: {
+        type: 'success',
+        text: 'You have successfully logged out.',
+      },
     });
   }
 
@@ -26,6 +29,7 @@ function HeaderLoggedIn(props) {
   }
 
   function handleTest() {
+    console.log(1);
     appDispatch({
       type: 'alert/open',
       payload: { type: 'success', text: 'good' },

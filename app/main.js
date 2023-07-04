@@ -8,14 +8,13 @@ import React, {
 import { useImmerReducer } from 'use-immer';
 import ReactDom from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
 import Axios from 'axios';
+
+// Import our custom CSS
+import './scss/styles.scss';
 
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
-
-// Import our custom CSS
-import '../app/scss/styles.scss';
 
 Axios.defaults.baseURL =
   process.env.BACKENDURL ||
@@ -34,6 +33,7 @@ const ViewSinglePost = React.lazy(() =>
   import('./components/ViewSinglePost')
 );
 import FlashMessages from './components/FleshMessages';
+import AlertMessages from './components/AlertMessages';
 import StateContext from './StateContext';
 import DispatchContext from './DispatchContext';
 import Profile from './components/Profile';
@@ -43,11 +43,18 @@ const Search = React.lazy(() => import('./components/Search'));
 const Chat = React.lazy(() => import('./components/Chat'));
 import axios from 'axios';
 import LoadingDotsIcon from './components/LoadingDotsIcon';
+import Collapse from 'react-bootstrap/Collapse';
+import { stat } from 'fs-extra';
 
 function Main() {
   const initialState = {
     loggedIn: Boolean(localStorage.getItem('complexappToken')),
-    flashMessages: [],
+    flashMessages: null,
+    alert: {
+      isOn: false,
+      type: 'success',
+      text: null,
+    },
     user: {
       token: localStorage.getItem('complexappToken'),
       username: localStorage.getItem('complexappUsername'),
@@ -69,6 +76,15 @@ function Main() {
         return;
       case 'flashMessage':
         draft.flashMessages.push(action.value);
+        return;
+      case 'alert/open':
+        console.log(2);
+        draft.alert.type = action.payload.type;
+        draft.alert.text = action.payload.text;
+        draft.alert.isOn = true;
+        return;
+      case 'alert/close':
+        draft.alert.isOn = false;
         return;
       case 'openSearch':
         draft.isSearchOpen = true;
@@ -105,7 +121,22 @@ function Main() {
     }
   }, [state.loggedIn]);
 
-  //Check if token has expired or not on first render
+  useEffect(() => {
+    console.log(3);
+    let timeout;
+
+    if (state.alert.isOn) {
+      timeout = setTimeout(() => {
+        dispatch({ type: 'alert/close' });
+      }, 2000);
+    }
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [state.alert.isOn]);
+
+  // Check if token has expired or not on first render
   useEffect(() => {
     if (state.loggedIn) {
       const ourRequest = axios.CancelToken.source();
@@ -142,7 +173,15 @@ function Main() {
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
         <BrowserRouter>
-          <FlashMessages messages={state.flashMessages} />
+          <Collapse in={state.alert.isOn}>
+            <div>
+              <AlertMessages
+                type={state.alert.type}
+                text={state.alert.text}
+              />
+            </div>
+          </Collapse>
+          {/* <FlashMessages messages={state.flashMessages} /> */}
           <Header />
           <Suspense fallback={<LoadingDotsIcon />}>
             <Routes>
@@ -162,7 +201,7 @@ function Main() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
-          <CSSTransition
+          {/* <CSSTransition
             timeout={330}
             in={state.isSearchOpen}
             classNames="search-overlay"
@@ -173,7 +212,7 @@ function Main() {
                 <Search />
               </Suspense>
             </div>
-          </CSSTransition>
+          </CSSTransition> */}
           <Suspense fallback="">
             {state.loggedIn && <Chat />}
           </Suspense>
