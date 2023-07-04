@@ -27,6 +27,7 @@ class RunAfterCompile {
 }
 
 config = {
+  mode: 'development',
   entry: './app/main.js',
   output: {
     publicPath: '/',
@@ -42,7 +43,6 @@ config = {
     }),
     new HtmlWebpackHarddiskPlugin(),
   ],
-  mode: 'development',
   module: {
     rules: [
       {

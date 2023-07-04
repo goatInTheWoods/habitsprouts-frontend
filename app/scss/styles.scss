@@ -1,7 +1,21 @@
-$theme-colors: (
-  "primary": #E9FF99,
-);
+// required to get $orange variable
+// @import '~bootstrap/scss/_functions';
+// @import '~bootstrap/scss/_variables';
+// $primary: $orange; // set the $primary variable
+// @import "/node_modules/bootstrap/scss/bootstrap";
 
 
-// Import all of Bootstrap's CSS
+$primary: #D4E88B;
+// // merge with existing $theme-colors map
+// $theme-colors: map-merge($theme-colors, ("primary": $primary));
+
+.custom-alert {
+  margin-bottom: 0 !important;
+}
+
+a:-webkit-any-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 @import "bootstrap/scss/bootstrap";

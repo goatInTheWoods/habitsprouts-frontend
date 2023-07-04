@@ -1,5 +1,5 @@
 {
-  "name": "TaskShare",
+  "name": "HabitCount",
   "version": "1.0.0",
   "description": "",
   "main": "test.js",
@@ -32,6 +32,7 @@
     "immer": "^9.0.16",
     "npm-run-all": "^4.1.5",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.8.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.3",
     "react-router-dom": "^6.3.0",
