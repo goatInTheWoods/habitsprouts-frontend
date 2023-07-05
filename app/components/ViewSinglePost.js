@@ -76,9 +76,13 @@ function ViewSinglePost() {
         });
         if (response.data == 'Success') {
           appDispatch({
-            type: 'flashMessage',
-            value: 'Post was successfully deleted.',
+            type: 'alert/open',
+            payload: {
+              type: 'success',
+              text: 'Post was successfully deleted.',
+            },
           });
+
           navigate(`/profile/${appState.user.username}`);
         }
       } catch (e) {

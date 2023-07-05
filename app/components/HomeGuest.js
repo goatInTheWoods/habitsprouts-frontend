@@ -246,10 +246,14 @@ function HomeGuest() {
             },
             { cancelToken: ourRequest.token }
           );
+
           appDispatch({ type: 'login', data: response.data });
           appDispatch({
-            type: 'flashMessage',
-            value: 'Congrats! Welcome to your new account.',
+            type: 'alert/open',
+            payload: {
+              type: 'success',
+              text: 'Congrats! Welcome to your new account.',
+            },
           });
         } catch (e) {
           console.log(

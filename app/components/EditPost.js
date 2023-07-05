@@ -104,8 +104,11 @@ function EditPost() {
             appState.user.username != response.data.author.username
           ) {
             appDispatch({
-              type: 'flashMessage',
-              value: 'You do not have permission to edit this post.',
+              type: 'alert/open',
+              payload: {
+                type: 'danger',
+                text: 'You do not have permission to edit this post.',
+              },
             });
 
             navigate('/');
@@ -146,8 +149,11 @@ function EditPost() {
           );
           dispatch({ type: 'saveRequestFinished' });
           appDispatch({
-            type: 'flashMessage',
-            value: 'Post was updated.',
+            type: 'alert/open',
+            payload: {
+              type: 'success',
+              text: 'Post was updated.',
+            },
           });
         } catch (e) {
           console.log(

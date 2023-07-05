@@ -28,14 +28,6 @@ function HeaderLoggedIn(props) {
     appDispatch({ type: 'toggleChat' });
   }
 
-  function handleTest() {
-    console.log(1);
-    appDispatch({
-      type: 'alert/open',
-      payload: { type: 'success', text: 'good' },
-    });
-  }
-
   return (
     <div className="flex-row my-3 my-md-0">
       <a
@@ -101,12 +93,6 @@ function HeaderLoggedIn(props) {
         className="btn btn-sm btn-secondary"
       >
         Sign Out
-      </button>
-      <button
-        onClick={handleTest}
-        className="btn btn-sm btn-secondary"
-      >
-        poo
       </button>
     </div>
   );

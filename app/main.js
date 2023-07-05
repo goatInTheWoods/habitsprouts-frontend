@@ -32,7 +32,6 @@ const CreatePost = React.lazy(() =>
 const ViewSinglePost = React.lazy(() =>
   import('./components/ViewSinglePost')
 );
-import FlashMessages from './components/FleshMessages';
 import AlertMessages from './components/AlertMessages';
 import StateContext from './StateContext';
 import DispatchContext from './DispatchContext';
@@ -44,12 +43,10 @@ const Chat = React.lazy(() => import('./components/Chat'));
 import axios from 'axios';
 import LoadingDotsIcon from './components/LoadingDotsIcon';
 import Collapse from 'react-bootstrap/Collapse';
-import { stat } from 'fs-extra';
 
 function Main() {
   const initialState = {
     loggedIn: Boolean(localStorage.getItem('complexappToken')),
-    flashMessages: null,
     alert: {
       isOn: false,
       type: 'success',
@@ -74,11 +71,7 @@ function Main() {
       case 'logout':
         draft.loggedIn = false;
         return;
-      case 'flashMessage':
-        draft.flashMessages.push(action.value);
-        return;
       case 'alert/open':
-        console.log(2);
         draft.alert.type = action.payload.type;
         draft.alert.text = action.payload.text;
         draft.alert.isOn = true;
@@ -128,7 +121,7 @@ function Main() {
     if (state.alert.isOn) {
       timeout = setTimeout(() => {
         dispatch({ type: 'alert/close' });
-      }, 2000);
+      }, 2500);
     }
 
     return () => {
@@ -150,9 +143,12 @@ function Main() {
 
           if (!response.data) {
             dispatch({ type: 'logout' });
-            dispatch({
-              type: 'flashMessage',
-              value: 'Your session has expired. Please log in again.',
+            appDispatch({
+              type: 'alert/open',
+              payload: {
+                type: 'danger',
+                text: 'Your session has expired. Please log in again.',
+              },
             });
           }
         } catch (e) {
@@ -181,7 +177,6 @@ function Main() {
               />
             </div>
           </Collapse>
-          {/* <FlashMessages messages={state.flashMessages} /> */}
           <Header />
           <Suspense fallback={<LoadingDotsIcon />}>
             <Routes>

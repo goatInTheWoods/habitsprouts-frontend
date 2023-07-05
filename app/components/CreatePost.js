@@ -20,9 +20,13 @@ function CreatePost(props) {
         body,
         token: appState.user.token,
       });
+
       appDispatch({
-        type: 'flashMessage',
-        value: 'Congrats, you created a new post!',
+        type: 'alert/open',
+        payload: {
+          type: 'success',
+          text: 'Congrats, you created a new post!',
+        },
       });
       navigate(`/post/${response.data}`);
       console.log('New post was created.');
