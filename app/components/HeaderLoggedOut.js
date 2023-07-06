@@ -6,16 +6,18 @@ const HeaderLoggedOut = props => {
   const appDispatch = useContext(DispatchContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [usernameInvalid, setUsernameInvalid] = useState(false);
+  const [passwordInvalid, setPasswordInvalid] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     if (!username) {
-      setUsername(false);
+      setUsernameInvalid(true);
       return;
     }
     if (!password) {
-      setPassword(false);
+      setPasswordInvalid(true);
       return;
     }
 
@@ -24,6 +26,12 @@ const HeaderLoggedOut = props => {
         username,
         password,
       });
+
+      setUsername('');
+      setPassword('');
+      setUsernameInvalid(false);
+      setPasswordInvalid(false);
+
       if (response.data) {
         appDispatch({ type: 'login', data: response.data });
         appDispatch({
@@ -54,13 +62,14 @@ const HeaderLoggedOut = props => {
       onSubmit={handleSubmit}
       className={
         'needs-validation mb-0 pt-2 pt-md-0' +
-        (username || password === false ? ' was-validated' : '')
+        (usernameInvalid || passwordInvalid ? ' was-validated' : '')
       }
       noValidate
     >
       <div className="row align-items-center">
         <div className="col-md mr-0 pr-md-0 mb-3 mb-md-0">
           <input
+            value={username}
             onChange={e => setUsername(e.target.value)}
             name="username"
             className="form-control form-control-sm input-dark"
@@ -73,6 +82,7 @@ const HeaderLoggedOut = props => {
 
         <div className="col-md mr-0 pr-md-0 mb-3 mb-md-0">
           <input
+            value={password}
             onChange={e => setPassword(e.target.value)}
             name="password"
             className="form-control form-control-sm input-dark"
