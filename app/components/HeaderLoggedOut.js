@@ -4,11 +4,21 @@ import DispatchContext from '../DispatchContext';
 
 const HeaderLoggedOut = props => {
   const appDispatch = useContext(DispatchContext);
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   async function handleSubmit(e) {
     e.preventDefault();
+
+    if (!username) {
+      setUsername(false);
+      return;
+    }
+    if (!password) {
+      setPassword(false);
+      return;
+    }
+
     try {
       const response = await axios.post('/login', {
         username,
@@ -40,7 +50,14 @@ const HeaderLoggedOut = props => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-0 pt-2 pt-md-0">
+    <form
+      onSubmit={handleSubmit}
+      className={
+        'needs-validation mb-0 pt-2 pt-md-0' +
+        (username || password === false ? ' was-validated' : '')
+      }
+      noValidate
+    >
       <div className="row align-items-center">
         <div className="col-md mr-0 pr-md-0 mb-3 mb-md-0">
           <input
@@ -50,8 +67,10 @@ const HeaderLoggedOut = props => {
             type="text"
             placeholder="Username"
             autoComplete="off"
+            required
           />
         </div>
+
         <div className="col-md mr-0 pr-md-0 mb-3 mb-md-0">
           <input
             onChange={e => setPassword(e.target.value)}
@@ -59,6 +78,7 @@ const HeaderLoggedOut = props => {
             className="form-control form-control-sm input-dark"
             type="password"
             placeholder="Password"
+            required
           />
         </div>
         <div className="col-md-auto">

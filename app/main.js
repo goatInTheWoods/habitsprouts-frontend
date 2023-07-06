@@ -115,7 +115,6 @@ function Main() {
   }, [state.loggedIn]);
 
   useEffect(() => {
-    console.log(3);
     let timeout;
 
     if (state.alert.isOn) {
