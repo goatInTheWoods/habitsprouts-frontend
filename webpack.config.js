@@ -55,6 +55,7 @@ config = {
               '@babel/preset-react',
               ['@babel/preset-env', { targets: { node: '12' } }],
             ],
+            plugins: ['babel-plugin-inline-react-svg'],
           },
         },
       },
