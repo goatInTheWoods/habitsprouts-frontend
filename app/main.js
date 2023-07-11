@@ -23,7 +23,7 @@ Axios.defaults.baseURL =
 import Header from './components/Header';
 import HomeGuest from './components/HomeGuest';
 import Home from './components/Home';
-import Footer from './components/Footer';
+import Navbar from './components/Navbar';
 import About from './components/About';
 import Terms from './components/Terms';
 const CreatePost = React.lazy(() =>
@@ -210,7 +210,7 @@ function Main() {
           <Suspense fallback="">
             {state.loggedIn && <Chat />}
           </Suspense>
-          <Footer />
+          <Navbar />
         </BrowserRouter>
       </DispatchContext.Provider>
     </StateContext.Provider>

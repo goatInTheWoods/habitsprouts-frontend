@@ -1,30 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 
 const Footer = () => {
   return (
-    <footer className="border-top text-center small text-muted py-3">
-      <p>
-        <Link to="/" className="mx-1">
-          Home
-        </Link>{' '}
-        |{' '}
-        <Link className="mx-1" to="/about-us">
-          About Us
-        </Link>{' '}
-        |{' '}
-        <Link className="mx-1" to="/terms">
-          Terms
-        </Link>
-      </p>
-      <p className="m-0">
+    /* <p className="m-0">
         Copyright &copy; {new Date().getFullYear()}{' '}
         <a href="/" className="text-muted">
-          ComplexApp
+          HabitCount
         </a>
         . All rights reserved.
-      </p>
-    </footer>
+      </p> */
+
+    <nav className="fixed-bottom nav nav-pills nav-justified  bg-black text-white p-4">
+      <Link className="nav-link" to="/">
+        Habits
+      </Link>
+      <Link className="nav-link" to="/about-us">
+        About Us
+      </Link>
+      <Link className="nav-link" to="/terms">
+        Terms
+      </Link>
+    </nav>
   );
 };
 

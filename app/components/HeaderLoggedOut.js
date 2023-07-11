@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import DispatchContext from '../DispatchContext';
-
 const HeaderLoggedOut = props => {
   const appDispatch = useContext(DispatchContext);
   const [username, setUsername] = useState('');

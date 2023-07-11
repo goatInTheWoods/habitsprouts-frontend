@@ -2,10 +2,6 @@ body {
   font-family: "Public Sans", sans-serif;
 }
 
-.header-bar {
-  background-color: #292929;
-}
-
 .container--narrow {
   max-width: 732px;
 }
