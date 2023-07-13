@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import fs from 'fs';
-import Footer from './app/components/Footer';
 import Header from './app/components/Header';
+import Navbar from './app/components/Navbar';
 import LoadingDotsIcon from './app/components/LoadingDotsIcon';
 import { StaticRouter as Router } from 'react-router-dom/server';
 import StateContext from './app/StateContext';
@@ -15,7 +15,7 @@ function Shell() {
         <div className="py-5 my-5 text-center">
           <LoadingDotsIcon />
         </div>
-        <Footer />
+        <Navbar />
       </Router>
     </StateContext.Provider>
   );

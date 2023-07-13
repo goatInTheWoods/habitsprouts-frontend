@@ -7,6 +7,7 @@
 
 $primary: #C0DA1F;
 $white: #FBFBFB;
+
 // // merge with existing $theme-colors map
 // $theme-colors: map-merge($theme-colors, ("primary": $primary));
 
@@ -19,4 +20,13 @@ a:-webkit-any-link {
   color: inherit;
 }
 
+.btn:active,
+.btn:focus,
+.btn.active,
+.btn:active:focus {
+   background-image: none;
+   outline: 0;
+   -webkit-box-shadow: none;
+   box-shadow: none;
+}
 @import "bootstrap/scss/bootstrap";

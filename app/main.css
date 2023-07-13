@@ -2,10 +2,6 @@ body {
   font-family: "Public Sans", sans-serif;
 }
 
-.container--narrow {
-  max-width: 732px;
-}
-
 .header-search-icon {
   position: relative;
   top: 3px;

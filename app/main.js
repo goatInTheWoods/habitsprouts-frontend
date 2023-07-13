@@ -4,6 +4,7 @@ import React, {
   useReducer,
   useContext,
   Suspense,
+  StrictMode,
 } from 'react';
 import { useImmerReducer } from 'use-immer';
 import ReactDom from 'react-dom/client';
@@ -24,6 +25,7 @@ import Header from './components/Header';
 import HomeGuest from './components/HomeGuest';
 import Home from './components/Home';
 import Navbar from './components/Navbar';
+import HabitList from './components/HabitList';
 import About from './components/About';
 import Terms from './components/Terms';
 const CreatePost = React.lazy(() =>
@@ -43,6 +45,7 @@ const Chat = React.lazy(() => import('./components/Chat'));
 import axios from 'axios';
 import LoadingDotsIcon from './components/LoadingDotsIcon';
 import Collapse from 'react-bootstrap/Collapse';
+import styled from 'styled-components';
 
 function Main() {
   const initialState = {
@@ -168,34 +171,49 @@ function Main() {
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
         <BrowserRouter>
-          <Collapse in={state.alert.isOn}>
-            <div>
-              <AlertMessages
-                type={state.alert.type}
-                text={state.alert.text}
-              />
-            </div>
-          </Collapse>
-          <Header />
-          <Suspense fallback={<LoadingDotsIcon />}>
-            <Routes>
-              <Route
-                path="/"
-                element={state.loggedIn ? <Home /> : <HomeGuest />}
-              />
-              <Route path="/about-us" element={<About />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/create-post" element={<CreatePost />} />
-              <Route path="/post/:id" element={<ViewSinglePost />} />
-              <Route path="/post/:id/edit" element={<EditPost />} />
-              <Route
-                path="/profile/:username/*"
-                element={<Profile />}
-              />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-          {/* <CSSTransition
+          <Container>
+            <Collapse in={state.alert.isOn}>
+              <div>
+                <AlertMessages
+                  type={state.alert.type}
+                  text={state.alert.text}
+                />
+              </div>
+            </Collapse>
+            <Header />
+            <MainContainer>
+              <Suspense fallback={<LoadingDotsIcon />}>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      state.loggedIn ? <Home /> : <HomeGuest />
+                    }
+                  />
+                  <Route path="/habits" element={<HabitList />} />
+                  <Route path="/about-us" element={<About />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route
+                    path="/create-post"
+                    element={<CreatePost />}
+                  />
+                  <Route
+                    path="/post/:id"
+                    element={<ViewSinglePost />}
+                  />
+                  <Route
+                    path="/post/:id/edit"
+                    element={<EditPost />}
+                  />
+                  <Route
+                    path="/profile/:username/*"
+                    element={<Profile />}
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </MainContainer>
+            {/* <CSSTransition
             timeout={330}
             in={state.isSearchOpen}
             classNames="search-overlay"
@@ -207,19 +225,36 @@ function Main() {
               </Suspense>
             </div>
           </CSSTransition> */}
-          <Suspense fallback="">
-            {state.loggedIn && <Chat />}
-          </Suspense>
-          <Navbar />
+            <Suspense fallback="">
+              {state.loggedIn && <Chat />}
+            </Suspense>
+            <Navbar />
+          </Container>
         </BrowserRouter>
       </DispatchContext.Provider>
     </StateContext.Provider>
   );
 }
+
 const app = '#app';
 const root = ReactDom.createRoot(document.querySelector(app));
-root.render(<Main />);
+root.render(
+  <StrictMode>
+    <Main />
+  </StrictMode>
+);
 
 if (module.hot) {
   module.hot.accept();
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const MainContainer = styled.div`
+  flex-grow: 1;
+  padding: 0 16px;
+`;
