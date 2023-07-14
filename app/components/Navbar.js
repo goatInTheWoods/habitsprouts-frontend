@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Navbar = props => {
+const Navbar = () => {
   return (
     /* <p className="m-0">
         Copyright &copy; {new Date().getFullYear()}{' '}

@@ -135,6 +135,7 @@ function Main() {
   useEffect(() => {
     if (state.loggedIn) {
       const ourRequest = axios.CancelToken.source();
+
       async function fetchResults() {
         try {
           const response = await axios.post(
@@ -159,6 +160,7 @@ function Main() {
           );
         }
       }
+
       fetchResults();
 
       return () => {

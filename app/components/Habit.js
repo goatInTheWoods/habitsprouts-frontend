@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Check from '../images/check.svg';
+import Dots from '../images/dots.svg';
 import styled from 'styled-components';
 
 const Habit = () => {
@@ -12,13 +14,20 @@ const Habit = () => {
 
   return (
     <Container className="d-flex align-items-center px-3 py-2 w-100 position-relative">
-      <Button onClick={handleCount}>{count}</Button>
-      <div className="flex-grow-1 text-center fs-3">Running</div>
+      <Button className="me-lg-3" onClick={handleCount}>
+        <Check />
+      </Button>
+
+      <div className="d-flex flex-column flex-grow-1 text-center">
+        <span className="fw-semibold fs-3">Running</span>
+        <span>for {count} days!</span>
+      </div>
+
       <DropdownButton
         className="position-absolute top-0 end-0"
         variant="-"
         id="dropdown-basic-button"
-        title={<i className="fas fa-solid fa-bars"></i>}
+        title={<Dots />}
         size="sm"
       >
         <Dropdown.Item as="button" href="#/action-1">
@@ -36,8 +45,9 @@ const Habit = () => {
 };
 
 const Container = styled.div`
-  border-radius: 16px;
+  border-radius: 26px;
   background: #fff;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
 
   .dropdown-toggle::after {
     display: none;
@@ -45,13 +55,12 @@ const Container = styled.div`
 `;
 
 const Button = styled.button`
-  width: 5rem;
-  height: 5rem;
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
-  border-color: #f0ff97;
-  background-color: #c6e700;
-  border-width: 5px;
-  border-style: solid;
-  margin-right: 3rem;
+  background-color: #f0ff97;
+  border-style: none;
+  filter: drop-shadow(2px 3px 9px rgba(122, 122, 122, 0.08));
 `;
+
 export default Habit;
