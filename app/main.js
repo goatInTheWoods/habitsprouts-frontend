@@ -48,6 +48,7 @@ import Collapse from 'react-bootstrap/Collapse';
 import styled from 'styled-components';
 
 function Main() {
+  const habitList = localStorage.getItem('habitList');
   const initialState = {
     loggedIn: Boolean(localStorage.getItem('complexappToken')),
     alert: {
@@ -63,6 +64,7 @@ function Main() {
     isSearchOpen: false,
     isChatOpen: false,
     unreadChatCount: 0,
+    habits: habitList ? JSON.parse(habitList) : [],
   };
 
   function ourReducer(draft, action) {
@@ -100,6 +102,18 @@ function Main() {
       case 'clearUnreadChatCount':
         draft.unreadChatCount = 0;
         return;
+      case 'habits/add':
+        draft.habits.push(action.payload);
+        return;
+      case 'habits/edit': {
+        const habitIndex = draft.habits.findIndex(
+          habit => habit.id === action.payload.id
+        );
+        if (habitIndex !== -1) {
+          draft.habits[habitIndex] = action.payload;
+          console.log(draft.habits[habitIndex]);
+        }
+      }
     }
   }
 
@@ -116,6 +130,12 @@ function Main() {
       localStorage.removeItem('complexappAvatar');
     }
   }, [state.loggedIn]);
+
+  useEffect(() => {
+    if (state.habits?.length > 0) {
+      localStorage.setItem('habitList', JSON.stringify(state.habits));
+    }
+  }, [state.habits]);
 
   useEffect(() => {
     let timeout;
@@ -146,7 +166,7 @@ function Main() {
 
           if (!response.data) {
             dispatch({ type: 'logout' });
-            appDispatch({
+            dispatch({
               type: 'alert/open',
               payload: {
                 type: 'danger',

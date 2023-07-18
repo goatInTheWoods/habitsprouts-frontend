@@ -1,26 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Check from '../images/check.svg';
 import Dots from '../images/dots.svg';
 import styled from 'styled-components';
+import DispatchContext from '../DispatchContext';
 
-const Habit = () => {
-  const [count, setCount] = useState(0);
+const Habit = ({ habit, onClickTitle, toggleEditModal }) => {
+  const appDispatch = useContext(DispatchContext);
 
   function handleCount() {
-    setCount(count + 1);
+    appDispatch({
+      type: 'habits/edit',
+      payload: {
+        ...habit,
+        countFrom:
+          habit.direction == 'increase'
+            ? habit.countFrom + 1
+            : habit.countFrom - 1,
+      },
+    });
   }
 
   return (
     <Container className="d-flex align-items-center px-3 py-2 w-100 position-relative">
-      <Button className="me-lg-3" onClick={handleCount}>
+      <CountButton className="me-lg-3" onClick={handleCount}>
         <Check />
-      </Button>
+      </CountButton>
 
-      <div className="d-flex flex-column flex-grow-1 text-center">
-        <span className="fw-semibold fs-3">Running</span>
-        <span>for {count} days!</span>
+      <div
+        className="d-flex flex-column flex-grow-1 text-center mx-4 custom-pointer"
+        onClick={onClickTitle}
+      >
+        <span className="fw-semibold fs-3">{habit.title}</span>
+        <span>
+          {habit.direction == 'increase'
+            ? `${habit.countFrom} ${habit.unit}!`
+            : `${habit.countFrom} ${habit.unit} to go!`}
+        </span>
       </div>
 
       <DropdownButton
@@ -30,8 +47,13 @@ const Habit = () => {
         title={<Dots />}
         size="sm"
       >
-        <Dropdown.Item as="button" href="#/action-1">
-          Action
+        <Dropdown.Item
+          as="button"
+          onClick={() => {
+            toggleEditModal(habit.id);
+          }}
+        >
+          Edit
         </Dropdown.Item>
         <Dropdown.Item as="button" href="#/action-2">
           Another action
@@ -54,7 +76,7 @@ const Container = styled.div`
   }
 `;
 
-const Button = styled.button`
+const CountButton = styled.button`
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
