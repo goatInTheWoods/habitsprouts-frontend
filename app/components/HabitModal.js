@@ -29,10 +29,6 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log({
-      type: `habits/${type}`,
-      payload: habit,
-    });
     appDispatch({
       type: `habits/${type}`,
       payload: habit,

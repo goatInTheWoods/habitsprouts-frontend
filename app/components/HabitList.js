@@ -5,7 +5,6 @@ import Habit from './Habit';
 import Plus from '../images/plus.svg';
 import styled from 'styled-components';
 import StateContext from '../StateContext';
-
 import { v4 as uuidv4 } from 'uuid';
 
 const HabitList = () => {
@@ -31,15 +30,12 @@ const HabitList = () => {
     setIsModalOpen(false);
   }
 
-  function toggleEditHabitModal(id) {
+  function setUpEdit(id) {
     const target = appState.habits.find(habit => {
       return habit.id == id;
     });
     setTargetHabit(target);
-    console.log(targetHabit);
-    setModalType('edit');
     openModal('edit');
-    // setIsEditModalOpen(!isEditModalOpen);
   }
 
   function foo() {
@@ -71,7 +67,7 @@ const HabitList = () => {
               key={habit.id}
               habit={habit}
               onClickTitle={foo}
-              toggleEditModal={toggleEditHabitModal}
+              setUpEdit={setUpEdit}
             />
           );
         })}

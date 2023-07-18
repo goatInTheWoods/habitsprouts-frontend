@@ -111,8 +111,14 @@ function Main() {
         );
         if (habitIndex !== -1) {
           draft.habits[habitIndex] = action.payload;
-          console.log(draft.habits[habitIndex]);
         }
+        return;
+      }
+      case 'habits/delete': {
+        const habitIndex = draft.habits.findIndex(
+          habit => habit.id === action.payload
+        );
+        draft.habits.splice(habitIndex, 1);
       }
     }
   }

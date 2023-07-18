@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Check from '../images/check.svg';
@@ -6,7 +6,7 @@ import Dots from '../images/dots.svg';
 import styled from 'styled-components';
 import DispatchContext from '../DispatchContext';
 
-const Habit = ({ habit, onClickTitle, toggleEditModal }) => {
+const Habit = ({ habit, onClickTitle, setUpEdit }) => {
   const appDispatch = useContext(DispatchContext);
 
   function handleCount() {
@@ -19,6 +19,13 @@ const Habit = ({ habit, onClickTitle, toggleEditModal }) => {
             ? habit.countFrom + 1
             : habit.countFrom - 1,
       },
+    });
+  }
+
+  function handleDelete(id) {
+    appDispatch({
+      type: 'habits/delete',
+      payload: id,
     });
   }
 
@@ -50,13 +57,16 @@ const Habit = ({ habit, onClickTitle, toggleEditModal }) => {
         <Dropdown.Item
           as="button"
           onClick={() => {
-            toggleEditModal(habit.id);
+            setUpEdit(habit.id);
           }}
         >
           Edit
         </Dropdown.Item>
-        <Dropdown.Item as="button" href="#/action-2">
-          Another action
+        <Dropdown.Item
+          as="button"
+          onClick={() => handleDelete(habit.id)}
+        >
+          Delete
         </Dropdown.Item>
         <Dropdown.Item as="button" href="#/action-3">
           Something else
