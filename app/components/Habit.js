@@ -31,7 +31,7 @@ const Habit = ({ habit, onClickTitle, setUpEdit }) => {
 
   return (
     <Container className="d-flex align-items-center px-3 py-2 w-100 position-relative">
-      <CountButton className="me-lg-3" onClick={handleCount}>
+      <CountButton className="me-lg-3 " onClick={handleCount}>
         <Check />
       </CountButton>
 
@@ -67,9 +67,6 @@ const Habit = ({ habit, onClickTitle, setUpEdit }) => {
           onClick={() => handleDelete(habit.id)}
         >
           Delete
-        </Dropdown.Item>
-        <Dropdown.Item as="button" href="#/action-3">
-          Something else
         </Dropdown.Item>
       </DropdownButton>
     </Container>

@@ -42,6 +42,10 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
     }
   }
 
+  function capitalize(word) {
+    return word[0].toUpperCase() + word.slice(1).toLowerCase();
+  }
+
   return (
     <>
       <Modal
@@ -52,7 +56,9 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
         onKeyPress={handleKeyPress}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add a New Habit</Modal.Title>
+          <Modal.Title>
+            {type === 'add' ? 'Add a New Habit' : 'Edit The Habit'}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
@@ -70,7 +76,11 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
               />
             </Form.Group>
             <Row>
-              <Form.Group as={Col} controlId="direction">
+              <Form.Group
+                className="pe-0"
+                as={Col}
+                controlId="direction"
+              >
                 <select
                   className="form-select"
                   id="direction"
@@ -79,12 +89,18 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
                   defaultValue={habit?.direction}
                 >
                   <option defaultValue value="increase">
-                    increase
+                    + increase
                   </option>
-                  <option value="decrease">decrease</option>
+                  <option value="decrease">- decrease </option>
                 </select>
               </Form.Group>
-              <Col xs="auto">Starts from</Col>
+              <Col
+                as="span"
+                className="d-flex align-items-center pe-0"
+                xs="auto"
+              >
+                Starts from
+              </Col>
               <Form.Group as={Col} sm={3} controlId="unit">
                 <Form.Control
                   type="text"
@@ -92,9 +108,9 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
                   onChange={handleInput}
                 />
               </Form.Group>
-              <Form.Group as={Col} sm={2} controlId="countFrom">
+              <Form.Group as={Col} sm={3} controlId="countFrom">
                 <Form.Control
-                  type="text"
+                  type="number"
                   defaultValue={habit?.countFrom}
                   onChange={handleInput}
                 />

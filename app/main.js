@@ -114,11 +114,18 @@ function Main() {
         }
         return;
       }
-      case 'habits/delete': {
-        const habitIndex = draft.habits.findIndex(
-          habit => habit.id === action.payload
-        );
-        draft.habits.splice(habitIndex, 1);
+      case 'habits/delete':
+        {
+          const habitIndex = draft.habits.findIndex(
+            habit => habit.id === action.payload
+          );
+          draft.habits.splice(habitIndex, 1);
+        }
+        return;
+      case 'habits/changeOrder': {
+        const fromHabit = draft.habits[action.payload.fromId];
+        draft.habits.splice(action.payload.fromId, 1);
+        draft.habits.splice(action.payload.toId, 0, fromHabit);
       }
     }
   }
