@@ -22,7 +22,7 @@ Axios.defaults.baseURL =
   'https://myreactbackendtest-4lua.onrender.com';
 
 import Header from './components/Header';
-import HomeGuest from './components/HomeGuest';
+import Login from './components/Login';
 import Home from './components/Home';
 import Navbar from './components/Navbar';
 import HabitList from './components/HabitList';
@@ -221,13 +221,12 @@ function Main() {
                 <Routes>
                   <Route
                     path="/"
-                    element={
-                      state.loggedIn ? <Home /> : <HomeGuest />
-                    }
+                    element={state.loggedIn ? <Home /> : <Login />}
                   />
                   <Route path="/habits" element={<HabitList />} />
                   <Route path="/about-us" element={<About />} />
                   <Route path="/terms" element={<Terms />} />
+                  <Route path="/policy" element={<Terms />} />
                   <Route
                     path="/create-post"
                     element={<CreatePost />}
@@ -286,10 +285,11 @@ if (module.hot) {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
 `;
 
 const MainContainer = styled.div`
   flex-grow: 1;
   padding: 0 16px;
+  overflow-y: auto;
 `;

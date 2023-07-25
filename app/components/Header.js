@@ -20,7 +20,7 @@ function Header(props) {
           <Logo />
         </Link>
         <div></div>
-        {/* {!props.staticEmpty ? headerContent : ''} */}
+        {!props.staticEmpty ? headerContent : ''}
       </div>
     </header>
   );

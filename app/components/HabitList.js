@@ -20,9 +20,9 @@ const HabitList = () => {
   const initialHabit = {
     id: uuidv4(),
     title: '',
-    direction: 'increase',
+    isIncrementCount: true,
     unit: 'days',
-    countFrom: 0,
+    count: 0,
   };
 
   function openModal(type) {

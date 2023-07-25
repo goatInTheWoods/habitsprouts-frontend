@@ -57,44 +57,49 @@ const HeaderLoggedOut = props => {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={
-        'needs-validation mb-0 pt-2 pt-md-0' +
-        (usernameInvalid || passwordInvalid ? ' was-validated' : '')
-      }
-      noValidate
-    >
-      <div className="row align-items-center">
-        <div className="col-md mr-0 pr-md-0 mb-3 mb-md-0">
-          <input
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            name="username"
-            className="form-control form-control-sm input-dark"
-            type="text"
-            placeholder="Username"
-            autoComplete="off"
-            required
-          />
-        </div>
+    <div className="col-md-auto">
+      <button className="btn btn-outline-secondary btn-sm rounded-0">
+        Sign In
+      </button>
+    </div>
+    // <form
+    //   onSubmit={handleSubmit}
+    //   className={
+    //     'needs-validation mb-0 pt-2 pt-md-0' +
+    //     (usernameInvalid || passwordInvalid ? ' was-validated' : '')
+    //   }
+    //   noValidate
+    // >
+    //   <div className="row align-items-center">
+    //     <div className="col-md mr-0 pr-md-0 mb-3 mb-md-0">
+    //       <input
+    //         value={username}
+    //         onChange={e => setUsername(e.target.value)}
+    //         name="username"
+    //         className="form-control form-control-sm input-dark"
+    //         type="text"
+    //         placeholder="Username"
+    //         autoComplete="off"
+    //         required
+    //       />
+    //     </div>
 
-        <div className="col-md mr-0 pr-md-0 mb-3 mb-md-0">
-          <input
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            name="password"
-            className="form-control form-control-sm input-dark"
-            type="password"
-            placeholder="Password"
-            required
-          />
-        </div>
-        <div className="col-md-auto">
-          <button className="btn btn-success btn-sm">Sign In</button>
-        </div>
-      </div>
-    </form>
+    //     <div className="col-md mr-0 pr-md-0 mb-3 mb-md-0">
+    //       <input
+    //         value={password}
+    //         onChange={e => setPassword(e.target.value)}
+    //         name="password"
+    //         className="form-control form-control-sm input-dark"
+    //         type="password"
+    //         placeholder="Password"
+    //         required
+    //       />
+    //     </div>
+    //     <div className="col-md-auto">
+    //       <button className="btn btn-success btn-sm">Sign In</button>
+    //     </div>
+    //   </div>
+    // </form>
   );
 };
 

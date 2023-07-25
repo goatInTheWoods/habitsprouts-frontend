@@ -14,10 +14,10 @@ const Habit = ({ habit, onClickTitle, setUpEdit }) => {
       type: 'habits/edit',
       payload: {
         ...habit,
-        countFrom:
-          habit.direction == 'increase'
-            ? habit.countFrom + 1
-            : habit.countFrom - 1,
+        count:
+          habit.isIncrementCount === true
+            ? habit.count + 1
+            : habit.count - 1,
       },
     });
   }
@@ -41,9 +41,9 @@ const Habit = ({ habit, onClickTitle, setUpEdit }) => {
       >
         <span className="fw-semibold fs-3">{habit.title}</span>
         <span>
-          {habit.direction == 'increase'
-            ? `${habit.countFrom} ${habit.unit}!`
-            : `${habit.countFrom} ${habit.unit} to go!`}
+          {habit.isIncrementCount === true
+            ? `${habit.count} ${habit.unit}!`
+            : `${habit.count} ${habit.unit} to go!`}
         </span>
       </div>
 
@@ -84,8 +84,8 @@ const Container = styled.div`
 `;
 
 const CountButton = styled.button`
-  width: 4rem;
-  height: 4rem;
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 50%;
   background-color: #f0ff97;
   border-style: none;
