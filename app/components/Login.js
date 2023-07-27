@@ -19,15 +19,12 @@ const Login = () => {
   const [passwordInvalid, setPasswordInvalid] = useState(false);
 
   async function handleCredentialResponse(response) {
-    console.log('Encoded JWT ID token: ' + response.credential);
-
     const token = response.credential;
 
     const res = await axios.post('/api/auth', { token });
 
-    if (res.ok) {
-      console.log(res);
-      // appDispatch({ type: 'login', data: response.data });
+    if (res.data) {
+      appDispatch({ type: 'login', data: res.data });
       appDispatch({
         type: 'alert/open',
         payload: {
@@ -36,11 +33,18 @@ const Login = () => {
         },
       });
       navigate('/');
-      // The token was verified and the user was authenticated
-      // Proceed to your app's main screen or whichever flow you want
     } else {
-      // Authentication failed, handle accordingly
+      appDispatch({
+        type: 'alert/open',
+        payload: {
+          type: 'danger',
+          text: 'Incorrect email/password.',
+        },
+      });
+
+      console.log('Incorrect email/password');
     }
+    navigate('/');
   }
 
   useEffect(() => {

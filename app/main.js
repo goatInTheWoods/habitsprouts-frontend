@@ -40,9 +40,8 @@ import DispatchContext from './DispatchContext';
 import Profile from './components/Profile';
 import EditPost from './components/EditPost';
 import NotFound from './components/NotFound';
-const Search = React.lazy(() => import('./components/Search'));
-const Chat = React.lazy(() => import('./components/Chat'));
-import axios from 'axios';
+// const Search = React.lazy(() => import('./components/Search'));
+// const Chat = React.lazy(() => import('./components/Chat'));
 import LoadingDotsIcon from './components/LoadingDotsIcon';
 import Collapse from 'react-bootstrap/Collapse';
 import styled from 'styled-components';
@@ -164,44 +163,6 @@ function Main() {
     };
   }, [state.alert.isOn]);
 
-  // Check if token has expired or not on first render
-  useEffect(() => {
-    if (state.loggedIn) {
-      const ourRequest = axios.CancelToken.source();
-
-      async function fetchResults() {
-        try {
-          const response = await axios.post(
-            '/checkToken',
-            { token: state.user.token },
-            { cancelToken: ourRequest.token }
-          );
-
-          if (!response.data) {
-            dispatch({ type: 'logout' });
-            dispatch({
-              type: 'alert/open',
-              payload: {
-                type: 'danger',
-                text: 'Your session has expired. Please log in again.',
-              },
-            });
-          }
-        } catch (e) {
-          console.log(
-            'There was a problem or the request was cancelled.'
-          );
-        }
-      }
-
-      fetchResults();
-
-      return () => {
-        ourRequest.cancel();
-      };
-    }
-  }, []);
-
   return (
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
@@ -221,8 +182,11 @@ function Main() {
                 <Routes>
                   <Route
                     path="/"
-                    element={state.loggedIn ? <Home /> : <Login />}
+                    element={
+                      state.loggedIn ? <HabitList /> : <Login />
+                    }
                   />
+                  <Route path="/login" element={<Login />} />
                   <Route path="/habits" element={<HabitList />} />
                   <Route path="/about-us" element={<About />} />
                   <Route path="/terms" element={<Terms />} />
@@ -259,9 +223,9 @@ function Main() {
               </Suspense>
             </div>
           </CSSTransition> */}
-            <Suspense fallback="">
+            {/* <Suspense fallback="">
               {state.loggedIn && <Chat />}
-            </Suspense>
+            </Suspense> */}
             <Navbar />
           </Container>
         </BrowserRouter>

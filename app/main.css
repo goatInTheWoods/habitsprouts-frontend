@@ -112,7 +112,6 @@ body {
 }
 
 .liveValidateMessage {
-  top: -6px;
   position: absolute;
   z-index: 1;
   padding-top: 6px;
