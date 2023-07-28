@@ -73,10 +73,12 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
                 defaultValue={habit?.title}
               />
             </Form.Group>
-            <Row>
+            <Row className="row-gap-3">
               <Form.Group
                 className="pe-0"
                 as={Col}
+                xs={5}
+                sm="auto"
                 controlId="isIncrementCount"
               >
                 <select
@@ -94,19 +96,20 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
               </Form.Group>
               <Col
                 as="span"
-                className="d-flex align-items-center pe-0"
-                xs="auto"
+                className="d-flex align-items-center pe-0 "
+                xs={7}
+                sm="auto"
               >
                 Starts from
               </Col>
-              <Form.Group as={Col} sm={3} controlId="unit">
+              <Form.Group as={Col} sm={3} xs={6} controlId="unit">
                 <Form.Control
                   type="text"
                   defaultValue={habit?.unit}
                   onChange={handleInput}
                 />
               </Form.Group>
-              <Form.Group as={Col} sm={3} controlId="count">
+              <Form.Group as={Col} sm={3} xs={6} controlId="count">
                 <Form.Control
                   type="number"
                   defaultValue={habit?.count}
