@@ -22,7 +22,6 @@ const Login = () => {
     const token = response.credential;
 
     const res = await axios.post('/api/auth', { token });
-
     if (res.data) {
       appDispatch({ type: 'login', data: res.data });
       appDispatch({

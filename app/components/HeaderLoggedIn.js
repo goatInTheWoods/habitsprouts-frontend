@@ -1,12 +1,18 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import StateContext from '../StateContext';
 import DispatchContext from '../DispatchContext';
+import Bars from '../images/bars.svg';
+import Button from 'react-bootstrap/Button';
+import Menu from './Menu';
 
 function HeaderLoggedIn(props) {
   const appDispatch = useContext(DispatchContext);
   const appState = useContext(StateContext);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const openMenu = () => setIsMenuOpen(true);
+  const closeMenu = () => setIsMenuOpen(false);
 
   function handleLogOut() {
     appDispatch({ type: 'logout' });
@@ -29,8 +35,10 @@ function HeaderLoggedIn(props) {
   }
 
   return (
-    <div className="flex-row my-3 my-md-0">
-      <a
+    <>
+      {isMenuOpen && <Menu isOpen={isMenuOpen} close={closeMenu} />}
+      <div className="d-flex flex-row my-3 my-md-0 gap-3">
+        {/* <a
         data-for="search"
         data-tip="Search"
         onClick={handleSearchIcon}
@@ -68,33 +76,40 @@ function HeaderLoggedIn(props) {
         place="bottom"
         id="chat"
         className="custom-tooltip"
-      />{' '}
-      <Link
-        data-for="profile"
-        data-tip="My Profile"
-        to={`/profile/${appState.user.username}`}
-        className="mr-2"
-      >
-        <img
-          className="small-header-avatar"
-          src={appState.user.avatar}
+      />{' '} */}
+        <Link
+          data-for="profile"
+          data-tip="My Profile"
+          to={`/profile/${appState.user.username}`}
+          className="mr-2"
+        >
+          <img
+            className="small-header-avatar"
+            src={appState.user.avatar}
+          />
+        </Link>{' '}
+        <ReactTooltip
+          place="bottom"
+          id="profile"
+          className="custom-tooltip"
         />
-      </Link>{' '}
-      <ReactTooltip
-        place="bottom"
-        id="profile"
-        className="custom-tooltip"
-      />
-      <Link className="btn btn-sm btn-success mr-2" to="/create-post">
-        Create Post
+        {/* <Link
+        className="btn btn-sm btn-outline-secondary mr-2"
+        to="/create-post"
+      >
+        Create Log
       </Link>{' '}
       <button
         onClick={handleLogOut}
         className="btn btn-sm btn-secondary"
       >
         Sign Out
-      </button>
-    </div>
+      </button> */}
+        <Button onClick={openMenu} className="bg-white">
+          <Bars />
+        </Button>
+      </div>
+    </>
   );
 }
 

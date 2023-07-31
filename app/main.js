@@ -49,16 +49,16 @@ import styled from 'styled-components';
 function Main() {
   const habitList = localStorage.getItem('habitList');
   const initialState = {
-    loggedIn: Boolean(localStorage.getItem('complexappToken')),
+    loggedIn: Boolean(localStorage.getItem('habitCountToken')),
     alert: {
       isOn: false,
       type: 'success',
       text: null,
     },
     user: {
-      token: localStorage.getItem('complexappToken'),
-      username: localStorage.getItem('complexappUsername'),
-      avatar: localStorage.getItem('complexappAvatar'),
+      token: localStorage.getItem('habitCountToken'),
+      username: localStorage.getItem('habitCountUsername'),
+      avatar: localStorage.getItem('habitCountAvatar'),
     },
     isSearchOpen: false,
     isChatOpen: false,
@@ -133,20 +133,18 @@ function Main() {
 
   useEffect(() => {
     if (state.loggedIn) {
-      localStorage.setItem('complexappToken', state.user.token);
-      localStorage.setItem('complexappUsername', state.user.username);
-      localStorage.setItem('complexappAvatar', state.user.avatar);
+      localStorage.setItem('habitCountToken', state.user.token);
+      localStorage.setItem('habitCountUsername', state.user.username);
+      localStorage.setItem('habitCountAvatar', state.user.avatar);
     } else {
-      localStorage.removeItem('complexappToken');
-      localStorage.removeItem('complexappUsername');
-      localStorage.removeItem('complexappAvatar');
+      localStorage.removeItem('habitCountToken');
+      localStorage.removeItem('habitCountUsername');
+      localStorage.removeItem('habitCountAvatar');
     }
   }, [state.loggedIn]);
 
   useEffect(() => {
-    if (state.habits?.length > 0) {
-      localStorage.setItem('habitList', JSON.stringify(state.habits));
-    }
+    localStorage.setItem('habitList', JSON.stringify(state.habits));
   }, [state.habits]);
 
   useEffect(() => {
