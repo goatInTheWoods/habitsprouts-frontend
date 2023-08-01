@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
@@ -9,7 +10,7 @@ import DispatchContext from '../DispatchContext';
 
 function Signup({ isOpen, close }) {
   const appDispatch = useContext(DispatchContext);
-
+  const navigate = useNavigate();
   const initialState = {
     username: {
       value: '',
@@ -173,7 +174,7 @@ function Signup({ isOpen, close }) {
   async function fetchDoesUsernameExist(ourRequest) {
     try {
       const response = await axios.post(
-        '/doesUsernameExist',
+        '/users/signup/doesUsernameExist',
         { username: state.username.value },
         { cancelToken: ourRequest.token }
       );
@@ -203,7 +204,7 @@ function Signup({ isOpen, close }) {
   async function fetchDoesEmailExist(ourRequest) {
     try {
       const response = await axios.post(
-        '/doesEmailExist',
+        '/users/signup/doesEmailExist',
         { email: state.email.value },
         { cancelToken: ourRequest.token }
       );
@@ -233,7 +234,7 @@ function Signup({ isOpen, close }) {
   async function fetchRegister(ourRequest) {
     try {
       const response = await axios.post(
-        '/register',
+        '/users',
         {
           username: state.username.value,
           email: state.email.value,
@@ -241,15 +242,18 @@ function Signup({ isOpen, close }) {
         },
         { cancelToken: ourRequest.token }
       );
-
-      appDispatch({ type: 'login', data: response.data });
-      appDispatch({
-        type: 'alert/open',
-        payload: {
-          type: 'success',
-          text: 'Congrats! Welcome to your new account.',
-        },
-      });
+      if (response.data) {
+        close();
+        navigate('/');
+        appDispatch({ type: 'login', data: response.data });
+        appDispatch({
+          type: 'alert/open',
+          payload: {
+            type: 'success',
+            text: 'Congrats! Welcome to your new account.',
+          },
+        });
+      }
     } catch (e) {
       console.log(
         'There was a problem or the request was cancelled.'

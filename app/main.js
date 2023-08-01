@@ -9,17 +9,12 @@ import React, {
 import { useImmerReducer } from 'use-immer';
 import ReactDom from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Axios from 'axios';
-
+import './axiosConfig';
 // Import our custom CSS
 import './scss/styles.scss';
 
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
-
-Axios.defaults.baseURL =
-  process.env.BACKENDURL ||
-  'https://myreactbackendtest-4lua.onrender.com';
 
 import Header from './components/Header';
 import Login from './components/Login';
@@ -132,6 +127,7 @@ function Main() {
   const [state, dispatch] = useImmerReducer(ourReducer, initialState);
 
   useEffect(() => {
+    console.log(state.user);
     if (state.loggedIn) {
       localStorage.setItem('habitCountToken', state.user.token);
       localStorage.setItem('habitCountUsername', state.user.username);

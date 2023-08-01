@@ -6,6 +6,7 @@ import DispatchContext from '../DispatchContext';
 import Bars from '../images/bars.svg';
 import Button from 'react-bootstrap/Button';
 import Menu from './Menu';
+import User from '../images/user.svg';
 
 function HeaderLoggedIn(props) {
   const appDispatch = useContext(DispatchContext);
@@ -13,17 +14,6 @@ function HeaderLoggedIn(props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = () => setIsMenuOpen(false);
-
-  function handleLogOut() {
-    appDispatch({ type: 'logout' });
-    appDispatch({
-      type: 'alert/open',
-      payload: {
-        type: 'success',
-        text: 'You have successfully logged out.',
-      },
-    });
-  }
 
   function handleSearchIcon(e) {
     e.preventDefault();
@@ -83,10 +73,13 @@ function HeaderLoggedIn(props) {
           to={`/profile/${appState.user.username}`}
           className="mr-2"
         >
-          <img
-            className="small-header-avatar"
-            src={appState.user.avatar}
-          />
+          {appState.user.avatar !== 'undefined' && (
+            <img
+              className="small-header-avatar"
+              src={appState.user.avatar}
+            />
+          )}
+          {appState.user.avatar === 'undefined' && <User />}
         </Link>{' '}
         <ReactTooltip
           place="bottom"
