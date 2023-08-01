@@ -186,7 +186,7 @@ const Login = () => {
               <div className="hstack gap-2 justify-content-between">
                 <SignupButton
                   onClick={() => openSignup()}
-                  className="btn btn-md btn-secondary mw-auto"
+                  className="btn btn-md btn-secondary"
                 >
                   Sign up
                 </SignupButton>

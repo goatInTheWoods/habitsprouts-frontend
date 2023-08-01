@@ -31,6 +31,11 @@ function Signup({ isOpen, close }) {
       hasErrors: false,
       message: '',
     },
+    rePassword: {
+      value: '',
+      hasErrors: false,
+      message: 'The password does not match.',
+    },
     submitCount: 0,
   };
 
@@ -124,13 +129,23 @@ function Signup({ isOpen, close }) {
         }
         return;
 
+      case 'rePasswordImmediately':
+        draft.rePassword.hasErrors = false;
+        draft.rePassword.value = action.value;
+
+        if (draft.password.value !== draft.rePassword.value) {
+          draft.rePassword.hasErrors = true;
+        }
+        return;
+
       case 'submitForm':
         if (
           !draft.username.hasErrors &&
           draft.username.isUnique &&
           !draft.email.hasErrors &&
           draft.email.isUnique &&
-          !draft.password.hasErrors
+          !draft.password.hasErrors &&
+          !draft.rePassword.hasErrors
         ) {
           draft.submitCount++;
         }
@@ -168,6 +183,10 @@ function Signup({ isOpen, close }) {
       type: 'passwordAfterDelay',
       value: state.password.value,
     });
+    dispatch({
+      type: 'rePasswordImmediately',
+      value: state.rePassword.value,
+    });
     dispatch({ type: 'submitForm' });
   }
 
@@ -178,7 +197,6 @@ function Signup({ isOpen, close }) {
         { username: state.username.value },
         { cancelToken: ourRequest.token }
       );
-
       dispatch({
         type: 'usernameUniqueResults',
         value: response.data,
@@ -311,8 +329,8 @@ function Signup({ isOpen, close }) {
           closeButton
         >
           <Modal.Title>
-            <p>Sign Up</p>
-            <p className="fs-6 fw-light lh-sm">
+            <p className="text-center text-primary">Sign Up</p>
+            <p className="fs-6 fw-light lh-sm mb-0">
               Welcome to HabitCount! Our service is completely free,
               so once you sign up, you're good to go!
             </p>
@@ -342,7 +360,7 @@ function Signup({ isOpen, close }) {
               />
               <CSSTransition
                 in={state.username.hasErrors}
-                timeout={330}
+                timeout={280}
                 classNames="liveValidateMessage"
                 unmountOnExit
               >
@@ -366,7 +384,7 @@ function Signup({ isOpen, close }) {
               />
               <CSSTransition
                 in={state.email.hasErrors}
-                timeout={330}
+                timeout={280}
                 classNames="liveValidateMessage"
                 unmountOnExit
               >
@@ -390,9 +408,10 @@ function Signup({ isOpen, close }) {
                 type="password"
                 placeholder="Password"
               />
+              <i className="fas fa-solid fa-eye"></i>
               <CSSTransition
                 in={state.password.hasErrors}
-                timeout={330}
+                timeout={280}
                 classNames="liveValidateMessage"
                 unmountOnExit
               >
@@ -401,12 +420,40 @@ function Signup({ isOpen, close }) {
                 </div>
               </CSSTransition>
             </Form.Group>
+            <Form.Group
+              className="mb-3"
+              controlId="repeat-password-register"
+            >
+              <Form.Control
+                onChange={e =>
+                  dispatch({
+                    type: 'rePasswordImmediately',
+                    value: e.target.value,
+                  })
+                }
+                name="rePassword"
+                type="password"
+                placeholder="Repeat password"
+              />
+              <CSSTransition
+                in={state.rePassword.hasErrors}
+                timeout={280}
+                classNames="liveValidateMessage"
+                unmountOnExit
+              >
+                <div className="alert alert-danger p-2 small liveValidateMessage">
+                  {state.rePassword.message}
+                </div>
+              </CSSTransition>
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer className="d-flex justify-content-center">
-          <Button variant="primary" onClick={handleSubmit}>
-            Sign Up
-          </Button>
+          <div className="d-grid col-12">
+            <Button variant="primary" onClick={handleSubmit}>
+              Sign Up
+            </Button>
+          </div>
         </Modal.Footer>
       </Modal>
     </>

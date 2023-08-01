@@ -18,7 +18,7 @@ const Navbar = () => {
       </Link>
       <Link className="nav-link flex-column" to="/about-us">
         <i className="fas fa-pen-square"></i>
-        <p>Comments</p>
+        <p>Logs</p>
       </Link>
       <Link className="nav-link" to="/terms">
         <i className="fas fa-users"></i>
