@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useImmerReducer } from 'use-immer';
 import { CSSTransition } from 'react-transition-group';
 import DispatchContext from '../DispatchContext';
+import styled from 'styled-components';
 
 function Signup({ isOpen, close }) {
   const appDispatch = useContext(DispatchContext);
@@ -30,11 +31,13 @@ function Signup({ isOpen, close }) {
       value: '',
       hasErrors: false,
       message: '',
+      visible: false,
     },
     rePassword: {
       value: '',
       hasErrors: false,
       message: 'The password does not match.',
+      visible: false,
     },
     submitCount: 0,
   };
@@ -129,6 +132,10 @@ function Signup({ isOpen, close }) {
         }
         return;
 
+      case 'togglePasswordVisible':
+        draft.password.visible = !draft.password.visible;
+        return;
+
       case 'rePasswordImmediately':
         draft.rePassword.hasErrors = false;
         draft.rePassword.value = action.value;
@@ -136,6 +143,10 @@ function Signup({ isOpen, close }) {
         if (draft.password.value !== draft.rePassword.value) {
           draft.rePassword.hasErrors = true;
         }
+        return;
+
+      case 'toggleRepasswordVisible':
+        draft.rePassword.visible = !draft.rePassword.visible;
         return;
 
       case 'submitForm':
@@ -394,7 +405,7 @@ function Signup({ isOpen, close }) {
               </CSSTransition>
             </Form.Group>
             <Form.Group
-              className="mb-3"
+              className="mb-3 position-relative"
               controlId="password-register"
             >
               <Form.Control
@@ -405,10 +416,29 @@ function Signup({ isOpen, close }) {
                   })
                 }
                 name="password"
-                type="password"
+                type={state.password.visible ? 'text' : 'password'}
                 placeholder="Password"
               />
-              <i className="fas fa-solid fa-eye"></i>
+              <PasswordEye
+                onClick={() => {
+                  dispatch({
+                    type: 'togglePasswordVisible',
+                  });
+                }}
+                className="position-absolute custom-pointer"
+              >
+                {!state.password.visible && (
+                  <span>
+                    <i className="fas fa-solid fa-eye"></i>
+                  </span>
+                )}
+                {state.password.visible && (
+                  <span>
+                    <i className="fas fa-solid fa-eye-slash"></i>
+                  </span>
+                )}
+              </PasswordEye>
+
               <CSSTransition
                 in={state.password.hasErrors}
                 timeout={280}
@@ -421,7 +451,7 @@ function Signup({ isOpen, close }) {
               </CSSTransition>
             </Form.Group>
             <Form.Group
-              className="mb-3"
+              className="mb-3 position-relative"
               controlId="repeat-password-register"
             >
               <Form.Control
@@ -432,9 +462,28 @@ function Signup({ isOpen, close }) {
                   })
                 }
                 name="rePassword"
-                type="password"
+                type={state.rePassword.visible ? 'text' : 'password'}
                 placeholder="Repeat password"
               />
+              <PasswordEye
+                onClick={() => {
+                  dispatch({
+                    type: 'toggleRepasswordVisible',
+                  });
+                }}
+                className="position-absolute custom-pointer"
+              >
+                {!state.rePassword.visible && (
+                  <span>
+                    <i className="fas fa-solid fa-eye"></i>
+                  </span>
+                )}
+                {state.rePassword.visible && (
+                  <span>
+                    <i className="fas fa-solid fa-eye-slash"></i>
+                  </span>
+                )}
+              </PasswordEye>
               <CSSTransition
                 in={state.rePassword.hasErrors}
                 timeout={280}
@@ -459,5 +508,10 @@ function Signup({ isOpen, close }) {
     </>
   );
 }
+
+const PasswordEye = styled.span`
+  top: 7px;
+  right: 11px;
+`;
 
 export default Signup;
