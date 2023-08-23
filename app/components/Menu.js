@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import ListGroup from 'react-bootstrap/ListGroup';
 import StateContext from '../StateContext';
 import DispatchContext from '../DispatchContext';
+import ConfirmationModal from './ConfirmationModal';
 import axios from 'axios';
 
 function Menu({ isOpen, close }) {
@@ -19,8 +20,15 @@ function Menu({ isOpen, close }) {
     { name: 'Edit my info' },
     { name: 'Log out', onClick: handleLogOut },
     { name: 'Log out from all devices', onClick: handleLogOutAll },
-    { name: 'sign out' },
+    { name: 'Delete account', onClick: handleDeletingUserModal },
   ];
+
+  const [isDeletingUserModalOpen, setIsDeletingUserModalOpen] =
+    useState(false);
+
+  function handleDeletingUserModal() {
+    setIsDeletingUserModalOpen(!isDeletingUserModalOpen);
+  }
 
   async function handleLogOut() {
     try {
@@ -64,8 +72,50 @@ function Menu({ isOpen, close }) {
     }
   }
 
+  async function handleDeletingUser() {
+    try {
+      const response = await axios.delete('/users/me');
+      if (response.status === 200) {
+        handleDeletingUserModal();
+        appDispatch({ type: 'logout' });
+        appDispatch({
+          type: 'alert/open',
+          payload: {
+            type: 'success',
+            text: 'Your account has been removed. See you next time!',
+          },
+        });
+      }
+    } catch (e) {
+      alert('Something went wrong. Try again.');
+    }
+  }
+
   return (
     <>
+      {isDeletingUserModalOpen && (
+        <ConfirmationModal
+          isOpen={isDeletingUserModalOpen}
+          close={handleDeletingUserModal}
+          title="Delete Your Account"
+          content={
+            <>
+              <p>Sorry to see you go😢 Before you proceed:</p>
+              <ul>
+                <li>
+                  All of your personal information will be permanently
+                  deleted.
+                </li>
+                <li>Your habit tracking data will be lost.</li>
+                <li> This action is irreversible.</li>
+              </ul>
+              <p>Are you sure you want to delete your account?</p>
+            </>
+          }
+          submitBtnTxt="Delete account"
+          handleSubmit={handleDeletingUser}
+        />
+      )}
       <Offcanvas show={isOpen} onHide={close} placement="end">
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>HabitCount</Offcanvas.Title>
