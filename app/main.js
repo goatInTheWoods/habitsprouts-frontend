@@ -23,6 +23,8 @@ import Navbar from './components/Navbar';
 import HabitList from './components/HabitList';
 import About from './components/About';
 import Terms from './components/Terms';
+import ResetPassword from './components/ResetPassword';
+import ForgotPassword from './components/ForgotPassword';
 const CreatePost = React.lazy(() =>
   import('./components/CreatePost')
 );
@@ -127,7 +129,6 @@ function Main() {
   const [state, dispatch] = useImmerReducer(ourReducer, initialState);
 
   useEffect(() => {
-    console.log(state.user);
     if (state.loggedIn) {
       localStorage.setItem('habitCountToken', state.user.token);
       localStorage.setItem('habitCountUsername', state.user.username);
@@ -174,13 +175,16 @@ function Main() {
             <MainContainer>
               <Suspense fallback={<LoadingDotsIcon />}>
                 <Routes>
-                  <Route
-                    path="/"
-                    element={
-                      state.loggedIn ? <HabitList /> : <Login />
-                    }
-                  />
+                  <Route path="/" element={<HabitList />} />
                   <Route path="/login" element={<Login />} />
+                  <Route
+                    path="/forgot-password"
+                    element={<ForgotPassword />}
+                  />
+                  <Route
+                    path="/reset-password"
+                    element={<ResetPassword />}
+                  />
                   <Route path="/habits" element={<HabitList />} />
                   <Route path="/about-us" element={<About />} />
                   <Route path="/terms" element={<Terms />} />
