@@ -1,37 +1,40 @@
-import React, { useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import { useImmerReducer } from 'use-immer';
 import { CSSTransition } from 'react-transition-group';
-import DispatchContext from '../DispatchContext';
 import styled from 'styled-components';
 
+// This component used in Signup, EditMyInfo, resetPassword
+
 function AccountInfoForm({
-  isUsernameVisible,
-  isEmailVisible,
-  isPasswordVisible,
-  isRePasswordVisible,
+  isInputVisible,
+  accountInfo,
+  onAccountInfoUpdate,
+  triggerValidation,
+  autoFocusInput,
 }) {
-  const appDispatch = useContext(DispatchContext);
-  const navigate = useNavigate();
+  const usernameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
   const initialState = {
     username: {
-      value: '',
+      value: accountInfo?.username,
       hasErrors: false,
       message: '',
       isUnique: false,
       checkCount: 0,
     },
     email: {
-      value: '',
+      value: accountInfo?.email,
       hasErrors: false,
       message: '',
       isUnique: false,
       checkCount: 0,
     },
     password: {
-      value: '',
+      value: accountInfo?.password,
       hasErrors: false,
       message: '',
       visible: false,
@@ -42,7 +45,7 @@ function AccountInfoForm({
       message: 'The password does not match.',
       visible: false,
     },
-    submitCount: 0,
+    isAllInfoClear: accountInfo.isAllInfoClear,
   };
 
   function ourReducer(draft, action) {
@@ -152,18 +155,31 @@ function AccountInfoForm({
         draft.rePassword.visible = !draft.rePassword.visible;
         return;
 
-      case 'submitForm':
-        if (
-          !draft.username.hasErrors &&
-          draft.username.isUnique &&
-          !draft.email.hasErrors &&
-          draft.email.isUnique &&
-          !draft.password.hasErrors &&
-          !draft.rePassword.hasErrors
-        ) {
-          draft.submitCount++;
+      case 'validateAllAndUpdate': {
+        const isUsernameClear = isInputVisible.username
+          ? !draft.username.hasErrors && draft.username.isUnique
+          : true;
+
+        const isEmailClear = isInputVisible.email
+          ? !draft.email.hasErrors && draft.email.isUnique
+          : true;
+
+        const isPasswordClear = isInputVisible.password
+          ? !draft.password.hasErrors && !draft.rePassword.hasErrors
+          : true;
+
+        if (isUsernameClear && isEmailClear && isPasswordClear) {
+          onAccountInfoUpdate({
+            username: draft.username.value,
+            email: draft.email.value,
+            password: draft.password.value,
+            isAllInfoClear: true,
+          });
+        } else {
+          onAccountInfoUpdate({ isAllInfoClear: false });
         }
         return;
+      }
     }
   }
 
@@ -228,51 +244,89 @@ function AccountInfoForm({
     }
   }, [state.email.checkCount]);
 
-  async function fetchRegister(ourRequest) {
-    try {
-      const response = await axios.post(
-        '/users',
-        {
-          username: state.username.value,
-          email: state.email.value,
-          password: state.password.value,
-        },
-        { cancelToken: ourRequest.token }
-      );
-      if (response.data) {
-        close();
-        navigate('/');
-        appDispatch({ type: 'login', data: response.data });
-        appDispatch({
-          type: 'alert/open',
-          payload: {
-            type: 'success',
-            text: 'Congrats! Welcome to your new account.',
-          },
-        });
-      }
-    } catch (e) {
-      console.log(
-        'There was a problem or the request was cancelled.'
-      );
+  useEffect(() => {
+    if (
+      !state.username.value &&
+      !state.username.value &&
+      !state.password.value &&
+      !state.rePassword.value
+    ) {
+      return;
     }
-  }
+    if (isInputVisible.username) {
+      dispatch({
+        type: 'usernameImmediately',
+        value: state.username.value,
+      });
+      dispatch({
+        type: 'usernameAfterDelay',
+        value: state.username.value,
+        noRequest: true,
+      });
+    }
+
+    if (isInputVisible.email) {
+      dispatch({
+        type: 'emailImmediately',
+        value: state.email.value,
+      });
+      dispatch({
+        type: 'emailAfterDelay',
+        value: state.email.value,
+        noRequest: true,
+      });
+    }
+
+    if (isInputVisible.password) {
+      dispatch({
+        type: 'passwordImmediately',
+        value: state.password.value,
+      });
+      dispatch({
+        type: 'passwordAfterDelay',
+        value: state.password.value,
+      });
+    }
+
+    if (isInputVisible.rePassword) {
+      dispatch({
+        type: 'rePasswordImmediately',
+        value: state.rePassword.value,
+      });
+    }
+
+    dispatch({ type: 'validateAllAndUpdate' });
+  }, [triggerValidation]);
 
   useEffect(() => {
-    if (state.submitCount) {
-      const ourRequest = axios.CancelToken.source();
+    switch (autoFocusInput) {
+      case 'username':
+        if (usernameRef.current) {
+          usernameRef.current.focus();
+        }
+        break;
 
-      fetchRegister(ourRequest);
+      case 'email':
+        if (emailRef.current) {
+          emailRef.current.focus();
+        }
+        break;
 
-      return () => {
-        ourRequest.cancel();
-      };
+      case 'password':
+        if (passwordRef.current) {
+          passwordRef.current.focus();
+        }
+        break;
+
+      default:
+        break;
     }
-  }, [state.submitCount]);
+  }, [autoFocusInput]);
 
   function inputCheck(input) {
     return useEffect(() => {
       if (state[input].value) {
+        console.log('inputcheck');
         const delay = setTimeout(() => {
           dispatch({ type: `${input}AfterDelay` });
         }, 800);
@@ -291,9 +345,10 @@ function AccountInfoForm({
   return (
     <>
       <Form>
-        {isUsernameVisible && (
+        {isInputVisible.username && (
           <Form.Group className="mb-3" controlId="username-register">
             <Form.Control
+              ref={usernameRef}
               type="text"
               onChange={e =>
                 dispatch({
@@ -304,7 +359,6 @@ function AccountInfoForm({
               name="username"
               placeholder="Username"
               required
-              autoFocus
             />
             <CSSTransition
               in={state.username.hasErrors}
@@ -318,9 +372,10 @@ function AccountInfoForm({
             </CSSTransition>
           </Form.Group>
         )}
-        {isEmailVisible && (
+        {isInputVisible.email && (
           <Form.Group className="mb-3" controlId="email-register">
             <Form.Control
+              ref={emailRef}
               onChange={e =>
                 dispatch({
                   type: 'emailImmediately',
@@ -344,12 +399,13 @@ function AccountInfoForm({
             </CSSTransition>
           </Form.Group>
         )}
-        {isPasswordVisible && (
+        {isInputVisible.password && (
           <Form.Group
             className="mb-3 position-relative"
             controlId="password-register"
           >
             <Form.Control
+              ref={passwordRef}
               onChange={e =>
                 dispatch({
                   type: 'passwordImmediately',
@@ -392,7 +448,7 @@ function AccountInfoForm({
             </CSSTransition>
           </Form.Group>
         )}
-        {isRePasswordVisible && (
+        {isInputVisible.rePassword && (
           <Form.Group
             className="mb-3 position-relative"
             controlId="repeat-password-register"
