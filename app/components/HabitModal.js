@@ -1,14 +1,15 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import produce from 'immer';
-import DispatchContext from '../DispatchContext';
+import axios from 'axios';
+import { useActions } from '../store';
 
 function HabitModal({ type, initialHabit, isOpen, closeModal }) {
-  const appDispatch = useContext(DispatchContext);
+  const { addHabit, editHabit } = useActions();
   const [habit, setHabit] = useState(initialHabit);
 
   function handleInput({ target }) {
@@ -29,12 +30,24 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
     closeModal();
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    appDispatch({
-      type: `habits/${type}`,
-      payload: habit,
-    });
+    const { id, ...habitRest } = habit;
+    try {
+      switch (type) {
+        case 'add':
+          const response = await axios.post('/habit', habitRest);
+          addHabit(habit);
+          break;
+        case 'edit':
+          editHabit(habit);
+          break;
+        default:
+          break;
+      }
+    } catch (err) {
+      console.log(err);
+    }
     handleClose();
   }
 

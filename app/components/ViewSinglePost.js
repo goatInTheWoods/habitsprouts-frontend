@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Page from './Page';
 import LoadingDotsIcon from './LoadingDotsIcon';
 import { useParams, Link, useNavigate } from 'react-router-dom';
@@ -6,15 +6,13 @@ import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import ReactTooltip from 'react-tooltip';
 import NotFound from './NotFound';
-import StateContext from '../StateContext';
-import DispatchContext from '../DispatchContext';
+import { useLoggedIn, useUserInfo, useActions } from '../store';
 
 function ViewSinglePost() {
+  const { openAlert } = useActions();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [post, setPost] = useState();
-  const appState = useContext(StateContext);
-  const appDispatch = useContext(DispatchContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,8 +55,8 @@ function ViewSinglePost() {
   }/${date.getDate()}/${date.getFullYear()}`;
 
   function isOwner() {
-    if (appState.loggedIn) {
-      return appState.user.username == post.author.username;
+    if (useLoggedIn()) {
+      return useUserInfo().username == post.author.username;
     }
     return false;
   }
@@ -71,19 +69,16 @@ function ViewSinglePost() {
       try {
         const response = await axios.delete(`/post/${id}`, {
           data: {
-            token: appState.user.token,
+            token: useUserInfo().token,
           },
         });
         if (response.data == 'Success') {
-          appDispatch({
-            type: 'alert/open',
-            payload: {
-              type: 'success',
-              text: 'Post was successfully deleted.',
-            },
+          openAlert({
+            type: 'success',
+            text: 'Post was successfully deleted.',
           });
 
-          navigate(`/profile/${appState.user.username}`);
+          navigate(`/profile/${useUserInfo().username}`);
         }
       } catch (e) {
         console.log('There was a problem');

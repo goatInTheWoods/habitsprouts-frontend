@@ -5,19 +5,16 @@ import Header from './app/components/Header';
 import Navbar from './app/components/Navbar';
 import LoadingDotsIcon from './app/components/LoadingDotsIcon';
 import { StaticRouter as Router } from 'react-router-dom/server';
-import StateContext from './app/StateContext';
 
 function Shell() {
   return (
-    <StateContext.Provider value={{ loggedIn: false }}>
-      <Router>
-        <Header staticEmpty={true} />
-        <div className="py-5 my-5 text-center">
-          <LoadingDotsIcon />
-        </div>
-        <Navbar />
-      </Router>
-    </StateContext.Provider>
+    <Router>
+      <Header staticEmpty={true} />
+      <div className="py-5 my-5 text-center">
+        <LoadingDotsIcon />
+      </div>
+      <Navbar />
+    </Router>
   );
 }
 

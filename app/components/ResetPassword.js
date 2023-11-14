@@ -1,13 +1,13 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Page from './Page';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import AccountInfoForm from './AccountInfoForm';
-import DispatchContext from '../DispatchContext';
+import { useActions } from '../store';
 
 const ResetPassword = () => {
-  const appDispatch = useContext(DispatchContext);
+  const { login, openAlert } = useActions();
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -54,23 +54,17 @@ const ResetPassword = () => {
       );
       if (response.data) {
         navigate('/');
-        appDispatch({ type: 'login', data: response.data });
-        appDispatch({
-          type: 'alert/open',
-          payload: {
-            type: 'success',
-            text: 'Congrats! Your password has successfully reset and logged in.',
-          },
+        login(response.data);
+        openAlert({
+          type: 'success',
+          text: 'Congrats! Your password has successfully reset and logged in.',
         });
       }
     } catch (e) {
       setOnResetFailure(true);
-      appDispatch({
-        type: 'alert/open',
-        payload: {
-          type: 'danger',
-          text: 'Failed to login.',
-        },
+      openAlert({
+        type: 'danger',
+        text: 'Failed to login.',
       });
     }
   }

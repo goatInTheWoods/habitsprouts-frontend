@@ -1,13 +1,12 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import Page from './Page';
-import StateContext from '../StateContext';
 import { useImmer } from 'use-immer';
 import axios from 'axios';
 import LoadingDotsIcon from './LoadingDotsIcon';
 import Post from './Post';
+import { useUserInfo } from '../store';
 
 function Home() {
-  const appState = React.useContext(StateContext);
   const [state, setState] = useImmer({
     isLoading: true,
     feed: [],
@@ -19,7 +18,7 @@ function Home() {
     async function fetchData() {
       try {
         const response = await axios.post('/getHomeFeed', {
-          token: appState.user.token,
+          token: useUserInfo().token,
         });
         setState(draft => {
           draft.isLoading = false;
@@ -58,7 +57,7 @@ function Home() {
       {state.feed.length == 0 && (
         <>
           <h2 className="text-center">
-            Hello <strong>{appState.user.username}</strong>, your feed
+            Hello <strong>{useUserInfo().username}</strong>, your feed
             is empty.
           </h2>
           <p className="lead text-muted text-center">

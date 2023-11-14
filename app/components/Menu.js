@@ -1,14 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import ListGroup from 'react-bootstrap/ListGroup';
-import StateContext from '../StateContext';
-import DispatchContext from '../DispatchContext';
 import ConfirmationModal from './ConfirmationModal';
 import axios from 'axios';
+import { useUserInfo, useActions } from '../store';
 
 function Menu({ isOpen, close }) {
-  const appState = useContext(StateContext);
-  const appDispatch = useContext(DispatchContext);
+  const { logout, openAlert } = useActions();
+  const userInfo = useUserInfo();
   const menuItems = [
     { name: 'My Acount' },
     { name: 'Dark Mode' },
@@ -32,18 +31,13 @@ function Menu({ isOpen, close }) {
 
   async function handleLogOut() {
     try {
-      const response = await axios.post(
-        '/users/logout',
-        appState.user
-      );
+      const response = await axios.post('/users/logout', userInfo);
+
       if (response.status === 204 || response.status === 200) {
-        appDispatch({ type: 'logout' });
-        appDispatch({
-          type: 'alert/open',
-          payload: {
-            type: 'success',
-            text: 'You have successfully logged out.',
-          },
+        logout();
+        openAlert({
+          type: 'success',
+          text: 'You have successfully logged out.',
         });
       }
     } catch (e) {
@@ -53,18 +47,12 @@ function Menu({ isOpen, close }) {
 
   async function handleLogOutAll() {
     try {
-      const response = await axios.post(
-        '/users/logoutAll',
-        appState.user
-      );
+      const response = await axios.post('/users/logoutAll', userInfo);
       if (response.status === 204 || response.status === 200) {
-        appDispatch({ type: 'logout' });
-        appDispatch({
-          type: 'alert/open',
-          payload: {
-            type: 'success',
-            text: 'You have successfully logged out from all devices.',
-          },
+        logout();
+        openAlert({
+          type: 'success',
+          text: 'You have successfully logged out from all devices.',
         });
       }
     } catch (e) {
@@ -77,13 +65,10 @@ function Menu({ isOpen, close }) {
       const response = await axios.delete('/users/me');
       if (response.status === 200) {
         handleDeletingUserModal();
-        appDispatch({ type: 'logout' });
-        appDispatch({
-          type: 'alert/open',
-          payload: {
-            type: 'success',
-            text: 'Your account has been removed. See you next time!',
-          },
+        logout();
+        openAlert({
+          type: 'success',
+          text: 'Your account has been removed. See you next time!',
         });
       }
     } catch (e) {

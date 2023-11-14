@@ -1,16 +1,17 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import Page from './Page';
 import { useParams, NavLink, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
-import StateContext from '../StateContext';
 import ProfilePosts from './ProfilePosts';
 import ProfileFollowers from './ProfileFollowers';
 import ProfileFollowing from './ProfileFollowing';
 import { useImmer } from 'use-immer';
+import { useLoggedIn, useUserInfo } from '../store';
 
 function Profile() {
+  const loggedIn = useLoggedIn();
+  const userInfo = useUserInfo();
   const { username } = useParams();
-  const appState = useContext(StateContext);
   const [state, setState] = useImmer({
     followActionLoading: false,
     startFollowingRequestCount: 0,
@@ -33,7 +34,7 @@ function Profile() {
     async function fetchData() {
       try {
         const response = await axios.post(`/profile/${username}`, {
-          token: appState.user.token,
+          token: userInfo.token,
         });
         setState(draft => {
           draft.profileData = response.data;
@@ -63,7 +64,7 @@ function Profile() {
           const response = await axios.post(
             `/addFollow/${state.profileData.profileUsername}`,
             {
-              token: appState.user.token,
+              token: userInfo.token,
             }
           );
           setState(draft => {
@@ -97,7 +98,7 @@ function Profile() {
           const response = await axios.post(
             `/removeFollow/${state.profileData.profileUsername}`,
             {
-              token: appState.user.token,
+              token: userInfo.token,
             }
           );
           setState(draft => {
@@ -138,10 +139,9 @@ function Profile() {
           src={state.profileData.profileAvatar}
         />{' '}
         {state.profileData.profileUsername}
-        {appState.loggedIn &&
+        {loggedIn &&
           !state.profileData.isFollowing &&
-          appState.user.username !=
-            state.profileData.profileUsername &&
+          userInfo.username != state.profileData.profileUsername &&
           state.profileData.profileUsername != '...' && (
             <button
               onClick={startFollowing}
@@ -151,10 +151,9 @@ function Profile() {
               Follow <i className="fas fa-user-plus"></i>
             </button>
           )}
-        {appState.loggedIn &&
+        {loggedIn &&
           state.profileData.isFollowing &&
-          appState.user.username !=
-            state.profileData.profileUsername &&
+          userInfo.username != state.profileData.profileUsername &&
           state.profileData.profileUsername != '...' && (
             <button
               onClick={stopFollowing}

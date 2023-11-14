@@ -1,13 +1,13 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import AccountInfoForm from './AccountInfoForm';
 import axios from 'axios';
-import DispatchContext from '../DispatchContext';
+import { useActions } from '../store';
 
 function Signup({ isOpen, close }) {
-  const appDispatch = useContext(DispatchContext);
+  const { login, openAlert } = useActions();
   const navigate = useNavigate();
 
   const isInputVisible = {
@@ -46,28 +46,23 @@ function Signup({ isOpen, close }) {
           username: accountInfo.username,
           email: accountInfo.email,
           password: accountInfo.password,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
         { cancelToken: ourRequest.token }
       );
       if (response.data) {
         close();
         navigate('/');
-        appDispatch({ type: 'login', data: response.data });
-        appDispatch({
-          type: 'alert/open',
-          payload: {
-            type: 'success',
-            text: 'Congrats! Welcome to your new account.',
-          },
+        login(response.data);
+        openAlert({
+          type: 'success',
+          text: 'Congrats! Welcome to your new account.',
         });
       }
     } catch (e) {
-      appDispatch({
-        type: 'alert/open',
-        payload: {
-          type: 'danger',
-          text: 'Failed to Sign up.',
-        },
+      openAlert({
+        type: 'danger',
+        text: 'Failed to Sign up.',
       });
     }
   }

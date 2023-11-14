@@ -1,23 +1,38 @@
-import React, { useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Page from './Page';
 import HabitModal from './HabitModal';
-import Habit from './Habit';
+import HabitItem from './HabitItem';
 import Plus from '../images/plus.svg';
 import styled from 'styled-components';
-import StateContext from '../StateContext';
-import DispatchContext from '../DispatchContext';
+import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import { useHabits, useUserInfo, useActions } from '../store';
 
 const HabitList = () => {
-  const appState = useContext(StateContext);
-  const appDispatch = useContext(DispatchContext);
+  const { changeHabitOrder } = useActions();
+  const habits = useHabits();
+  const userInfo = useUserInfo();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [targetHabit, setTargetHabit] = useState(null);
   // state for drag & drop
   const [draggedItemId, setDraggedItemId] = useState(null);
+
+  useEffect(() => {
+    async function fetchHabits() {
+      try {
+        const response = await axios.get('/habits');
+        console.log(response);
+      } catch (e) {
+        console.log('Failed to get habits.');
+      }
+    }
+
+    fetchHabits();
+  }, []);
 
   const initialHabit = {
     id: uuidv4(),
@@ -37,44 +52,26 @@ const HabitList = () => {
   }
 
   function setUpEdit(id) {
-    const target = appState.habits.find(habit => {
+    const target = habits.find(habit => {
       return habit.id === id;
     });
     setTargetHabit(target);
     openModal('edit');
   }
 
-  function foo() {
-    console.log(1);
-  }
-
   const handleDrop = (event, habitId) => {
     event.preventDefault();
     const droppedItemId = habitId;
 
-    const droppedIndex = appState.habits.findIndex(
+    const droppedIndex = habits?.findIndex(
       habit => habit.id === droppedItemId
     );
-    const draggedIndex = appState.habits.findIndex(
+    const draggedIndex = habits?.findIndex(
       habit => habit.id === draggedItemId
     );
 
     if (droppedIndex !== -1 && draggedIndex !== -1) {
-      const newHabits = [...appState.habits];
-      newHabits.splice(draggedIndex, 1); // Remove dragged item from the list
-      newHabits.splice(
-        droppedIndex,
-        0,
-        appState.habits[draggedIndex]
-      ); // Insert dragged item at the dropped index
-
-      appDispatch({
-        type: 'habits/changeOrder',
-        payload: {
-          fromId: draggedIndex,
-          toId: droppedIndex,
-        },
-      });
+      changeHabitOrder(draggedIndex, droppedIndex);
     }
     setDraggedItemId(null);
   };
@@ -85,6 +82,36 @@ const HabitList = () => {
 
   const handleDragStart = (event, habitId) => {
     setDraggedItemId(habitId);
+  };
+
+  const WelcomeCard = () => {
+    return (
+      <Container>
+        <Card border="light" className="text-center">
+          <Card.Header
+            as="p"
+            className="bg-light fs-5 text-secondary"
+          >
+            Welcome to the Marathon!
+          </Card.Header>
+          <Card.Body>
+            <Card.Text>
+              I know making a habit is not easy. You are not alone.
+              Start this race by creating a new habit card and
+              tracking your achievements. You'll be amazed at how far
+              you can go. Let's get started!
+            </Card.Text>
+            <Button
+              className="text-white"
+              variant="primary"
+              onClick={() => openModal('add')}
+            >
+              Create New Habit
+            </Button>
+          </Card.Body>
+        </Card>
+      </Container>
+    );
   };
 
   return (
@@ -100,8 +127,8 @@ const HabitList = () => {
         />
       )}
       <h1 className="text-primary">
-        {appState?.user?.username
-          ? appState.user.username + `'s Habits`
+        {userInfo?.username
+          ? userInfo.username + `'s Habits`
           : 'My Habits'}
       </h1>
       <div className="d-flex flex-row-reverse mb-3 text-primary">
@@ -110,34 +137,8 @@ const HabitList = () => {
         </AddHabitButton>
       </div>
       <div className="vstack gap-3">
-        {appState.habits.length === 0 && (
-          <Container>
-            <Card border="light" className="text-center">
-              <Card.Header
-                as="p"
-                className="bg-light fs-5 text-secondary"
-              >
-                Welcome to the Marathon!
-              </Card.Header>
-              <Card.Body>
-                <Card.Text>
-                  I know making a habit is not easy. You are not
-                  alone. Start this race by creating a new habit card
-                  and tracking your achievements. You'll be amazed at
-                  how far you can go. Let's get started!
-                </Card.Text>
-                <Button
-                  className="text-white"
-                  variant="primary"
-                  onClick={() => openModal('add')}
-                >
-                  Create New Habit
-                </Button>
-              </Card.Body>
-            </Card>
-          </Container>
-        )}
-        {appState.habits.map(habit => {
+        {useHabits()?.length === 0 && <WelcomeCard />}
+        {useHabits()?.map(habit => {
           return (
             <div
               key={habit.id}
@@ -148,11 +149,7 @@ const HabitList = () => {
               }}
               onDragOver={handleDragOver}
             >
-              <Habit
-                habit={habit}
-                onClickTitle={foo}
-                setUpEdit={setUpEdit}
-              />
+              <HabitItem habit={habit} setUpEdit={setUpEdit} />
             </div>
           );
         })}

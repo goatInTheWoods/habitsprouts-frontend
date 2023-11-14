@@ -1,28 +1,26 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
-import StateContext from '../StateContext';
-import DispatchContext from '../DispatchContext';
 import Bars from '../images/bars.svg';
 import Button from 'react-bootstrap/Button';
 import Menu from './Menu';
 import User from '../images/user.svg';
+import { useUserInfo } from '../store';
 
-function HeaderLoggedIn(props) {
-  const appDispatch = useContext(DispatchContext);
-  const appState = useContext(StateContext);
+function HeaderLoggedIn() {
+  const userInfo = useUserInfo();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = () => setIsMenuOpen(false);
 
-  function handleSearchIcon(e) {
-    e.preventDefault();
-    appDispatch({ type: 'openSearch' });
-  }
+  // function handleSearchIcon(e) {
+  //   e.preventDefault();
+  //   appDispatch({ type: 'openSearch' });
+  // }
 
-  function handleChat() {
-    appDispatch({ type: 'toggleChat' });
-  }
+  // function handleChat() {
+  //   appDispatch({ type: 'toggleChat' });
+  // }
 
   return (
     <>
@@ -70,16 +68,16 @@ function HeaderLoggedIn(props) {
         <Link
           data-for="profile"
           data-tip="My Profile"
-          to={`/profile/${appState.user.username}`}
+          to={`/profile/${userInfo.username}`}
           className="mr-2"
         >
-          {appState.user.avatar !== 'undefined' && (
+          {userInfo.avatar !== 'undefined' && (
             <img
               className="small-header-avatar"
-              src={appState.user.avatar}
+              src={userInfo.avatar}
             />
           )}
-          {appState.user.avatar === 'undefined' && <User />}
+          {userInfo.avatar === 'undefined' && <User />}
         </Link>{' '}
         <ReactTooltip
           place="bottom"

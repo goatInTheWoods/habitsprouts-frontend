@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import HeaderLoggedOut from './HeaderLoggedOut';
 import HeaderLoggedIn from './HeaderLoggedIn';
-import StateContext from '../StateContext';
 import Logo from '../images/logo.svg';
+import { useLoggedIn } from '../store';
 
 function Header(props) {
-  const appState = useContext(StateContext);
-  const headerContent = appState.loggedIn ? (
+  const loggedIn = useLoggedIn();
+  const headerContent = loggedIn ? (
     <HeaderLoggedIn />
   ) : (
     <HeaderLoggedOut />

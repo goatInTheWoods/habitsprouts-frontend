@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import Page from './Page';
 import axios from 'axios';
-import DispatchContext from '../DispatchContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Signup from './Signup';
+import { useActions } from '../store';
 
 const Login = () => {
-  const appDispatch = useContext(DispatchContext);
+  const { login, openAlert } = useActions();
+  const urlSearchString = window.location.search;
+  const params = new URLSearchParams(urlSearchString);
+  const redirectedFrom = params?.get('from');
   const navigate = useNavigate();
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const closeSignup = () => setIsSignupOpen(false);
@@ -20,27 +23,21 @@ const Login = () => {
 
   async function handleCredentialResponse(response) {
     const token = response.credential;
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    const res = await axios.post('/api/auth', { token });
+    const res = await axios.post('/api/auth', { token, timezone });
     if (res.data) {
-      appDispatch({ type: 'login', data: res.data });
-      appDispatch({
-        type: 'alert/open',
-        payload: {
-          type: 'success',
-          text: 'Congrats! You are logged in.',
-        },
+      login(res.data);
+      openAlert({
+        type: 'success',
+        text: 'Congrats! You are logged in.',
       });
       navigate('/');
     } else {
-      appDispatch({
-        type: 'alert/open',
-        payload: {
-          type: 'danger',
-          text: 'Incorrect email/password.',
-        },
+      openAlert({
+        type: 'danger',
+        text: 'Incorrect email/password.',
       });
-
       console.log('Incorrect email/password');
     }
     navigate('/');
@@ -82,28 +79,19 @@ const Login = () => {
       setEmailInvalid(false);
       setPasswordInvalid(false);
 
-      if (response.data) {
-        appDispatch({ type: 'login', data: response.data });
-        appDispatch({
-          type: 'alert/open',
-          payload: {
-            type: 'success',
-            text: 'Congrats! You are logged in.',
-          },
+      if (response.status === 204 || response.status === 201) {
+        login(response.data);
+        openAlert({
+          type: 'success',
+          text: 'Congrats! You are logged in.',
         });
         navigate('/');
-      } else {
-        appDispatch({
-          type: 'alert/open',
-          payload: {
-            type: 'danger',
-            text: 'Incorrect email/password.',
-          },
-        });
-
-        console.log('Incorrect email/password');
       }
     } catch (e) {
+      openAlert({
+        type: 'danger',
+        text: 'Incorrect email/password.',
+      });
       console.log('There was a problem', e);
     }
   }
@@ -127,6 +115,11 @@ const Login = () => {
           <h1 className="d-block d-md-none text-primary text-center">
             Log in
           </h1>
+          {redirectedFrom === '401' && (
+            <p className="text-danger">
+              Your login has expired. Please log on again to continue.
+            </p>
+          )}
           <form
             onSubmit={handleSubmit}
             className={
@@ -153,6 +146,7 @@ const Login = () => {
                 placeholder="Email"
                 autoComplete="off"
                 required
+                autoFocus
               />
             </div>
             <div className="form-group">
@@ -172,7 +166,22 @@ const Login = () => {
                 required
               />
             </div>
+
             <div className="mt-3 vstack gap-3 mx-auto">
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheckDefault"
+                />
+                <label
+                  className="form-check-label"
+                  htmlFor="flexCheckDefault"
+                >
+                  Remember me
+                </label>
+              </div>
               <button
                 type="submit"
                 className="btn btn-md btn-primary"
@@ -180,9 +189,16 @@ const Login = () => {
                 Sign in
               </button>
 
+              <ForgotPassword>
+                <Link className="link" to="/forgot-password">
+                  Forgot Password?
+                </Link>
+              </ForgotPassword>
+
               <div className="opacity-50">
                 <hr></hr>
               </div>
+
               <div className="hstack gap-2 justify-content-between">
                 <SignupButton
                   onClick={() => openSignup()}
@@ -204,4 +220,10 @@ const SignupButton = styled.button`
   font-size: 14px;
 `;
 
+const ForgotPassword = styled.div`
+  text-align: center;
+  .link {
+    text-decoration: underline;
+  }
+`;
 export default Login;

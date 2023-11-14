@@ -1,32 +1,25 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Check from '../images/check.svg';
 import Dots from '../images/dots.svg';
 import styled from 'styled-components';
-import DispatchContext from '../DispatchContext';
+import { useActions } from '../store';
 
-const Habit = ({ habit, onClickTitle, setUpEdit }) => {
-  const appDispatch = useContext(DispatchContext);
-
+const HabitItem = ({ habit, onClickTitle, setUpEdit }) => {
+  const { editHabit, deleteHabit } = useActions();
   function handleCount() {
-    appDispatch({
-      type: 'habits/edit',
-      payload: {
-        ...habit,
-        count:
-          habit.isIncrementCount === true
-            ? habit.count + 1
-            : habit.count - 1,
-      },
+    editHabit({
+      ...habit,
+      count:
+        habit.isIncrementCount === true
+          ? habit.count + 1
+          : habit.count - 1,
     });
   }
 
   function handleDelete(id) {
-    appDispatch({
-      type: 'habits/delete',
-      payload: id,
-    });
+    deleteHabit(id);
   }
 
   return (
@@ -92,4 +85,4 @@ const CountButton = styled.button`
   filter: drop-shadow(2px 3px 9px rgba(122, 122, 122, 0.08));
 `;
 
-export default Habit;
+export default HabitItem;
