@@ -5,17 +5,44 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import produce from 'immer';
-import axios from 'axios';
-import { useActions } from '../store';
+import { useLoggedIn, useHabitsCount, useActions } from '../store';
+import { createHabit, updateHabit } from '../services/HabitService';
+import { useMutation } from '@tanstack/react-query';
 
 function HabitModal({ type, initialHabit, isOpen, closeModal }) {
+  const loggedIn = useLoggedIn();
+  const habitsCount = useHabitsCount();
   const { addHabit, editHabit } = useActions();
+
+  const createHabitMutation = useMutation({
+    mutationFn: createHabit,
+    onSuccess: data => {
+      // Handle successful creation
+      console.log('Habit created:', data);
+    },
+    onError: error => {
+      // Handle error
+      console.error('Error creating habit:', error);
+    },
+  });
+
+  const updateHabitMutation = useMutation({
+    mutationFn: updateHabit,
+    onSuccess: () => {
+      // Handle successful update
+      console.log('Habit updated');
+    },
+    onError: error => {
+      // Handle error
+      console.error('Error updating habit:', error);
+    },
+  });
   const [habit, setHabit] = useState(initialHabit);
 
   function handleInput({ target }) {
     setHabit(
       produce(draft => {
-        if (target.id === 'count') {
+        if (target.id === 'totalCount') {
           draft[target.id] = Number(target.value);
         } else if (target.id === 'isIncrementCount') {
           draft[target.id] = target.value === 'true'; // compare string and assign boolean
@@ -25,6 +52,7 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
       })
     );
   }
+
   function handleClose() {
     setHabit(initialHabit);
     closeModal();
@@ -36,10 +64,20 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
     try {
       switch (type) {
         case 'add':
-          const response = await axios.post('/habit', habitRest);
-          addHabit(habit);
+          if (loggedIn) {
+            await createHabitMutation.mutate(habitRest);
+          }
+          addHabit({
+            ...habit,
+            streakCount: 0,
+            completionDates: [],
+            orderIndex: habitsCount,
+          });
           break;
         case 'edit':
+          if (loggedIn) {
+            await updateHabitMutation.mutate(id, { habitRest });
+          }
           editHabit(habit);
           break;
         default:
@@ -125,7 +163,7 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
               <Form.Group as={Col} sm={3} xs={6} controlId="count">
                 <Form.Control
                   type="number"
-                  defaultValue={habit?.count}
+                  defaultValue={habit?.totalCount}
                   onChange={handleInput}
                 />
               </Form.Group>

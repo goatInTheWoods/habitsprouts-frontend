@@ -3,18 +3,15 @@ import React, {
   useEffect,
   Suspense,
   StrictMode,
-  useLayoutEffect,
 } from 'react';
 import ReactDom from 'react-dom/client';
 import {
-  BrowserRouter,
-  Router,
+  BrowserRouter as Router,
   Routes,
   Route,
 } from 'react-router-dom';
 
-import { history } from './history';
-import './axiosConfig';
+import AxiosWrapper from './components/AxiosWrapper';
 // Import our custom CSS
 import './scss/styles.scss';
 
@@ -44,8 +41,17 @@ import LoadingDotsIcon from './components/LoadingDotsIcon';
 import Collapse from 'react-bootstrap/Collapse';
 import styled from 'styled-components';
 import { useAlertStatus, useActions } from './store';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function Main() {
+  // useSetupAxiosInterceptor();
+
+  const queryClient = new QueryClient();
+
   const { closeAlert } = useActions();
   const alertStatus = useAlertStatus();
 
@@ -62,24 +68,6 @@ function Main() {
     };
   }, [alertStatus?.isOn]);
 
-  const CustomRouter = ({ history, ...props }) => {
-    const [state, setState] = useState({
-      action: history.action,
-      location: history.location,
-    });
-
-    useLayoutEffect(() => history.listen(setState), [history]);
-
-    return (
-      <Router
-        {...props}
-        location={state.location}
-        navigationType={state.action}
-        navigator={history}
-      />
-    );
-  };
-
   const Alert = () => {
     return (
       <>
@@ -91,47 +79,51 @@ function Main() {
             />
           </div>
         </Collapse>
-        ;
       </>
     );
   };
 
   return (
-    <CustomRouter history={history}>
-      <Container>
-        <Alert />
-        <Header />
-        <MainContainer>
-          <Suspense fallback={<LoadingDotsIcon />}>
-            <Routes>
-              <Route path="/" element={<HabitList />} />
-              <Route path="/login" element={<Login />} />
-              <Route
-                path="/forgot-password"
-                element={<ForgotPassword />}
-              />
-              <Route
-                path="/reset-password"
-                element={<ResetPassword />}
-              />
-              <Route path="/habits" element={<HabitList />} />
-              <Route path="/about-us" element={<About />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/policy" element={<Terms />} />
-              {/* <Route path="/create-post" element={<CreatePost />} />
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <AxiosWrapper>
+          <Container>
+            <Alert />
+            <Header />
+            <MainContainer>
+              <Suspense fallback={<LoadingDotsIcon />}>
+                <Routes>
+                  <Route path="/" element={<HabitList />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route
+                    path="/forgot-password"
+                    element={<ForgotPassword />}
+                  />
+                  <Route
+                    path="/reset-password"
+                    element={<ResetPassword />}
+                  />
+                  <Route path="/habits" element={<HabitList />} />
+                  <Route path="/about-us" element={<About />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/policy" element={<Terms />} />
+                  {/* <Route path="/create-post" element={<CreatePost />} />
               <Route path="/post/:id" element={<ViewSinglePost />} />
               <Route path="/post/:id/edit" element={<EditPost />} /> */}
-              <Route
-                path="/profile/:username/*"
-                element={<Profile />}
-              />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </MainContainer>
-        <Navbar />
-      </Container>
-    </CustomRouter>
+                  <Route
+                    path="/profile/:username/*"
+                    element={<Profile />}
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </MainContainer>
+            <Navbar />
+          </Container>
+        </AxiosWrapper>
+      </Router>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 

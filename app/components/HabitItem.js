@@ -11,10 +11,10 @@ const HabitItem = ({ habit, onClickTitle, setUpEdit }) => {
   function handleCount() {
     editHabit({
       ...habit,
-      count:
+      totalCount:
         habit.isIncrementCount === true
-          ? habit.count + 1
-          : habit.count - 1,
+          ? habit.totalCount + 1
+          : habit.totalCount - 1,
     });
   }
 
@@ -35,8 +35,8 @@ const HabitItem = ({ habit, onClickTitle, setUpEdit }) => {
         <span className="fw-semibold fs-3">{habit.title}</span>
         <span>
           {habit.isIncrementCount === true
-            ? `${habit.count} ${habit.unit}!`
-            : `${habit.count} ${habit.unit} to go!`}
+            ? `${habit.totalCount} ${habit.unit}!`
+            : `${habit.totalCount} ${habit.unit} to go!`}
         </span>
       </div>
 

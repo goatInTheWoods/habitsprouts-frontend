@@ -1,39 +1,44 @@
+import { useEffect } from 'react';
 import Axios from 'axios';
-import { history } from './history';
 import { useStore } from './store';
 
-const logout = useStore.getState().actions.logout;
-const useInfo = useStore.getState().userInfo;
-
 Axios.defaults.baseURL = process.env.BACKENDURL;
-Axios.interceptors.request.use(
-  config => {
-    const token = useInfo.token;
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);
 
-Axios.interceptors.response.use(
-  response => {
-    return response;
-  },
-  error => {
-    // Any status codes that falls outside the range of 2xx will come here
-    if (error.response && error.response.status === 401) {
-      // Redirect user to login page
-      // navigate('/');
-      logout();
-      history.push('/login?from=401');
-    }
+const useSetupAxiosInterceptors = navigateTo => {
+  const userInfo = useStore(state => state.userInfo);
+  const logout = useStore(state => state.actions.logout);
 
-    // You can also throw the error so that you can handle it in the components
-    // if needed or you can just return a Promise.reject(error) here.
-    return Promise.reject(error);
-  }
-);
+  useEffect(() => {
+    const requestInterceptor = Axios.interceptors.request.use(
+      config => {
+        if (userInfo.token) {
+          config.headers[
+            'Authorization'
+          ] = `Bearer ${userInfo.token}`;
+        }
+        return config;
+      },
+      error => {
+        return Promise.reject(error);
+      }
+    );
+
+    const responseInterceptor = Axios.interceptors.response.use(
+      response => response,
+      error => {
+        if (error.response && error.response.status === 401) {
+          logout();
+          navigateTo('/login?from=401');
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      Axios.interceptors.request.eject(requestInterceptor);
+      Axios.interceptors.response.eject(responseInterceptor);
+    };
+  }, [userInfo.token, logout]);
+};
+
+export default useSetupAxiosInterceptors;

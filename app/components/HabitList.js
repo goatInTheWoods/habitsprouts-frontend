@@ -2,18 +2,32 @@ import React, { useEffect, useState } from 'react';
 import Page from './Page';
 import HabitModal from './HabitModal';
 import HabitItem from './HabitItem';
+import WelcomeCard from './WelcomeCard';
 import Plus from '../images/plus.svg';
 import styled from 'styled-components';
-import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import { useHabits, useUserInfo, useActions } from '../store';
+import {
+  useLoggedIn,
+  useHabits,
+  useUserInfo,
+  useActions,
+} from '../store';
+import { useQuery } from '@tanstack/react-query';
+import { fetchHabits } from '../services/HabitService';
+// import useSetupAxiosInterceptors from '../axiosConfig';
 
 const HabitList = () => {
-  const { changeHabitOrder } = useActions();
+  // useSetupAxiosInterceptors();
+  const { changeHabitOrder, setHabits } = useActions();
+  const loggedIn = useLoggedIn();
   const habits = useHabits();
   const userInfo = useUserInfo();
+
+  const { isLoading, isError, isSuccess, data, error } = useQuery({
+    queryKey: ['habits'],
+    queryFn: fetchHabits,
+    enabled: loggedIn && !!userInfo.token,
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
@@ -21,25 +35,12 @@ const HabitList = () => {
   // state for drag & drop
   const [draggedItemId, setDraggedItemId] = useState(null);
 
-  useEffect(() => {
-    async function fetchHabits() {
-      try {
-        const response = await axios.get('/habits');
-        console.log(response);
-      } catch (e) {
-        console.log('Failed to get habits.');
-      }
-    }
-
-    fetchHabits();
-  }, []);
-
   const initialHabit = {
     id: uuidv4(),
     title: '',
     isIncrementCount: true,
     unit: 'days',
-    count: 0,
+    totalCount: 0,
   };
 
   function openModal(type) {
@@ -84,35 +85,19 @@ const HabitList = () => {
     setDraggedItemId(habitId);
   };
 
-  const WelcomeCard = () => {
-    return (
-      <Container>
-        <Card border="light" className="text-center">
-          <Card.Header
-            as="p"
-            className="bg-light fs-5 text-secondary"
-          >
-            Welcome to the Marathon!
-          </Card.Header>
-          <Card.Body>
-            <Card.Text>
-              I know making a habit is not easy. You are not alone.
-              Start this race by creating a new habit card and
-              tracking your achievements. You'll be amazed at how far
-              you can go. Let's get started!
-            </Card.Text>
-            <Button
-              className="text-white"
-              variant="primary"
-              onClick={() => openModal('add')}
-            >
-              Create New Habit
-            </Button>
-          </Card.Body>
-        </Card>
-      </Container>
-    );
-  };
+  useEffect(() => {
+    if (isSuccess && data) {
+      setHabits(data);
+    }
+  }, [isSuccess, data, setHabits]);
+
+  // if (isLoading) {
+  //   return <span>Loading...</span>;
+  // }
+
+  // if (isError) {
+  //   return <span>Error: {error.message}</span>;
+  // }
 
   return (
     <Page title="HabitList" className="d-flex flex-column">
@@ -137,22 +122,28 @@ const HabitList = () => {
         </AddHabitButton>
       </div>
       <div className="vstack gap-3">
-        {useHabits()?.length === 0 && <WelcomeCard />}
-        {useHabits()?.map(habit => {
-          return (
-            <div
-              key={habit.id}
-              draggable={true}
-              onDragStart={event => handleDragStart(event, habit.id)}
-              onDrop={event => {
-                handleDrop(event, habit.id);
-              }}
-              onDragOver={handleDragOver}
-            >
-              <HabitItem habit={habit} setUpEdit={setUpEdit} />
-            </div>
-          );
-        })}
+        {habits && habits.length === 0 && (
+          <WelcomeCard openModal={openModal} />
+        )}
+
+        {habits &&
+          habits.map(habit => {
+            return (
+              <div
+                key={habit.id}
+                draggable={true}
+                onDragStart={event =>
+                  handleDragStart(event, habit.id)
+                }
+                onDrop={event => {
+                  handleDrop(event, habit.id);
+                }}
+                onDragOver={handleDragOver}
+              >
+                <HabitItem habit={habit} setUpEdit={setUpEdit} />
+              </div>
+            );
+          })}
       </div>
     </Page>
   );
@@ -160,12 +151,6 @@ const HabitList = () => {
 
 const AddHabitButton = styled.button`
   all: unset;
-`;
-
-const Container = styled.div`
-  background: #fff;
-  box-shadow: 0px 6px 8px 0px rgba(0, 0, 0, 0.1);
-  font-size: 14px;
 `;
 
 export default HabitList;
