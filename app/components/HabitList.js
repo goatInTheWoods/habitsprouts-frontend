@@ -8,30 +8,31 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import {
   useLoggedIn,
+  useHabitsCount,
   useHabits,
   useUserInfo,
   useActions,
 } from '../store';
 import { useQuery } from '@tanstack/react-query';
-import { fetchHabits } from '../services/HabitService';
-// import useSetupAxiosInterceptors from '../axiosConfig';
+import { axiosFetchHabits } from '../services/HabitService';
 
 const HabitList = () => {
-  // useSetupAxiosInterceptors();
   const { changeHabitOrder, setHabits } = useActions();
   const loggedIn = useLoggedIn();
   const habits = useHabits();
+  const habitsCount = useHabitsCount();
   const userInfo = useUserInfo();
+  const [allowedToFetch, setAllowedToFetch] = useState(false);
 
   const { isLoading, isError, isSuccess, data, error } = useQuery({
     queryKey: ['habits'],
-    queryFn: fetchHabits,
-    enabled: loggedIn && !!userInfo.token,
+    queryFn: axiosFetchHabits,
+    enabled: allowedToFetch,
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
-  const [targetHabit, setTargetHabit] = useState(null);
+  const [selectedHabit, setSelctedHabit] = useState(null);
   // state for drag & drop
   const [draggedItemId, setDraggedItemId] = useState(null);
 
@@ -41,6 +42,9 @@ const HabitList = () => {
     isIncrementCount: true,
     unit: 'days',
     totalCount: 0,
+    streakCount: 0,
+    completionDates: [],
+    orderIndex: habitsCount,
   };
 
   function openModal(type) {
@@ -52,11 +56,11 @@ const HabitList = () => {
     setIsModalOpen(false);
   }
 
-  function setUpEdit(id) {
+  function editSelectedItem(id) {
     const target = habits.find(habit => {
       return habit.id === id;
     });
-    setTargetHabit(target);
+    setSelctedHabit(target);
     openModal('edit');
   }
 
@@ -86,18 +90,24 @@ const HabitList = () => {
   };
 
   useEffect(() => {
+    if (loggedIn && userInfo.token) {
+      setAllowedToFetch(true);
+    }
+  }, [loggedIn, userInfo.token]);
+
+  useEffect(() => {
     if (isSuccess && data) {
       setHabits(data);
     }
   }, [isSuccess, data, setHabits]);
 
-  // if (isLoading) {
-  //   return <span>Loading...</span>;
-  // }
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
 
-  // if (isError) {
-  //   return <span>Error: {error.message}</span>;
-  // }
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
 
   return (
     <Page title="HabitList" className="d-flex flex-column">
@@ -105,7 +115,7 @@ const HabitList = () => {
         <HabitModal
           type={modalType}
           initialHabit={
-            modalType === 'add' ? initialHabit : targetHabit
+            modalType === 'add' ? initialHabit : selectedHabit
           }
           isOpen={isModalOpen}
           closeModal={closeModal}
@@ -140,7 +150,10 @@ const HabitList = () => {
                 }}
                 onDragOver={handleDragOver}
               >
-                <HabitItem habit={habit} setUpEdit={setUpEdit} />
+                <HabitItem
+                  habit={habit}
+                  editSelectedItem={editSelectedItem}
+                />
               </div>
             );
           })}

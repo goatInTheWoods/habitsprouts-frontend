@@ -22,6 +22,14 @@ export const useStore = create(
             type: 'success',
             text: null,
           },
+          confirmStatus: {
+            isOn: false,
+            isLoading: false,
+            title: null,
+            content: null,
+            submitBtnText: 'confirm',
+            submitFn: () => {},
+          },
           isSearchOpen: false,
           isChatOpen: false,
           unreadChatCount: 0,
@@ -29,12 +37,12 @@ export const useStore = create(
           actions: {
             login: data => {
               set(state => {
-                state.loggedIn = true;
                 state.userInfo = {
                   token: data?.token,
                   username: data?.username,
                   avatar: data?.avatar,
                 };
+                state.loggedIn = !!data?.token;
               });
             },
             logout: () => {
@@ -58,6 +66,24 @@ export const useStore = create(
             closeAlert: () =>
               set(state => {
                 state.alertStatus.isOn = false;
+              }),
+            openConfirm: ({
+              title,
+              content,
+              submitBtnText,
+              submitFn,
+            }) => {
+              set(state => {
+                state.confirmStatus.title = title;
+                state.confirmStatus.content = content;
+                state.confirmStatus.submitBtnText = submitBtnText;
+                state.confirmStatus.submitFn = submitFn;
+                state.confirmStatus.isOn = true;
+              });
+            },
+            closeConfirm: () =>
+              set(state => {
+                state.confirmStatus.isOn = false;
               }),
             openSearch: () =>
               set(state => {
@@ -133,6 +159,8 @@ export const useLoggedIn = () =>
   useStore(state => Boolean(state.userInfo.token));
 export const useAlertStatus = () =>
   useStore(state => state.alertStatus);
+export const useConfirmStatus = () =>
+  useStore(state => state.confirmStatus);
 export const useUserInfo = () => useStore(state => state.userInfo);
 export const useHabits = () => useStore(state => state.habits);
 export const useHabitsCount = () =>

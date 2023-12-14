@@ -5,43 +5,42 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import produce from 'immer';
-import { useLoggedIn, useHabitsCount, useActions } from '../store';
-import { createHabit, updateHabit } from '../services/HabitService';
-import { useMutation } from '@tanstack/react-query';
+import { useLoggedIn, useActions } from '../store';
+import {
+  axiosCreateHabit,
+  axiosUpdateHabit,
+} from '../services/HabitService';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 
 function HabitModal({ type, initialHabit, isOpen, closeModal }) {
   const loggedIn = useLoggedIn();
-  const habitsCount = useHabitsCount();
-  const { addHabit, editHabit } = useActions();
+  const { addHabit, editHabit, closeConfirm } = useActions();
+  const queryClient = useQueryClient();
+  const [habit, setHabit] = useState(initialHabit);
 
   const createHabitMutation = useMutation({
-    mutationFn: createHabit,
-    onSuccess: data => {
-      // Handle successful creation
-      console.log('Habit created:', data);
+    mutationFn: axiosCreateHabit,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
     onError: error => {
-      // Handle error
       console.error('Error creating habit:', error);
     },
   });
 
   const updateHabitMutation = useMutation({
-    mutationFn: updateHabit,
+    mutationFn: axiosUpdateHabit,
     onSuccess: () => {
-      // Handle successful update
-      console.log('Habit updated');
+      queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
     onError: error => {
-      // Handle error
       console.error('Error updating habit:', error);
     },
   });
-  const [habit, setHabit] = useState(initialHabit);
 
   function handleInput({ target }) {
-    setHabit(
-      produce(draft => {
+    setHabit(current =>
+      produce(current, draft => {
         if (target.id === 'totalCount') {
           draft[target.id] = Number(target.value);
         } else if (target.id === 'isIncrementCount') {
@@ -64,22 +63,28 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
     try {
       switch (type) {
         case 'add':
-          if (loggedIn) {
+          if (!loggedIn) {
+            addHabit({
+              ...habit,
+            });
+          } else {
             await createHabitMutation.mutate(habitRest);
           }
-          addHabit({
-            ...habit,
-            streakCount: 0,
-            completionDates: [],
-            orderIndex: habitsCount,
-          });
+          closeConfirm();
           break;
+
         case 'edit':
-          if (loggedIn) {
-            await updateHabitMutation.mutate(id, { habitRest });
+          if (!loggedIn) {
+            editHabit(habit);
+          } else {
+            await updateHabitMutation.mutate({
+              id,
+              habitData: { ...habitRest },
+            });
           }
-          editHabit(habit);
+          closeConfirm();
           break;
+
         default:
           break;
       }
@@ -160,7 +165,12 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
                   onChange={handleInput}
                 />
               </Form.Group>
-              <Form.Group as={Col} sm={3} xs={6} controlId="count">
+              <Form.Group
+                as={Col}
+                sm={3}
+                xs={6}
+                controlId="totalCount"
+              >
                 <Form.Control
                   type="number"
                   defaultValue={habit?.totalCount}

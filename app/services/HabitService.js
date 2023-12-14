@@ -1,21 +1,21 @@
 import axios from 'axios';
 
-export const fetchHabits = async () => {
+export const axiosFetchHabits = async () => {
   const { data } = await axios.get('/habits');
   return data;
 };
 
-export const createHabit = async habitData => {
+export const axiosCreateHabit = async habitData => {
   const { data } = await axios.post('/habit', habitData);
   return data;
 };
 
-export const updateHabit = async (id, habitData) => {
+export const axiosUpdateHabit = async ({ id, habitData }) => {
   const { data } = await axios.patch(`/habits/${id}`, habitData);
   return data;
 };
 
-export const deleteHabit = async (id, habitData) => {
-  const { data } = await axios.delete(`/habits/${id}`, habitData);
+export const axiosDeleteHabit = async id => {
+  const { data } = await axios.delete(`/habits/${id}`);
   return data;
 };

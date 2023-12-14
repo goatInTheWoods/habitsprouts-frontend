@@ -4,10 +4,26 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Check from '../images/check.svg';
 import Dots from '../images/dots.svg';
 import styled from 'styled-components';
-import { useActions } from '../store';
+import { useLoggedIn, useActions } from '../store';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { axiosDeleteHabit } from '../services/HabitService';
 
-const HabitItem = ({ habit, onClickTitle, setUpEdit }) => {
-  const { editHabit, deleteHabit } = useActions();
+const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
+  const loggedIn = useLoggedIn();
+  const { editHabit, deleteHabit, openConfirm, closeConfirm } =
+    useActions();
+  const queryClient = useQueryClient();
+
+  const deleteHabitMutation = useMutation({
+    mutationFn: axiosDeleteHabit,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['habits'] });
+    },
+    onError: error => {
+      console.error('Error creating habit:', error);
+    },
+  });
+
   function handleCount() {
     editHabit({
       ...habit,
@@ -18,8 +34,24 @@ const HabitItem = ({ habit, onClickTitle, setUpEdit }) => {
     });
   }
 
+  async function checkLoggedInAndDelete(id) {
+    if (!loggedIn) {
+      deleteHabit(id);
+    } else {
+      await deleteHabitMutation.mutate(id);
+    }
+    closeConfirm();
+  }
+
   function handleDelete(id) {
-    deleteHabit(id);
+    openConfirm({
+      title: 'Delete Your Habit',
+      content: `
+            <p>Are you sure you want to delete this habit?</p>
+        `,
+      submitBtnText: 'Delete account',
+      submitFn: () => checkLoggedInAndDelete(id),
+    });
   }
 
   return (
@@ -50,7 +82,7 @@ const HabitItem = ({ habit, onClickTitle, setUpEdit }) => {
         <Dropdown.Item
           as="button"
           onClick={() => {
-            setUpEdit(habit.id);
+            editSelectedItem(habit.id);
           }}
         >
           Edit

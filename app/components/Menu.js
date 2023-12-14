@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import ListGroup from 'react-bootstrap/ListGroup';
-import ConfirmationModal from './ConfirmationModal';
 import axios from 'axios';
 import { useUserInfo, useActions } from '../store';
 
 function Menu({ isOpen, close }) {
-  const { logout, openAlert } = useActions();
+  const { logout, openAlert, openConfirm, closeConfirm } =
+    useActions();
   const userInfo = useUserInfo();
   const menuItems = [
     { name: 'My Acount' },
@@ -19,14 +19,43 @@ function Menu({ isOpen, close }) {
     { name: 'Edit my info' },
     { name: 'Log out', onClick: handleLogOut },
     { name: 'Log out from all devices', onClick: handleLogOutAll },
-    { name: 'Delete account', onClick: handleDeletingUserModal },
+    { name: 'Delete account', onClick: handleDeletingUser },
   ];
 
-  const [isDeletingUserModalOpen, setIsDeletingUserModalOpen] =
-    useState(false);
+  async function deleteUser() {
+    try {
+      const response = await axios.delete('/users/me');
+      if (response.status === 200) {
+        closeConfirm();
+        logout();
+        openAlert({
+          type: 'success',
+          text: 'Your account has been removed. See you next time!',
+        });
+      }
+    } catch (e) {
+      alert('Something went wrong. Try again.');
+    }
+  }
 
-  function handleDeletingUserModal() {
-    setIsDeletingUserModalOpen(!isDeletingUserModalOpen);
+  function handleDeletingUser() {
+    openConfirm({
+      title: 'Delete Your Account',
+      content: `
+            <p>Sorry to see you go😢 Before you proceed:</p>
+            <ul>
+              <li>
+                All of your personal information will be permanently
+                deleted.
+              </li>
+              <li>Your habit tracking data will be lost.</li>
+              <li> This action is irreversible.</li>
+            </ul>
+            <p>Are you sure you want to delete your account?</p>
+        `,
+      submitBtnText: 'Delete account',
+      submitFn: deleteUser,
+    });
   }
 
   async function handleLogOut() {
@@ -60,47 +89,8 @@ function Menu({ isOpen, close }) {
     }
   }
 
-  async function handleDeletingUser() {
-    try {
-      const response = await axios.delete('/users/me');
-      if (response.status === 200) {
-        handleDeletingUserModal();
-        logout();
-        openAlert({
-          type: 'success',
-          text: 'Your account has been removed. See you next time!',
-        });
-      }
-    } catch (e) {
-      alert('Something went wrong. Try again.');
-    }
-  }
-
   return (
     <>
-      {isDeletingUserModalOpen && (
-        <ConfirmationModal
-          isOpen={isDeletingUserModalOpen}
-          close={handleDeletingUserModal}
-          title="Delete Your Account"
-          content={
-            <>
-              <p>Sorry to see you go😢 Before you proceed:</p>
-              <ul>
-                <li>
-                  All of your personal information will be permanently
-                  deleted.
-                </li>
-                <li>Your habit tracking data will be lost.</li>
-                <li> This action is irreversible.</li>
-              </ul>
-              <p>Are you sure you want to delete your account?</p>
-            </>
-          }
-          submitBtnTxt="Delete account"
-          handleSubmit={handleDeletingUser}
-        />
-      )}
       <Offcanvas show={isOpen} onHide={close} placement="end">
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>HabitCount</Offcanvas.Title>

@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  Suspense,
-  StrictMode,
-} from 'react';
+import React, { useEffect, Suspense, StrictMode } from 'react';
 import ReactDom from 'react-dom/client';
 import {
   BrowserRouter as Router,
@@ -37,6 +32,7 @@ import AlertMessages from './components/AlertMessages';
 import Profile from './components/Profile';
 // import EditPost from './components/EditPost';
 import NotFound from './components/NotFound';
+import ConfirmationModal from './components/ConfirmationModal';
 import LoadingDotsIcon from './components/LoadingDotsIcon';
 import Collapse from 'react-bootstrap/Collapse';
 import styled from 'styled-components';
@@ -48,8 +44,6 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function Main() {
-  // useSetupAxiosInterceptor();
-
   const queryClient = new QueryClient();
 
   const { closeAlert } = useActions();
@@ -92,6 +86,7 @@ function Main() {
             <Header />
             <MainContainer>
               <Suspense fallback={<LoadingDotsIcon />}>
+                <ConfirmationModal />
                 <Routes>
                   <Route path="/" element={<HabitList />} />
                   <Route path="/login" element={<Login />} />
