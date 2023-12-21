@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import HeaderLoggedOut from './HeaderLoggedOut';
 import HeaderLoggedIn from './HeaderLoggedIn';
-import Logo from '../images/logo.svg';
-import { useLoggedIn } from '../store';
+import Logo from '../../images/logo.svg';
+import { useLoggedIn } from '../../store/store';
 
 function Header(props) {
   const loggedIn = useLoggedIn();

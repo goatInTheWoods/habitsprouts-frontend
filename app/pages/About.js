@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import Container from './Container';
-import Page from './Page';
+import React from 'react';
+import Page from '@/components/common/Page';
 
 const About = () => {
   return (

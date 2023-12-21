@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import Page from './Page';
+import Page from './common/Page';
 import { useParams, NavLink, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import ProfilePosts from './ProfilePosts';
 import ProfileFollowers from './ProfileFollowers';
 import ProfileFollowing from './ProfileFollowing';
 import { useImmer } from 'use-immer';
-import { useLoggedIn, useUserInfo } from '../store';
+import { useLoggedIn, useUserInfo } from '../store/store';
 
 function Profile() {
   const loggedIn = useLoggedIn();

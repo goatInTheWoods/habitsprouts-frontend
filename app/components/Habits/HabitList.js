@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Page from './Page';
-import HabitModal from './HabitModal';
-import HabitItem from './HabitItem';
-import WelcomeCard from './WelcomeCard';
-import Plus from '../images/plus.svg';
+import Page from '@/components/common/Page';
+import HabitModal from '@/components/Habits/HabitModal';
+import HabitItem from '@/components/Habits/HabitItem';
+import WelcomeCard from '@/components/Habits/WelcomeCard';
+import Plus from '../../images/plus.svg';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -12,9 +12,16 @@ import {
   useHabits,
   useUserInfo,
   useActions,
-} from '../store';
-import { useQuery } from '@tanstack/react-query';
-import { axiosFetchHabits } from '../services/HabitService';
+} from '@/store/store';
+import {
+  useQuery,
+  useQueryClient,
+  useMutation,
+} from '@tanstack/react-query';
+import {
+  axiosFetchHabits,
+  axiosUpdateHabit,
+} from '@/services/HabitService';
 
 const HabitList = () => {
   const { changeHabitOrder, setHabits } = useActions();
@@ -24,10 +31,22 @@ const HabitList = () => {
   const userInfo = useUserInfo();
   const [allowedToFetch, setAllowedToFetch] = useState(false);
 
+  const queryClient = useQueryClient();
   const { isLoading, isError, isSuccess, data, error } = useQuery({
     queryKey: ['habits'],
     queryFn: axiosFetchHabits,
     enabled: allowedToFetch,
+    refetchOnWindowFocus: true,
+  });
+
+  const updateHabitMutation = useMutation({
+    mutationFn: axiosUpdateHabit,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['habits'] });
+    },
+    onError: error => {
+      console.error('Error updating habit:', error);
+    },
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,8 +61,7 @@ const HabitList = () => {
     isIncrementCount: true,
     unit: 'days',
     totalCount: 0,
-    streakCount: 0,
-    completionDates: [],
+    dailyCountLimit: 1,
     orderIndex: habitsCount,
   };
 
@@ -121,11 +139,11 @@ const HabitList = () => {
           closeModal={closeModal}
         />
       )}
-      <h1 className="text-primary">
+      {/* <h1 className="text-primary">
         {userInfo?.username
           ? userInfo.username + `'s Habits`
           : 'My Habits'}
-      </h1>
+      </h1> */}
       <div className="d-flex flex-row-reverse mb-3 text-primary">
         <AddHabitButton onClick={() => openModal('add')}>
           <Plus />

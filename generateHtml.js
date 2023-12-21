@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import fs from 'fs';
-import Header from './app/components/Header';
-import Navbar from './app/components/Navbar';
-import LoadingDotsIcon from './app/components/LoadingDotsIcon';
+import Header from './app/components/Header/Header';
+import Navbar from './app/components/Footer/Navbar';
+import LoadingDotsIcon from './app/components/common/LoadingDotsIcon';
 import { StaticRouter as Router } from 'react-router-dom/server';
 
 function Shell() {

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Page from './Page';
+import Page from '../common/Page';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import AccountInfoForm from './AccountInfoForm';
-import { useActions } from '../store';
+import { useActions } from '../../store/store';
 
 const ResetPassword = () => {
   const { login, openAlert } = useActions();

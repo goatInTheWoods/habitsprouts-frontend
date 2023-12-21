@@ -15,6 +15,11 @@ export const axiosUpdateHabit = async ({ id, habitData }) => {
   return data;
 };
 
+export const axiosCountHabit = async id => {
+  const { data } = await axios.patch(`/habits/count/${id}`);
+  return data;
+};
+
 export const axiosDeleteHabit = async id => {
   const { data } = await axios.delete(`/habits/${id}`);
   return data;

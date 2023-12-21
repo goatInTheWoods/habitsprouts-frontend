@@ -5,11 +5,11 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import produce from 'immer';
-import { useLoggedIn, useActions } from '../store';
+import { useLoggedIn, useActions } from '@/store/store';
 import {
   axiosCreateHabit,
   axiosUpdateHabit,
-} from '../services/HabitService';
+} from '@/services/HabitService';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 
 function HabitModal({ type, initialHabit, isOpen, closeModal }) {
@@ -41,7 +41,10 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
   function handleInput({ target }) {
     setHabit(current =>
       produce(current, draft => {
-        if (target.id === 'totalCount') {
+        if (
+          target.id === 'totalCount' ||
+          target.id === 'dailyCountLimit'
+        ) {
           draft[target.id] = Number(target.value);
         } else if (target.id === 'isIncrementCount') {
           draft[target.id] = target.value === 'true'; // compare string and assign boolean
@@ -129,7 +132,27 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
                 defaultValue={habit?.title}
               />
             </Form.Group>
-            <Row className="row-gap-3">
+            <Row className="row-gap-3 mb-2">
+              <Col
+                as="span"
+                className="d-flex align-items-center"
+                xs={7}
+                sm="auto"
+              >
+                Starts from day
+              </Col>
+              <Form.Group
+                as={Col}
+                sm={3}
+                xs={6}
+                controlId="totalCount"
+              >
+                <Form.Control
+                  type="number"
+                  defaultValue={habit?.totalCount}
+                  onChange={handleInput}
+                />
+              </Form.Group>
               <Form.Group
                 className="pe-0"
                 as={Col}
@@ -145,51 +168,55 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
                   defaultValue={habit?.isIncrementCount}
                 >
                   <option defaultValue value="true">
-                    + increase
+                    + Count Up
                   </option>
-                  <option value="false">- decrease </option>
+                  <option value="false">- Count Down </option>
                 </select>
+              </Form.Group>
+            </Row>
+            <Row className="row-gap-3">
+              <Col
+                as="span"
+                className="d-flex align-items-center"
+                // xs={7}
+                sm="auto"
+              >
+                Count this item
+              </Col>
+              <Form.Group
+                as={Col}
+                sm={3}
+                // xs={6}
+                controlId="dailyCountLimit"
+              >
+                <Form.Control
+                  type="number"
+                  defaultValue={habit?.dailyCountLimit}
+                  onChange={handleInput}
+                />
               </Form.Group>
               <Col
                 as="span"
                 className="d-flex align-items-center pe-0 "
-                xs={7}
+                // xs={7}
                 sm="auto"
               >
-                Starts from
+                time{habit?.dailyCountLimit > 1 ? 's' : ''} per day
               </Col>
-              <Form.Group as={Col} sm={3} xs={6} controlId="unit">
-                <Form.Control
-                  type="text"
-                  defaultValue={habit?.unit}
-                  onChange={handleInput}
-                />
-              </Form.Group>
-              <Form.Group
-                as={Col}
-                sm={3}
-                xs={6}
-                controlId="totalCount"
-              >
-                <Form.Control
-                  type="number"
-                  defaultValue={habit?.totalCount}
-                  onChange={handleInput}
-                />
-              </Form.Group>
             </Row>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Cancel
           </Button>
           <Button
             type="submit"
             variant="primary"
             onClick={handleSubmit}
           >
-            Save Changes
+            <i className="bi bi-check"></i>
+            Save
           </Button>
         </Modal.Footer>
       </Modal>

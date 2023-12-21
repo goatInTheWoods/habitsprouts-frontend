@@ -2,7 +2,7 @@ import React from 'react';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios';
-import { useUserInfo, useActions } from '../store';
+import { useUserInfo, useActions } from '../../store/store';
 
 function Menu({ isOpen, close }) {
   const { logout, openAlert, openConfirm, closeConfirm } =

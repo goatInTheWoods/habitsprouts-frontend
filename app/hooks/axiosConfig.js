@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Axios from 'axios';
-import { useStore } from './store';
+import { useStore } from '@/store/store';
 
 Axios.defaults.baseURL = process.env.BACKENDURL;
 

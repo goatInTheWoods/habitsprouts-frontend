@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import AccountInfoForm from './AccountInfoForm';
 import axios from 'axios';
-import { useActions } from '../store';
+import { useActions } from '../../store/store';
 
 function Signup({ isOpen, close }) {
   const { login, openAlert } = useActions();

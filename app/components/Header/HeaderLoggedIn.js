@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
-import Bars from '../images/bars.svg';
+import Bars from '../../images/bars.svg';
 import Button from 'react-bootstrap/Button';
 import Menu from './Menu';
-import User from '../images/user.svg';
-import { useUserInfo } from '../store';
+import User from '../../images/user.svg';
+import { useUserInfo } from '../../store/store';
 
 function HeaderLoggedIn() {
   const userInfo = useUserInfo();

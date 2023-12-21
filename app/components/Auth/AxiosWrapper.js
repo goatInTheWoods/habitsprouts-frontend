@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useSetupAxiosInterceptors from '../axiosConfig';
+import useSetupAxiosInterceptors from '@/hooks/axiosConfig';
 
 const AxiosWrapper = ({ children }) => {
   const navigateTo = useNavigate();

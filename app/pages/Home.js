@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import Page from './Page';
 import { useImmer } from 'use-immer';
 import axios from 'axios';
-import LoadingDotsIcon from './LoadingDotsIcon';
-import Post from './Post';
-import { useUserInfo } from '../store';
+import LoadingDotsIcon from '@/components/common/LoadingDotsIcon';
+import Post from '@/components/Post';
+import { useUserInfo } from '@/store/store';
 
 function Home() {
   const [state, setState] = useImmer({

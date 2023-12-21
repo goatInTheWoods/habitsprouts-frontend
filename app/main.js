@@ -6,37 +6,37 @@ import {
   Route,
 } from 'react-router-dom';
 
-import AxiosWrapper from './components/AxiosWrapper';
+import AxiosWrapper from '@/components/Auth/AxiosWrapper';
 // Import our custom CSS
 import './scss/styles.scss';
 
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
 
-import Header from './components/Header';
-import Login from './components/Login';
+import Header from '@/components/Header/Header';
+import Login from '@/pages/Login';
 // import Home from './components/Home';
-import Navbar from './components/Navbar';
-import HabitList from './components/HabitList';
-import About from './components/About';
-import Terms from './components/Terms';
-import ResetPassword from './components/ResetPassword';
-import ForgotPassword from './components/ForgotPassword';
+import Navbar from '@/components/Footer/Navbar';
+import HabitList from '@/components/Habits/HabitList';
+import About from '@/pages/About';
+import Terms from '@/pages/Terms';
+import ResetPassword from '@/components/Auth/ResetPassword';
+import ForgotPassword from '@/components/Auth/ForgotPassword';
 // const CreatePost = React.lazy(() =>
 //   import('./components/CreatePost')
 // );
 // const ViewSinglePost = React.lazy(() =>
 //   import('./components/ViewSinglePost')
 // );
-import AlertMessages from './components/AlertMessages';
-import Profile from './components/Profile';
+import AlertMessages from '@/components/common/AlertMessages';
+import Profile from '@/components/Profile';
 // import EditPost from './components/EditPost';
-import NotFound from './components/NotFound';
-import ConfirmationModal from './components/ConfirmationModal';
-import LoadingDotsIcon from './components/LoadingDotsIcon';
+import NotFound from '@/pages/NotFound';
+import ConfirmationModal from '@/components/common/Modal/ConfirmationModal';
+import LoadingDotsIcon from '@/components/common/LoadingDotsIcon';
 import Collapse from 'react-bootstrap/Collapse';
 import styled from 'styled-components';
-import { useAlertStatus, useActions } from './store';
+import { useAlertStatus, useActions } from '@/store/store';
 import {
   QueryClient,
   QueryClientProvider,

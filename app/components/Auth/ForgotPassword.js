@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Page from './Page';
+import Page from '../common/Page';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';

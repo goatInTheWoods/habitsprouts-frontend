@@ -83,6 +83,11 @@ config = {
       },
     ],
   },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'app/'),
+    },
+  },
 };
 
 if (currentTask == 'webpackDev' || currentTask == 'dev') {

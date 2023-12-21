@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Page from './Page';
+import Page from '@/components/common/Page';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
-import Signup from './Signup';
-import { useActions } from '../store';
+import Signup from '@/components/Auth/Signup';
+import { useActions } from '@/store/store';
 
 const Login = () => {
   const { login, openAlert } = useActions();
@@ -44,18 +44,18 @@ const Login = () => {
   }
 
   useEffect(() => {
-    if (window.google && document.getElementById('google')) {
-      const google = window.google;
-      google.accounts.id.initialize({
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse,
-      });
-      google.accounts.id.renderButton(
-        document.getElementById('google'),
-        { theme: 'filled_blue', size: 'medium', text: 'google' } // customization attributes
-      );
-      google.accounts.id.prompt(); // also display the One Tap dialog
-    }
+    // if (window.google && document.getElementById('google')) {
+    const google = window.google;
+    google.accounts.id.initialize({
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      callback: handleCredentialResponse,
+    });
+    google.accounts.id.renderButton(
+      document.getElementById('google'),
+      { theme: 'filled_blue', size: 'medium', text: 'google' } // customization attributes
+    );
+    google.accounts.id.prompt(); // also display the One Tap dialog
+    // }
   }, []);
 
   async function handleSubmit(e) {
