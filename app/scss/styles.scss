@@ -7,7 +7,7 @@
 
 $primary: #C0DA1F;
 $white: #FBFBFB;
-
+$greenGrey: #71764F;
 // // merge with existing $theme-colors map
 // $theme-colors: map-merge($theme-colors, ("primary": $primary));
 
@@ -17,6 +17,11 @@ $white: #FBFBFB;
 
 .custom-pointer {
   cursor: pointer;
+}
+
+.modal-center {
+  display: flex;
+  justify-content: center;
 }
 
 a:-webkit-any-link {

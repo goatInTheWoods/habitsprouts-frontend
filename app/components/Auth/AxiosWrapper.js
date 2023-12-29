@@ -2,11 +2,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSetupAxiosInterceptors from '@/hooks/axiosConfig';
 
-const AxiosWrapper = ({ children }) => {
+// useNavigate can only be used inside router,
+// so I make this wrapper to use useNavigate in axios interceptor.
+function AxiosWrapper({ children }) {
   const navigateTo = useNavigate();
   useSetupAxiosInterceptors(navigateTo);
 
   return <>{children}</>;
-};
+}
 
 export default AxiosWrapper;

@@ -1,0 +1,19 @@
+/* ModalStyles.css */
+
+.custom-modal .modal-dialog {
+  margin: 20px;
+  padding-left: 0;
+  max-width: 100%;
+}
+
+@media (min-width: 992px) {
+  .custom-modal .modal-dialog {
+    max-width: 920px;
+  }
+}
+
+.custom-modal .modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - (1.75rem * 2));
+}

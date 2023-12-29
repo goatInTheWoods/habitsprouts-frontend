@@ -1,0 +1,33 @@
+.rdp {
+  width: 100%; // DayPicker takes 100% width of its parent
+
+  // Base styles
+  font-size: 0.85rem; // Default font size
+  --rdp-cell-size: 2.5rem; // Default cell size using rem
+
+  // Bootstrap breakpoints
+  @media (min-width: 576px) { // sm
+    --rdp-cell-size: 3.5rem;
+  }
+
+  @media (min-width: 768px) { // md
+    --rdp-cell-size: 4rem;
+  }
+
+  @media (min-width: 992px) { // lg
+    --rdp-cell-size: 4.5rem;
+  }
+
+  @media (min-width: 1200px) { // xl
+    --rdp-cell-size: 5rem;
+  }
+
+  @media (min-width: 1400px) { // xxl
+    --rdp-cell-size: 5.5rem;
+  }
+}
+
+.rdp-months {
+  display: flex;
+  justify-content: center;
+}

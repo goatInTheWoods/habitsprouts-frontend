@@ -1,11 +1,9 @@
 import React from 'react';
-
 import styled from 'styled-components';
 import { useLoggedIn, useActions } from '@/store/store';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import {
   axiosDeleteHabit,
-  axiosUpdateHabit,
   axiosCountHabit,
 } from '@/services/HabitService';
 import HabitCountButton from '@/components/Habits/HaibtCountButton';

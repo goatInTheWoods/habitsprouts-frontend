@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Page from '@/components/common/Page';
-import HabitModal from '@/components/Habits/HabitModal';
+import HabitInfoModal from '@/components/Habits/HabitInfoModal';
+import HabitStatisticsModal from '@/components/Habits/HabitStatisticsModal';
 import HabitItem from '@/components/Habits/HabitItem';
 import WelcomeCard from '@/components/Habits/WelcomeCard';
 import Plus from '../../images/plus.svg';
@@ -49,7 +50,8 @@ const HabitList = () => {
     },
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isStatModalOpen, setIsStatModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [selectedHabit, setSelctedHabit] = useState(null);
   // state for drag & drop
@@ -65,13 +67,21 @@ const HabitList = () => {
     orderIndex: habitsCount,
   };
 
-  function openModal(type) {
+  function openInfoModal(type) {
     setModalType(type);
-    setIsModalOpen(true);
+    setIsInfoModalOpen(true);
   }
 
-  function closeModal() {
-    setIsModalOpen(false);
+  function closeInfoModal() {
+    setIsInfoModalOpen(false);
+  }
+
+  function openStatModal() {
+    setIsStatModalOpen(true);
+  }
+
+  function closeStatModal() {
+    setIsStatModalOpen(false);
   }
 
   function editSelectedItem(id) {
@@ -79,7 +89,15 @@ const HabitList = () => {
       return habit.id === id;
     });
     setSelctedHabit(target);
-    openModal('edit');
+    openInfoModal('edit');
+  }
+
+  function handleStatModal(id) {
+    const target = habits.find(habit => {
+      return habit.id === id;
+    });
+    setSelctedHabit(target);
+    openStatModal();
   }
 
   const handleDrop = (event, habitId) => {
@@ -129,14 +147,21 @@ const HabitList = () => {
 
   return (
     <Page title="HabitList" className="d-flex flex-column">
-      {isModalOpen && (
-        <HabitModal
+      {isInfoModalOpen && (
+        <HabitInfoModal
           type={modalType}
           initialHabit={
             modalType === 'add' ? initialHabit : selectedHabit
           }
-          isOpen={isModalOpen}
-          closeModal={closeModal}
+          isOpen={isInfoModalOpen}
+          closeModal={closeInfoModal}
+        />
+      )}
+      {isStatModalOpen && (
+        <HabitStatisticsModal
+          habitId={selectedHabit.id}
+          isOpen={isStatModalOpen}
+          closeModal={closeStatModal}
         />
       )}
       {/* <h1 className="text-primary">
@@ -145,13 +170,13 @@ const HabitList = () => {
           : 'My Habits'}
       </h1> */}
       <div className="d-flex flex-row-reverse mb-3 text-primary">
-        <AddHabitButton onClick={() => openModal('add')}>
+        <AddHabitButton onClick={() => openInfoModal('add')}>
           <Plus />
         </AddHabitButton>
       </div>
       <div className="vstack gap-3">
         {habits && habits.length === 0 && (
-          <WelcomeCard openModal={openModal} />
+          <WelcomeCard openModal={openInfoModal} />
         )}
 
         {habits &&
@@ -170,6 +195,7 @@ const HabitList = () => {
               >
                 <HabitItem
                   habit={habit}
+                  onClickTitle={() => handleStatModal(habit.id)}
                   editSelectedItem={editSelectedItem}
                 />
               </div>

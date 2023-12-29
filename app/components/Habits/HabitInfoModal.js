@@ -12,7 +12,7 @@ import {
 } from '@/services/HabitService';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 
-function HabitModal({ type, initialHabit, isOpen, closeModal }) {
+function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
   const loggedIn = useLoggedIn();
   const { addHabit, editHabit, closeConfirm } = useActions();
   const queryClient = useQueryClient();
@@ -151,6 +151,8 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
                   type="number"
                   defaultValue={habit?.totalCount}
                   onChange={handleInput}
+                  // disabled={type === 'edit' ? true : false}
+                  // readOnly={type === 'edit' ? true : false}
                 />
               </Form.Group>
               <Form.Group
@@ -166,6 +168,7 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
                   aria-label="Default select example"
                   onChange={handleInput}
                   defaultValue={habit?.isIncrementCount}
+                  // disabled={type === 'edit' ? true : false}
                 >
                   <option defaultValue value="true">
                     + Count Up
@@ -174,7 +177,7 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
                 </select>
               </Form.Group>
             </Row>
-            <Row className="row-gap-3">
+            {/* <Row className="row-gap-3">
               <Col
                 as="span"
                 className="d-flex align-items-center"
@@ -203,7 +206,7 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
               >
                 time{habit?.dailyCountLimit > 1 ? 's' : ''} per day
               </Col>
-            </Row>
+            </Row> */}
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -224,4 +227,4 @@ function HabitModal({ type, initialHabit, isOpen, closeModal }) {
   );
 }
 
-export default HabitModal;
+export default HabitInfoModal;

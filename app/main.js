@@ -13,6 +13,9 @@ import './scss/styles.scss';
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
 
+import 'react-day-picker/dist/style.css';
+import '@/scss/day-picker.scss';
+
 import Header from '@/components/Header/Header';
 import Login from '@/pages/Login';
 // import Home from './components/Home';
@@ -82,11 +85,11 @@ function Main() {
       <Router>
         <AxiosWrapper>
           <Container>
+            <ConfirmationModal />
             <Alert />
             <Header />
             <MainContainer>
               <Suspense fallback={<LoadingDotsIcon />}>
-                <ConfirmationModal />
                 <Routes>
                   <Route path="/" element={<HabitList />} />
                   <Route path="/login" element={<Login />} />

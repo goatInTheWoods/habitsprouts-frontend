@@ -28,7 +28,7 @@ export const useStore = create(
             title: null,
             content: null,
             submitBtnText: 'confirm',
-            submitFn: () => {},
+            submitFn: null,
           },
           isSearchOpen: false,
           isChatOpen: false,
@@ -84,6 +84,10 @@ export const useStore = create(
             closeConfirm: () =>
               set(state => {
                 state.confirmStatus.isOn = false;
+                state.confirmStatus.title = null;
+                state.confirmStatus.content = null;
+                state.confirmStatus.submitBtnText = 'confirm';
+                state.confirmStatus.submitFn = null;
               }),
             openSearch: () =>
               set(state => {

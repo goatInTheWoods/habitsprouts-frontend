@@ -4,6 +4,7 @@ import { useStore } from '@/store/store';
 
 Axios.defaults.baseURL = process.env.BACKENDURL;
 
+// This useSetupAxiosInterceptors is used in AxiosWrapper.
 const useSetupAxiosInterceptors = navigateTo => {
   const userInfo = useStore(state => state.userInfo);
   const logout = useStore(state => state.actions.logout);
@@ -23,6 +24,7 @@ const useSetupAxiosInterceptors = navigateTo => {
       }
     );
 
+    // users will be redirected to login page whenever they get 401 error
     const responseInterceptor = Axios.interceptors.response.use(
       response => response,
       error => {
