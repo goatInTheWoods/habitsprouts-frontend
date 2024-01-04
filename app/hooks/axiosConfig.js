@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Axios from 'axios';
 import { useStore } from '@/store/store';
+import { getUserTimeZone } from '@/utils/util';
 
 Axios.defaults.baseURL = process.env.BACKENDURL;
 
@@ -17,6 +18,11 @@ const useSetupAxiosInterceptors = navigateTo => {
             'Authorization'
           ] = `Bearer ${userInfo.token}`;
         }
+
+        if (config.url && config.url.startsWith('/habits')) {
+          config.headers['User-Time-Zone'] = getUserTimeZone();
+        }
+
         return config;
       },
       error => {

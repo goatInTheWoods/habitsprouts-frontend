@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import styled from 'styled-components';
 import X from '../../images/x.svg';
@@ -15,10 +15,20 @@ import { axiosFetchSingleHabit } from '@/services/HabitService';
 import { DayPicker } from 'react-day-picker';
 
 function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
+  const [days, setDays] = useState([]);
   const { isLoading, isError, isSuccess, data, error } = useQuery({
     queryKey: ['singleHabit'],
     queryFn: () => axiosFetchSingleHabit(habitId),
   });
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      const dateObjects = data.completionDates.map(
+        dateString => new Date(dateString)
+      );
+      setDays(dateObjects);
+    }
+  }, [data, isSuccess]);
 
   if (isLoading) {
     return <span>Loading...</span>;
@@ -65,7 +75,9 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
                     {data.totalCount}
                   </span>
                 )}
-                <span className="text-primary opacity-50">days</span>
+                <span className="text-color-greenGrey opacity-50">
+                  days
+                </span>
               </Stack>
             </StatContainer>
             <StatContainer xs={8}>
@@ -110,7 +122,13 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
         </div>
         <hr />
         <DayPickerWrapper>
-          <DayPicker />
+          <DayPicker
+            mode="multiple"
+            selected={days}
+            modifiersClassNames={{
+              selected: 'my-selected',
+            }}
+          />
         </DayPickerWrapper>
       </Modal.Body>
     </StyledModal>
@@ -119,33 +137,29 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
 
 const StyledModal = styled(Modal)`
   .modal-dialog {
-    display: flex; // Enable flex layout
-    justify-content: center; // Center horizontally
-    align-items: center; // Center vertically
-    margin: auto; // Auto margin for centering
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
 
-    height: 100%; // Full height
-    padding: 0; // Remove padding
-    max-width: none; // Remove max-width
+    height: 100%;
+    padding: 0;
+    max-width: none;
 
     @media (min-width: 576px) {
-      // Adjust for small devices
-      max-width: 500px; // Set a max-width for small devices
+      max-width: 500px;
     }
 
     @media (min-width: 768px) {
-      // Adjust for medium devices
-      max-width: 720px; // Set a max-width for medium devices
+      max-width: 720px;
     }
 
     @media (min-width: 992px) {
-      // Adjust for large devices
-      max-width: 920px; // Set a max-width for large devices
+      max-width: 920px;
     }
 
     @media (min-width: 1200px) {
-      // Adjust for extra large devices
-      max-width: 1140px; // Set a max-width for extra large devices
+      max-width: 1140px;
     }
   }
 
@@ -153,9 +167,9 @@ const StyledModal = styled(Modal)`
     border-radius: 26px 26px 0px 0px;
     background: #fff;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.09);
-    width: 100%; // Full width
-    max-height: 100%; // Full height
-    overflow-y: auto; // Scroll if content is large
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
   }
 
   .modal-header,
@@ -187,6 +201,10 @@ const DayPickerWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  .my-selected {
+    color: red;
+  }
 `;
 
 export default HabitStatisticsModal;

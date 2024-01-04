@@ -23,9 +23,8 @@ const Login = () => {
 
   async function handleCredentialResponse(response) {
     const token = response.credential;
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    const res = await axios.post('/api/auth', { token, timezone });
+    const res = await axios.post('/api/auth', { token });
     if (res.data) {
       login(res.data);
       openAlert({

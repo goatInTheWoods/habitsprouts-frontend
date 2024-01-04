@@ -46,7 +46,6 @@ function Signup({ isOpen, close }) {
           username: accountInfo.username,
           email: accountInfo.email,
           password: accountInfo.password,
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
         { cancelToken: ourRequest.token }
       );

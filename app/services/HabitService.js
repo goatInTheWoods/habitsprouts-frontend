@@ -5,8 +5,8 @@ export const axiosFetchHabits = async () => {
   return data;
 };
 
-export const axiosFetchSingleHabit = async id => {
-  const { data } = await axios.get(`/habits/${id}`);
+export const axiosFetchSingleHabit = async habitId => {
+  const { data } = await axios.get(`/habits/${habitId}`);
   return data;
 };
 
