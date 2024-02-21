@@ -11,15 +11,41 @@ import {
   useQueryClient,
   useMutation,
 } from '@tanstack/react-query';
-import { axiosFetchSingleHabit } from '@/services/HabitService';
+import {
+  axiosFetchSingleHabit,
+  axiosUpdateHabit,
+} from '@/services/HabitService';
 import { DayPicker } from 'react-day-picker';
+import { getUserTimeZone, convertTimezone } from '@/utils/util';
 
 function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
   const [days, setDays] = useState([]);
+  const queryClient = useQueryClient();
   const { isLoading, isError, isSuccess, data, error } = useQuery({
     queryKey: ['singleHabit'],
     queryFn: () => axiosFetchSingleHabit(habitId),
   });
+
+  const updateCompleteDate = useMutation({
+    mutationFn: axiosUpdateHabit,
+    onSuccess: () => {
+      console.log('good');
+      queryClient.invalidateQueries({ queryKey: ['singleHabit'] });
+    },
+    onError: error => {
+      console.error('Error updating habit:', error);
+    },
+  });
+
+  const handleDayClick = date => {
+    updateCompleteDate.mutate({
+      id: habitId,
+      habitData: {
+        ...data,
+        selectedDate: date,
+      },
+    });
+  };
 
   useEffect(() => {
     if (isSuccess && data) {
@@ -86,13 +112,19 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
                   <span className="text-color-greenGrey">
                     Current Streak
                   </span>
-                  {data && <span>{data.streakCount}</span>}
+                  {data && (
+                    <span className="fw-bold">
+                      {data.currentStreak}
+                    </span>
+                  )}
                 </div>
                 <div className="w-100 d-flex justify-content-between">
                   <span className="text-color-greenGrey">
                     Best Streak
                   </span>
-                  {data && <span>{data.bestStreakCount}</span>}
+                  {data && (
+                    <span className="fw-bold">{data.bestStreak}</span>
+                  )}
                 </div>
               </div>
             </StatContainer>
@@ -101,20 +133,26 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
           <Row>
             <StatContainer>
               <div className="w-100 d-flex flex-column px-3 pb-1">
-                <div className="text-center fw-bold pb-2 text-color-greenGrey">
-                  Times completed
+                <div className="text-center fw-bold pb-2">
+                  <span className="p-1 text-color-greenGrey bg-lightGreen">
+                    Times completed
+                  </span>
                 </div>
                 <div className="w-100 d-flex justify-content-between">
                   <span className="text-color-greenGrey">
                     This month
                   </span>
-                  {data && <span>{data.streakCount}</span>}
+                  <span className="fw-bold">
+                    {data?.timesCompleted?.month ?? 'N/A'}
+                  </span>
                 </div>
                 <div className="w-100 d-flex justify-content-between">
                   <span className="text-color-greenGrey">
-                    this year
+                    This year
                   </span>
-                  {data && <span>{data.streakCount}</span>}
+                  <span className="fw-bold">
+                    {data?.timesCompleted?.year ?? 'N/A'}
+                  </span>
                 </div>
               </div>
             </StatContainer>
@@ -125,6 +163,7 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
           <DayPicker
             mode="multiple"
             selected={days}
+            onDayClick={handleDayClick}
             modifiersClassNames={{
               selected: 'my-selected',
             }}
@@ -181,6 +220,10 @@ const StyledModal = styled(Modal)`
 
   .text-color-greenGrey {
     color: #71764f;
+  }
+
+  .bg-lightGreen {
+    background: rgba(211, 235, 206, 0.44);
   }
 `;
 

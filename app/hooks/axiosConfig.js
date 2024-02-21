@@ -5,7 +5,6 @@ import { getUserTimeZone } from '@/utils/util';
 
 Axios.defaults.baseURL = process.env.BACKENDURL;
 
-// This useSetupAxiosInterceptors is used in AxiosWrapper.
 const useSetupAxiosInterceptors = navigateTo => {
   const userInfo = useStore(state => state.userInfo);
   const logout = useStore(state => state.actions.logout);
@@ -38,6 +37,7 @@ const useSetupAxiosInterceptors = navigateTo => {
           logout();
           navigateTo('/login?from=401');
         }
+
         return Promise.reject(error);
       }
     );
