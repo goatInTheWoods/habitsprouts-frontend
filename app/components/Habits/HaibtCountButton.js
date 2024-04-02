@@ -1,11 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import Check from '../../images/check.svg';
+import Smile from '../../images/smile.svg';
 
-const HabitCountButton = ({ onClick }) => {
+const HabitCountButton = ({ isCompletedToday, onClick }) => {
   return (
     <CountButtonContainer className="me-lg-3 " onClick={onClick}>
-      <Check />
+      {!isCompletedToday && <Check />}
+      {isCompletedToday && <Smile />}
     </CountButtonContainer>
   );
 };

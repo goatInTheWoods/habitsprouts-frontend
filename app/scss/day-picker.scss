@@ -25,6 +25,13 @@
   @media (min-width: 1400px) { // xxl
     --rdp-cell-size: 5.5rem;
   }
+
+  &-small {
+    font-size: 0.7rem;
+    --rdp-cell-size: 1.8rem;
+    position: relative;
+    z-index: 1000;
+  }
 }
 
 .rdp-months {

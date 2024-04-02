@@ -21,6 +21,7 @@ import Login from '@/pages/Login';
 // import Home from './components/Home';
 import Navbar from '@/components/Footer/Navbar';
 import HabitList from '@/components/Habits/HabitList';
+import LogList from '@/components/Logs/LogList';
 import About from '@/pages/About';
 import Terms from '@/pages/Terms';
 import ResetPassword from '@/components/Auth/ResetPassword';
@@ -102,6 +103,7 @@ function Main() {
                     element={<ResetPassword />}
                   />
                   <Route path="/habits" element={<HabitList />} />
+                  <Route path="/logs" element={<LogList />} />
                   <Route path="/about-us" element={<About />} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/policy" element={<Terms />} />
@@ -144,7 +146,7 @@ const Container = styled.div`
 `;
 
 const MainContainer = styled.div`
-  flex-grow: 1;
   padding: 0 16px;
-  overflow-y: auto;
+  flex-grow: 1;
+  overflow-y: hidden;
 `;

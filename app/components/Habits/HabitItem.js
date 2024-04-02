@@ -7,10 +7,15 @@ import {
   axiosCountHabit,
 } from '@/services/HabitService';
 import HabitCountButton from '@/components/Habits/HaibtCountButton';
-import HabitDropdown from '@/components/Habits/HabitDropdown';
-import { getUserTimeZone } from '@/utils/util';
+import ItemDropdown from '@/components/common/ItemDropdown';
+import { getUserTimeZone, isEqualDay } from '@/utils/util';
 
-const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
+const HabitItem = ({
+  habit,
+  onClickTitle,
+  editSelectedItem,
+  isFetching,
+}) => {
   const loggedIn = useLoggedIn();
   const {
     editHabit,
@@ -78,22 +83,43 @@ const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
     });
   }
 
+  function isCompletedToday() {
+    const Dateslength = habit?.completionDates?.length;
+
+    if (Dateslength) {
+      const lastDay = new Date(
+        habit.completionDates[Dateslength - 1]
+      );
+      const today = new Date();
+      return isEqualDay(lastDay, today);
+    } else {
+      return false;
+    }
+  }
+
   return (
     <Container className="d-flex align-items-center px-3 py-2 w-100 position-relative">
-      <HabitCountButton onClick={handleCount} />
+      <HabitCountButton
+        isCompletedToday={isCompletedToday()}
+        onClick={handleCount}
+      />
 
       <div
         className="d-flex flex-column flex-grow-1 text-center mx-4 custom-pointer"
         onClick={onClickTitle}
       >
         <span className="fw-semibold fs-3">{habit.title}</span>
-        <span>
-          {habit.isIncrementCount === true
-            ? `${habit.totalCount} ${habit.unit}!`
-            : `${habit.totalCount} ${habit.unit} to go!`}
-        </span>
+        <div>
+          <HabitTotalCount>
+            {isFetching
+              ? '•••'
+              : habit.isIncrementCount
+              ? `${habit.totalCount} ${habit.unit}!`
+              : `${habit.totalCount} ${habit.unit} to go!`}
+          </HabitTotalCount>
+        </div>
       </div>
-      <HabitDropdown
+      <ItemDropdown
         onEditClick={() => {
           editSelectedItem(habit.id);
         }}
@@ -113,6 +139,16 @@ const Container = styled.div`
   .dropdown-toggle::after {
     display: none;
   }
+`;
+
+const HabitTotalCount = styled.span`
+  padding: 2px 4px;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #799183;
+  background: rgba(211, 235, 206, 0.44);
 `;
 
 export default HabitItem;

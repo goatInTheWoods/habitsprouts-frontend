@@ -3,7 +3,7 @@ import Container from '@/components/common/Container';
 
 const Page = props => {
   useEffect(() => {
-    document.title = `${props.title} | HabitCount`;
+    document.title = `${props.title} | HabitSprouts`;
     window.scrollTo(0, 0);
   }, [props.title]);
 

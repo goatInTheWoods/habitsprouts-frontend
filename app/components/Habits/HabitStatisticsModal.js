@@ -29,8 +29,8 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
   const updateCompleteDate = useMutation({
     mutationFn: axiosUpdateHabit,
     onSuccess: () => {
-      console.log('good');
       queryClient.invalidateQueries({ queryKey: ['singleHabit'] });
+      queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
     onError: error => {
       console.error('Error updating habit:', error);
@@ -182,7 +182,7 @@ const StyledModal = styled(Modal)`
     margin: auto;
 
     height: 100%;
-    padding: 0;
+    padding: 44px 0 0 0;
     max-width: none;
 
     @media (min-width: 576px) {
@@ -191,14 +191,6 @@ const StyledModal = styled(Modal)`
 
     @media (min-width: 768px) {
       max-width: 720px;
-    }
-
-    @media (min-width: 992px) {
-      max-width: 920px;
-    }
-
-    @media (min-width: 1200px) {
-      max-width: 1140px;
     }
   }
 
@@ -216,14 +208,6 @@ const StyledModal = styled(Modal)`
   .modal-footer {
     padding: 16px;
     margin: 0 20px;
-  }
-
-  .text-color-greenGrey {
-    color: #71764f;
-  }
-
-  .bg-lightGreen {
-    background: rgba(211, 235, 206, 0.44);
   }
 `;
 

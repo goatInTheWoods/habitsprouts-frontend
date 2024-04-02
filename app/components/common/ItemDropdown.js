@@ -3,7 +3,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dots from '../../images/dots.svg';
 
-const HabitDropdown = ({ onEditClick, onDeleteClick }) => {
+const ItemDropdown = ({ onEditClick, onDeleteClick }) => {
   return (
     <DropdownButton
       className="position-absolute top-0 end-0"
@@ -22,4 +22,4 @@ const HabitDropdown = ({ onEditClick, onDeleteClick }) => {
   );
 };
 
-export default HabitDropdown;
+export default ItemDropdown;

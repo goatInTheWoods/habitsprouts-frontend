@@ -10,6 +10,11 @@ export const axiosFetchSingleHabit = async habitId => {
   return data;
 };
 
+export const axiosFetchHabitList = async () => {
+  const { data } = await axios.get('/habits/list');
+  return data;
+};
+
 export const axiosCreateHabit = async habitData => {
   const { data } = await axios.post('/habit', habitData);
   return data;

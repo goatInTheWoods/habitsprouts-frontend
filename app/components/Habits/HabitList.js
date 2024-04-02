@@ -33,12 +33,13 @@ const HabitList = () => {
   const [allowedToFetch, setAllowedToFetch] = useState(false);
 
   const queryClient = useQueryClient();
-  const { isLoading, isError, isSuccess, data, error } = useQuery({
-    queryKey: ['habits'],
-    queryFn: axiosFetchHabits,
-    enabled: allowedToFetch,
-    refetchOnWindowFocus: true,
-  });
+  const { isLoading, isFetching, isError, isSuccess, data, error } =
+    useQuery({
+      queryKey: ['habits'],
+      queryFn: axiosFetchHabits,
+      enabled: allowedToFetch,
+      refetchOnWindowFocus: true,
+    });
 
   const updateHabitMutation = useMutation({
     mutationFn: axiosUpdateHabit,
@@ -164,17 +165,12 @@ const HabitList = () => {
           closeModal={closeStatModal}
         />
       )}
-      {/* <h1 className="text-primary">
-        {userInfo?.username
-          ? userInfo.username + `'s Habits`
-          : 'My Habits'}
-      </h1> */}
-      <div className="d-flex flex-row-reverse mb-3 text-primary">
+      <AddHabitContainer>
         <AddHabitButton onClick={() => openInfoModal('add')}>
           <Plus />
         </AddHabitButton>
-      </div>
-      <div className="vstack gap-3">
+      </AddHabitContainer>
+      <HabitContainer className="vstack gap-3">
         {habits && habits.length === 0 && (
           <WelcomeCard openModal={openInfoModal} />
         )}
@@ -197,17 +193,34 @@ const HabitList = () => {
                   habit={habit}
                   onClickTitle={() => handleStatModal(habit.id)}
                   editSelectedItem={editSelectedItem}
+                  isFetching={isFetching}
                 />
               </div>
             );
           })}
-      </div>
+      </HabitContainer>
     </Page>
   );
 };
 
+const AddHabitContainer = styled.div`
+  margin-bottom: 1rem;
+  text-align: right;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #fbfbfb;
+`;
+
 const AddHabitButton = styled.button`
   all: unset;
+  cursor: pointer;
+`;
+
+const HabitContainer = styled.div`
+  overflow-y: auto;
+  max-height: calc(100vh - 22vh);
+  padding-bottom: 22vh;
 `;
 
 export default HabitList;
