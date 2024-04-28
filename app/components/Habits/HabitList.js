@@ -218,9 +218,17 @@ const AddHabitButton = styled.button`
 `;
 
 const HabitContainer = styled.div`
-  overflow-y: auto;
   max-height: calc(100vh - 22vh);
   padding-bottom: 22vh;
+  overflow-y: scroll;
+  overflow-anchor: none;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  &::-webkit-scrollbar {
+    /* WebKit */
+    width: 0;
+    height: 0;
+  }
 `;
 
 export default HabitList;
