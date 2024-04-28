@@ -11,7 +11,10 @@ import TipTapEditor from '@/components/Logs/TipTapEditor';
 import DatePickerInput from '@/components/Logs/DatePickerInput';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { axiosCreateLog } from '@/services/LogService';
+import {
+  axiosCreateLog,
+  axiosUpdateLog,
+} from '@/services/LogService';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 
 const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
@@ -31,6 +34,16 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
     },
   });
 
+  const updateLogMutation = useMutation({
+    mutationFn: axiosUpdateLog,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['logs'] });
+    },
+    onError: error => {
+      console.error('Error updating log:', error);
+    },
+  });
+
   const hadleSelectedHabit = habit => {
     setSelectedHabit(habit);
   };
@@ -39,7 +52,18 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
     e.preventDefault();
     const log = { date: selectedDate, habit: selectedHabit, content };
     try {
-      await createLogMutation.mutate(log);
+      if (selectedLog) {
+        await updateLogMutation.mutate({
+          id: selectedLog.id,
+          logData: {
+            content,
+            date: selectedDate,
+            habitId: selectedHabit.id,
+          },
+        });
+      } else {
+        await createLogMutation.mutate(log);
+      }
       closeModal();
     } catch (err) {
       console.log(err);
@@ -47,10 +71,15 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
   };
 
   useEffect(() => {
-    if (isOpen && selectedLog) {
-      console.log(selectedLog);
+    if (isOpen && selectedLog && habitList) {
+      const habit = habitList.find(
+        habit => habit.id === selectedLog.habit._id
+      );
+      setSelectedHabit(habit);
+      setSelectedDate(new Date(selectedLog.date));
+      setContent(selectedLog.content);
     }
-  }, [isOpen]);
+  }, [isOpen, selectedLog, habitList]);
 
   return (
     <StyledModal

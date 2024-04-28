@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import styled from 'styled-components';
@@ -9,11 +9,22 @@ const TipTapEditor = ({ content, setContent }) => {
       StarterKit, // This includes the 'doc' node, paragraph, text, and other basic formatting options.
     ],
     content: content,
+    onCreate: ({ editor }) => {
+      editor.commands.setContent(content);
+    },
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       setContent(html);
     },
   });
+
+  useEffect(() => {
+    if (editor && content) {
+      if (editor.getHTML() !== content) {
+        editor.commands.setContent(content);
+      }
+    }
+  }, [content, editor]);
 
   if (!editor) {
     return <p>Loading...</p>;

@@ -69,7 +69,7 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
       <div ref={popperRef}>
         <Container
           type="text"
-          placeholder={format(new Date(), 'y-MM-dd')}
+          placeholder={format(new Date(selectedDate), 'y-MM-dd')}
           value={inputValue}
           onChange={handleInputChange}
           onClick={openPopper}

@@ -15,7 +15,7 @@ const LogItem = ({ log, isFetchigLogs, editSelectedItem }) => {
   const queryClient = useQueryClient();
 
   const date = new Date(log.date);
-  const habitStatus = `${log.currentCount} ${log.habit.unit} | ${log.habit.title}`;
+  const habitStatus = `${log.habit.currentCount} ${log.habit.unit} | ${log.habit?.title}`;
 
   const deleteLogMutation = useMutation({
     mutationFn: axiosDeleteLog,
@@ -24,20 +24,6 @@ const LogItem = ({ log, isFetchigLogs, editSelectedItem }) => {
     },
     onError: error => {
       console.error('Error deleting log:', error);
-    },
-  });
-
-  const updateLogMutation = useMutation({
-    mutationFn: axiosUpdateLog,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['logs'] });
-    },
-    onError: error => {
-      console.error('Error updating log:', error);
-      openAlert({
-        type: 'danger',
-        text: 'Something went wrong, counting failed. Try agian.',
-      });
     },
   });
 
@@ -61,7 +47,7 @@ const LogItem = ({ log, isFetchigLogs, editSelectedItem }) => {
     const sanitizedContent = DOMPurify.sanitize(htmlContent);
 
     return (
-      <div
+      <HtmlContents
         className="px-1 text-color-blackGrey"
         dangerouslySetInnerHTML={{ __html: sanitizedContent }}
       />
@@ -110,6 +96,19 @@ const StatusText = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
+`;
+
+const HtmlContents = styled.div`
+  p {
+    margin-bottom: 0.3rem;
+    &:last-child {
+      margin-bottom: 1rem;
+    }
+  }
+
+  ul > li > p {
+    margin-bottom: 0.3rem !important;
+  }
 `;
 
 export default LogItem;
