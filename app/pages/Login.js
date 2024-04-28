@@ -105,7 +105,7 @@ const Login = () => {
       <div className=" row align-items-center justify">
         <div className="d-none d-md-block col-lg-6 py-3 text-secondary">
           <p className="display-3 pb-4 text-primary fw-semibold">
-            HabitCount
+            HabitSprouts
           </p>
           <p className="fs-2 text-muted">
             Build your habits in the simplest way and become a better
