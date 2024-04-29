@@ -15,7 +15,7 @@ const LogItem = ({ log, isFetchigLogs, editSelectedItem }) => {
   const queryClient = useQueryClient();
 
   const date = new Date(log.date);
-  const habitStatus = `${log.habit.currentCount} ${log.habit.unit} | ${log.habit?.title}`;
+  const habitStatus = `${log.habit?.currentCount} ${log.habit?.unit} | ${log.habit?.title}`;
 
   const deleteLogMutation = useMutation({
     mutationFn: axiosDeleteLog,

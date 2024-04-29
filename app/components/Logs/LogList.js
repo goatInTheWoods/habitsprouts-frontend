@@ -14,6 +14,7 @@ import styled from 'styled-components';
 const LogList = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [filter, setFilter] = useState('');
+  const [filterList, setFilterList] = useState('');
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [selectedLog, setSelctedLog] = useState(null);
 
@@ -57,12 +58,33 @@ const LogList = () => {
     openLogModal();
   }
 
+  function filterLogs(logs) {
+    const filteredLogsById = logs.filter(log =>
+      filter ? log.habit.habitId === filter : true
+    );
+    setFilteredLogs(filteredLogsById);
+  }
+
+  function handleFilterList(logs) {
+    const checkDuplicates = new Set();
+    const extractedHabits = logs
+      .filter(log => {
+        const habitId = log.habit.habitId;
+        if (checkDuplicates.has(habitId)) {
+          return false;
+        } else {
+          checkDuplicates.add(habitId);
+          return true;
+        }
+      })
+      .map(log => log.habit);
+    setFilterList(extractedHabits);
+  }
+
   useEffect(() => {
     if (logs) {
-      const filteredLogsById = logs.filter(log =>
-        filter ? log.habit._id === filter : true
-      );
-      setFilteredLogs(filteredLogsById);
+      filterLogs(logs);
+      handleFilterList(logs);
     }
   }, [logs, filter]);
 
@@ -77,7 +99,7 @@ const LogList = () => {
         />
       )}
       <UpperContainer className="mb-3 hstack gap-3">
-        <LogFilter habitList={habitList} setFilter={setFilter} />
+        <LogFilter habitList={filterList} setFilter={setFilter} />
         <Button
           onClick={openLogModal}
           className="ms-auto px-3 text-light"

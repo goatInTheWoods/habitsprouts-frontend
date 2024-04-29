@@ -31,7 +31,7 @@ function LogFilter({ habitList, setFilter }) {
             return (
               <Dropdown.Item
                 data-title={habit.title}
-                data-key={habit.id}
+                data-key={habit.habitId}
                 key={i}
               >
                 {habit.title}

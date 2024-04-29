@@ -73,7 +73,7 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
   useEffect(() => {
     if (isOpen && selectedLog && habitList) {
       const habit = habitList.find(
-        habit => habit.id === selectedLog.habit._id
+        habit => habit.id === selectedLog.habit.habitId
       );
       setSelectedHabit(habit);
       setSelectedDate(new Date(selectedLog.date));
