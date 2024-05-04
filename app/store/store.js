@@ -10,7 +10,6 @@ export const useStore = create(
     subscribeWithSelector(
       persist(
         immer((set, get) => ({
-          // Your initial state
           loggedIn: false,
           userInfo: {
             token: null,
@@ -30,9 +29,6 @@ export const useStore = create(
             submitBtnText: 'confirm',
             submitFn: null,
           },
-          isSearchOpen: false,
-          isChatOpen: false,
-          unreadChatCount: 0,
           habits: [],
           actions: {
             login: data => {
@@ -89,30 +85,6 @@ export const useStore = create(
                 state.confirmStatus.submitBtnText = 'confirm';
                 state.confirmStatus.submitFn = null;
               }),
-            openSearch: () =>
-              set(state => {
-                state.isSearchOpen = true;
-              }),
-            closeSearch: () =>
-              set(state => {
-                state.isSearchOpen = false;
-              }),
-            toggleChat: () =>
-              set(state => {
-                state.isChatOpen = !state.isChatOpen;
-              }),
-            closeChat: () =>
-              set(state => {
-                state.isChatOpen = false;
-              }),
-            incrementUnreadChatCount: () =>
-              set(state => {
-                state.unreadChatCount++;
-              }),
-            clearUnreadChatCount: () =>
-              set(state => {
-                state.unreadChatCount = 0;
-              }),
             setHabits: habits =>
               set(state => {
                 state.habits = habits;
@@ -141,9 +113,10 @@ export const useStore = create(
               }),
             changeHabitOrder: (fromId, toId) =>
               set(state => {
-                const fromHabit = state.habits[fromId];
-                state.habits.splice(fromId, 1);
-                state.habits.splice(toId, 0, fromHabit);
+                const habits = [...state.habits];
+                const [movedHabit] = habits.splice(fromId, 1);
+                habits.splice(toId, 0, movedHabit);
+                return { ...state, habits };
               }),
           },
         })),
