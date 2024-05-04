@@ -45,7 +45,11 @@ function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
           target.id === 'totalCount' ||
           target.id === 'dailyCountLimit'
         ) {
-          draft[target.id] = Number(target.value);
+          let inputValue = Number(target.value);
+          if (inputValue < 0) {
+            inputValue = 0; // Set to 0 if negative
+          }
+          draft[target.id] = inputValue;
         } else if (target.id === 'isIncrementCount') {
           draft[target.id] = target.value === 'true'; // compare string and assign boolean
         } else {
@@ -132,85 +136,51 @@ function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
                 defaultValue={habit?.title}
               />
             </Form.Group>
-            <Row className="row-gap-3 mb-2">
-              <Col
-                as="span"
-                className="d-flex align-items-center"
-                xs={7}
-                sm="auto"
-              >
-                Starts from day
-              </Col>
-              <Form.Group
-                as={Col}
-                sm={3}
-                xs={6}
-                controlId="totalCount"
-              >
-                <Form.Control
-                  type="number"
-                  defaultValue={habit?.totalCount}
-                  onChange={handleInput}
-                  disabled={
-                    loggedIn && type === 'edit' ? true : false
-                  }
-                  // readOnly={type === 'edit' ? true : false}
-                />
-              </Form.Group>
-              <Form.Group
-                className="pe-0"
-                as={Col}
-                xs={5}
-                sm="auto"
-                controlId="isIncrementCount"
-              >
-                <select
-                  className="form-select"
-                  id="isIncrementCount"
-                  aria-label="Default select example"
-                  onChange={handleInput}
-                  defaultValue={habit?.isIncrementCount}
-                  disabled={
-                    loggedIn && type === 'edit' ? true : false
-                  }
+            {!loggedIn && (
+              <Row className="row-gap-3 mb-2">
+                <Col
+                  as="span"
+                  className="d-flex align-items-center"
+                  xs={7}
+                  sm="auto"
                 >
-                  <option defaultValue value="true">
-                    + Count Up
-                  </option>
-                  <option value="false">- Count Down </option>
-                </select>
-              </Form.Group>
-            </Row>
-            {/* <Row className="row-gap-3">
-              <Col
-                as="span"
-                className="d-flex align-items-center"
-                // xs={7}
-                sm="auto"
-              >
-                Count this item
-              </Col>
-              <Form.Group
-                as={Col}
-                sm={3}
-                // xs={6}
-                controlId="dailyCountLimit"
-              >
-                <Form.Control
-                  type="number"
-                  defaultValue={habit?.dailyCountLimit}
-                  onChange={handleInput}
-                />
-              </Form.Group>
-              <Col
-                as="span"
-                className="d-flex align-items-center pe-0 "
-                // xs={7}
-                sm="auto"
-              >
-                time{habit?.dailyCountLimit > 1 ? 's' : ''} per day
-              </Col>
-            </Row> */}
+                  Starts from day
+                </Col>
+                <Form.Group
+                  as={Col}
+                  sm={3}
+                  xs={6}
+                  controlId="totalCount"
+                >
+                  <Form.Control
+                    type="number"
+                    defaultValue={habit?.totalCount}
+                    onChange={handleInput}
+                    min="0"
+                  />
+                </Form.Group>
+                <Form.Group
+                  className="pe-0"
+                  as={Col}
+                  xs={5}
+                  sm="auto"
+                  controlId="isIncrementCount"
+                >
+                  <select
+                    className="form-select"
+                    id="isIncrementCount"
+                    aria-label="Default select example"
+                    onChange={handleInput}
+                    defaultValue={habit?.isIncrementCount}
+                  >
+                    <option defaultValue value="true">
+                      + Count Up
+                    </option>
+                    <option value="false">- Count Down </option>
+                  </select>
+                </Form.Group>
+              </Row>
+            )}
           </Form>
         </Modal.Body>
         <Modal.Footer>
