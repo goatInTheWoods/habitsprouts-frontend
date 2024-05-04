@@ -22,6 +22,7 @@ import {
 import {
   axiosFetchHabits,
   axiosUpdateHabit,
+  axiosUpdateHabitOrder,
 } from '@/services/HabitService';
 
 const HabitList = () => {
@@ -41,13 +42,13 @@ const HabitList = () => {
       refetchOnWindowFocus: true,
     });
 
-  const updateHabitMutation = useMutation({
-    mutationFn: axiosUpdateHabit,
+  const updateHabitOrderMutation = useMutation({
+    mutationFn: axiosUpdateHabitOrder,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
     onError: error => {
-      console.error('Error updating habit:', error);
+      console.error('Error updating habit indices:', error);
     },
   });
 
@@ -56,7 +57,7 @@ const HabitList = () => {
   const [modalType, setModalType] = useState(null);
   const [selectedHabit, setSelctedHabit] = useState(null);
   // state for drag & drop
-  const [draggedItemId, setDraggedItemId] = useState(null);
+  const [movedItem, setmovedItem] = useState(null);
 
   const initialHabit = {
     id: uuidv4(),
@@ -101,29 +102,36 @@ const HabitList = () => {
     openStatModal();
   }
 
-  const handleDrop = (event, habitId) => {
+  const handleDrop = async (event, targetOrderHabit) => {
     event.preventDefault();
-    const droppedItemId = habitId;
-
-    const droppedIndex = habits?.findIndex(
-      habit => habit.id === droppedItemId
-    );
-    const draggedIndex = habits?.findIndex(
-      habit => habit.id === draggedItemId
-    );
-
-    if (droppedIndex !== -1 && draggedIndex !== -1) {
-      changeHabitOrder(draggedIndex, droppedIndex);
+    if (loggedIn) {
+      await updateHabitOrderMutation.mutate({
+        id: movedItem.id,
+        indices: {
+          oldOrderIndex: movedItem.orderIndex,
+          newOrderIndex: targetOrderHabit.orderIndex,
+        },
+      });
+    } else {
+      const fromIdx = habits?.findIndex(
+        habit => habit.id === movedItem.id
+      );
+      const toIdx = habits?.findIndex(
+        habit => habit.id === targetOrderHabit.id
+      );
+      if (fromIdx !== -1 && toIdx !== -1) {
+        changeHabitOrder(fromIdx, toIdx);
+      }
     }
-    setDraggedItemId(null);
+    setmovedItem(null);
   };
 
   const handleDragOver = event => {
     event.preventDefault();
   };
 
-  const handleDragStart = (event, habitId) => {
-    setDraggedItemId(habitId);
+  const handleDragStart = (event, habit) => {
+    setmovedItem(habit);
   };
 
   useEffect(() => {
@@ -181,11 +189,9 @@ const HabitList = () => {
               <div
                 key={habit.id}
                 draggable={true}
-                onDragStart={event =>
-                  handleDragStart(event, habit.id)
-                }
+                onDragStart={event => handleDragStart(event, habit)}
                 onDrop={event => {
-                  handleDrop(event, habit.id);
+                  handleDrop(event, habit);
                 }}
                 onDragOver={handleDragOver}
               >
@@ -220,7 +226,7 @@ const AddHabitButton = styled.button`
 const HabitContainer = styled.div`
   max-height: calc(100vh - 22vh);
   padding-bottom: 22vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-anchor: none;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */

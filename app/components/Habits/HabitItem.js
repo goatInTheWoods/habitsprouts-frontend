@@ -57,7 +57,9 @@ const HabitItem = ({
         totalCount:
           habit.isIncrementCount === true
             ? habit.totalCount + 1
-            : habit.totalCount - 1,
+            : habit.totalCount > 0
+            ? habit.totalCount - 1
+            : habit.totalCount,
       });
     }
     await updateHabitMutation.mutate(habit.id);

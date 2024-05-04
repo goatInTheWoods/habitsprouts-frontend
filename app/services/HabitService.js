@@ -25,6 +25,12 @@ export const axiosUpdateHabit = async ({ id, habitData }) => {
   return data;
 };
 
+export const axiosUpdateHabitOrder = async ({ id, indices }) => {
+  console.log(id);
+  const { data } = await axios.patch(`/habits/order/${id}`, indices);
+  return data;
+};
+
 export const axiosCountHabit = async id => {
   const { data } = await axios.patch(`/habits/count/${id}`);
   return data;
