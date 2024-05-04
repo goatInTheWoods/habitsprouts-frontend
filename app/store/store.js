@@ -140,6 +140,4 @@ export const useConfirmStatus = () =>
   useStore(state => state.confirmStatus);
 export const useUserInfo = () => useStore(state => state.userInfo);
 export const useHabits = () => useStore(state => state.habits);
-export const useHabitsCount = () =>
-  useStore(state => state.habits.length);
 export const useActions = () => useStore(state => state.actions);

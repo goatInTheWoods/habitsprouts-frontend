@@ -9,7 +9,6 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import {
   useLoggedIn,
-  useHabitsCount,
   useHabits,
   useUserInfo,
   useActions,
@@ -29,7 +28,6 @@ const HabitList = () => {
   const { changeHabitOrder, setHabits } = useActions();
   const loggedIn = useLoggedIn();
   const habits = useHabits();
-  const habitsCount = useHabitsCount();
   const userInfo = useUserInfo();
   const [allowedToFetch, setAllowedToFetch] = useState(false);
 
@@ -66,7 +64,6 @@ const HabitList = () => {
     unit: 'days',
     totalCount: 0,
     dailyCountLimit: 1,
-    orderIndex: habitsCount,
   };
 
   function openInfoModal(type) {
