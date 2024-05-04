@@ -151,7 +151,9 @@ function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
                   type="number"
                   defaultValue={habit?.totalCount}
                   onChange={handleInput}
-                  // disabled={type === 'edit' ? true : false}
+                  disabled={
+                    loggedIn && type === 'edit' ? true : false
+                  }
                   // readOnly={type === 'edit' ? true : false}
                 />
               </Form.Group>
@@ -168,7 +170,9 @@ function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
                   aria-label="Default select example"
                   onChange={handleInput}
                   defaultValue={habit?.isIncrementCount}
-                  // disabled={type === 'edit' ? true : false}
+                  disabled={
+                    loggedIn && type === 'edit' ? true : false
+                  }
                 >
                   <option defaultValue value="true">
                     + Count Up
