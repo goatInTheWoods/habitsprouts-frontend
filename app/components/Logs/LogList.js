@@ -67,7 +67,7 @@ const LogList = () => {
 
   function handleFilterList(logs) {
     const checkDuplicates = new Set();
-    const extractedHabits = logs
+    const uniqueHabits = logs
       .filter(log => {
         const habitId = log.habit.habitId;
         if (checkDuplicates.has(habitId)) {
@@ -78,7 +78,7 @@ const LogList = () => {
         }
       })
       .map(log => log.habit);
-    setFilterList(extractedHabits);
+    setFilterList(uniqueHabits);
   }
 
   useEffect(() => {
@@ -138,7 +138,7 @@ const UpperContainer = styled.div`
 const LogContainer = styled.div`
   max-height: calc(100vh - 22vh);
   padding-bottom: 22vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-anchor: none;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
