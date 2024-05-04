@@ -6,6 +6,7 @@ import { getUserTimeZone } from '@/utils/util';
 Axios.defaults.baseURL = process.env.BACKENDURL;
 
 const useSetupAxiosInterceptors = navigateTo => {
+  const loggedIn = useStore(state => state.loggedIn);
   const userInfo = useStore(state => state.userInfo);
   const logout = useStore(state => state.actions.logout);
 
@@ -34,7 +35,9 @@ const useSetupAxiosInterceptors = navigateTo => {
       response => response,
       error => {
         if (error.response && error.response.status === 401) {
-          logout();
+          if (loggedIn) {
+            logout();
+          }
           navigateTo('/login?from=401');
         }
 
