@@ -169,7 +169,7 @@ const Login = () => {
             </div>
 
             <div className="mt-3 vstack gap-3 mx-auto">
-              <div className="form-check">
+              {/* <div className="form-check">
                 <input
                   className="form-check-input"
                   type="checkbox"
@@ -182,7 +182,7 @@ const Login = () => {
                 >
                   Remember me
                 </label>
-              </div>
+              </div> */}
               <button
                 type="submit"
                 className="btn btn-md btn-primary"
