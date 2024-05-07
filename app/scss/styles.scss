@@ -38,6 +38,15 @@ color: #333333;
   background: rgba(211, 235, 206, 0.44);
 }
 
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  &::-webkit-scrollbar {
+    /* WebKit */
+    width: 0;
+    height: 0;
+  }
+}
 // .btn:active,
 // .btn:focus,
 // .btn.active,
