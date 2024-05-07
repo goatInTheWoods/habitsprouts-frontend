@@ -4,6 +4,7 @@ import HabitInfoModal from '@/components/Habits/HabitInfoModal';
 import HabitStatisticsModal from '@/components/Habits/HabitStatisticsModal';
 import HabitItem from '@/components/Habits/HabitItem';
 import WelcomeCard from '@/components/Habits/WelcomeCard';
+import Spinner from 'react-bootstrap/Spinner';
 import Plus from '../../images/plus.svg';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
@@ -143,10 +144,6 @@ const HabitList = () => {
     }
   }, [isSuccess, data, setHabits]);
 
-  if (isLoading) {
-    return <span>Loading...</span>;
-  }
-
   if (isError) {
     return <span>Error: {error.message}</span>;
   }
@@ -175,7 +172,18 @@ const HabitList = () => {
           <Plus />
         </AddHabitButton>
       </AddHabitContainer>
-      <HabitContainer className="vstack gap-3">
+      <HabitContainer className="vstack gap-3 no-scrollbar">
+        {isLoading && (
+          <div className="d-flex justify-content-center">
+            <Spinner
+              animation="border"
+              variant="primary"
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        )}
         {habits && habits.length === 0 && (
           <WelcomeCard openModal={openInfoModal} />
         )}
@@ -225,13 +233,6 @@ const HabitContainer = styled.div`
   padding-bottom: 22vh;
   overflow-y: auto;
   overflow-anchor: none;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  &::-webkit-scrollbar {
-    /* WebKit */
-    width: 0;
-    height: 0;
-  }
 `;
 
 export default HabitList;

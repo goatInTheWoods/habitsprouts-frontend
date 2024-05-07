@@ -8,6 +8,7 @@ import {
 } from '@/services/HabitService';
 import HabitCountButton from '@/components/Habits/HaibtCountButton';
 import ItemDropdown from '@/components/common/ItemDropdown';
+import Spinner from 'react-bootstrap/Spinner';
 import { getUserTimeZone, isEqualDay } from '@/utils/util';
 
 const HabitItem = ({
@@ -112,13 +113,22 @@ const HabitItem = ({
       >
         <span className="fw-semibold fs-3">{habit.title}</span>
         <div>
-          <HabitTotalCount>
-            {isFetching
-              ? '•••'
-              : habit.isIncrementCount
-              ? `${habit.totalCount} ${habit.unit}!`
-              : `${habit.totalCount} ${habit.unit} to go!`}
-          </HabitTotalCount>
+          {isFetching ? (
+            <Spinner
+              as="span"
+              animation="grow"
+              varient="light"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+          ) : (
+            <HabitTotalCount>
+              {habit.isIncrementCount
+                ? `${habit.totalCount} ${habit.unit}!`
+                : `${habit.totalCount} ${habit.unit} to go!`}
+            </HabitTotalCount>
+          )}
         </div>
       </div>
       <ItemDropdown

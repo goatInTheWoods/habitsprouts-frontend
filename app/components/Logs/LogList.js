@@ -6,17 +6,24 @@ import Stack from 'react-bootstrap/Stack';
 import LogModal from '@/components/Logs/LogModal';
 import DatePickerInput from '@/components/Logs/DatePickerInput';
 import LogItem from '@/components/Logs/LogItem';
+import Spinner from 'react-bootstrap/Spinner';
 import { axiosFetchHabitList } from '@/services/HabitService';
 import { axiosFetchLogs } from '@/services/LogService';
 import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
+import { useLoggedIn, useUserInfo } from '@/store/store';
+import { useLocation } from 'react-router-dom';
 
 const LogList = () => {
+  const loggedIn = useLoggedIn();
+  const userInfo = useUserInfo();
+  const location = useLocation();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [filter, setFilter] = useState('');
-  const [filterList, setFilterList] = useState('');
+  const [filterList, setFilterList] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [selectedLog, setSelctedLog] = useState(null);
+  const [allowedToFetch, setAllowedToFetch] = useState(false);
 
   const {
     isLoading: isLoadingHabitList,
@@ -27,6 +34,7 @@ const LogList = () => {
   } = useQuery({
     queryKey: ['habitList'],
     queryFn: axiosFetchHabitList,
+    enabled: allowedToFetch,
   });
 
   const {
@@ -39,6 +47,7 @@ const LogList = () => {
   } = useQuery({
     queryKey: ['logs'],
     queryFn: axiosFetchLogs,
+    enabled: allowedToFetch,
   });
 
   function openLogModal() {
@@ -59,10 +68,11 @@ const LogList = () => {
   }
 
   function filterLogs(logs) {
-    const filteredLogsById = logs.filter(log =>
-      filter ? log.habit.habitId === filter : true
+    if (!filter) return setFilteredLogs(logs); // Ensure there is a filter set
+    const filteredLogs = logs.filter(
+      log => log.habit.habitId === filter
     );
-    setFilteredLogs(filteredLogsById);
+    setFilteredLogs(filteredLogs);
   }
 
   function handleFilterList(logs) {
@@ -82,11 +92,25 @@ const LogList = () => {
   }
 
   useEffect(() => {
+    if (loggedIn && userInfo.token) {
+      setAllowedToFetch(true);
+    }
+  }, [loggedIn, userInfo.token]);
+
+  useEffect(() => {
     if (logs) {
       filterLogs(logs);
       handleFilterList(logs);
     }
   }, [logs, filter]);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const initialFilter = queryParams.get('filter');
+    if (initialFilter) {
+      setFilter(initialFilter);
+    }
+  }, []);
 
   return (
     <Page title="LogList" className="d-flex flex-column">
@@ -99,7 +123,11 @@ const LogList = () => {
         />
       )}
       <UpperContainer className="mb-3 hstack gap-3">
-        <LogFilter habitList={filterList} setFilter={setFilter} />
+        <LogFilter
+          habitList={filterList}
+          filter={filter}
+          setFilter={setFilter}
+        />
         <Button
           onClick={openLogModal}
           className="ms-auto px-3 text-light"
@@ -108,7 +136,18 @@ const LogList = () => {
           New Log
         </Button>
       </UpperContainer>
-      <LogContainer className="vstack gap-3">
+      <LogContainer className="vstack gap-3 no-scrollbar">
+        {isLoadingLogs && (
+          <div className="d-flex justify-content-center">
+            <Spinner
+              animation="border"
+              variant="primary"
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        )}
         {filteredLogs &&
           filteredLogs.map(log => {
             return (
@@ -140,13 +179,6 @@ const LogContainer = styled.div`
   padding-bottom: 22vh;
   overflow-y: auto;
   overflow-anchor: none;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  &::-webkit-scrollbar {
-    /* WebKit */
-    width: 0;
-    height: 0;
-  }
 `;
 
 export default LogList;
