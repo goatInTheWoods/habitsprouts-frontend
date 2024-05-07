@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 
-function LogFilter({ habitList, setFilter }) {
+function LogFilter({ habitList, filter, setFilter }) {
   const [title, setTitle] = useState('All');
 
   function handleSelect(key, event) {
     const selectedItemKey = event.target.getAttribute('data-key');
-
     setFilter(selectedItemKey);
-    setTitle(event.target.getAttribute('data-title'));
   }
+
+  useEffect(() => {
+    const currentHabit = habitList?.find(
+      habit => habit.habitId === filter
+    );
+    setTitle(currentHabit ? currentHabit.title : 'All');
+  }, [filter]);
 
   return (
     <Dropdown onSelect={handleSelect}>
@@ -23,17 +28,11 @@ function LogFilter({ habitList, setFilter }) {
         {title}
       </Dropdown.Toggle>
       <Dropdown.Menu>
-        <Dropdown.Item data-key={null} data-title="All">
-          All
-        </Dropdown.Item>
+        <Dropdown.Item data-key={null}>All</Dropdown.Item>
         {habitList &&
           habitList.map((habit, i) => {
             return (
-              <Dropdown.Item
-                data-title={habit.title}
-                data-key={habit.habitId}
-                key={i}
-              >
+              <Dropdown.Item data-key={habit.habitId} key={i}>
                 {habit.title}
               </Dropdown.Item>
             );

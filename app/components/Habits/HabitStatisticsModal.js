@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import X from '../../images/x.svg';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Spinner from 'react-bootstrap/Spinner';
 import {
   useQuery,
   useQueryClient,
@@ -17,13 +19,19 @@ import {
 } from '@/services/HabitService';
 import { DayPicker } from 'react-day-picker';
 import { getUserTimeZone, convertTimezone } from '@/utils/util';
+import { useLoggedIn, useUserInfo } from '@/store/store';
 
 function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
+  const loggedIn = useLoggedIn();
+  const userInfo = useUserInfo();
   const [days, setDays] = useState([]);
+  const [allowedToFetch, setAllowedToFetch] = useState(false);
   const queryClient = useQueryClient();
+
   const { isLoading, isError, isSuccess, data, error } = useQuery({
     queryKey: ['singleHabit'],
     queryFn: () => axiosFetchSingleHabit(habitId),
+    enabled: allowedToFetch,
   });
 
   const updateCompleteDate = useMutation({
@@ -48,6 +56,12 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
   };
 
   useEffect(() => {
+    if (loggedIn && userInfo.token) {
+      setAllowedToFetch(true);
+    }
+  }, [loggedIn, userInfo.token]);
+
+  useEffect(() => {
     if (isSuccess && data) {
       const dateObjects = data.completionDates.map(
         dateString => new Date(dateString)
@@ -55,10 +69,6 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
       setDays(dateObjects);
     }
   }, [data, isSuccess]);
-
-  if (isLoading) {
-    return <span>Loading...</span>;
-  }
 
   if (isError) {
     return <span>Error: {error.message}</span>;
@@ -78,17 +88,50 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
               <X />
             </CloseButton>
           </div>
-          <div className="d-flex justify-content-between">
-            {data && <Modal.Title>{data.title}</Modal.Title>}
-            <Button variant="secondary" size="sm">
-              <i className="fas fa-solid fa-arrow-right"></i>{' '}
-              <span className="ps-1">Go to logs</span>
-            </Button>
-          </div>
+          {loggedIn && (
+            <div className="d-flex justify-content-between">
+              {data && <Modal.Title>{data.title}</Modal.Title>}
+              <Link
+                to={`/logs?filter=${encodeURIComponent(habitId)}`}
+              >
+                <Button variant="secondary" size="sm">
+                  <i className="fas fa-solid fa-arrow-right"></i>{' '}
+                  <span className="ps-1">Go to logs</span>
+                </Button>
+              </Link>
+            </div>
+          )}
         </Stack>
       </Modal.Header>
-      <Modal.Body>
-        {' '}
+      <Modal.Body
+        className={`no-scrollbar ${
+          !loggedIn ? 'disabled-modal' : ''
+        }`}
+      >
+        {isLoading && (
+          <div className="d-flex justify-content-center">
+            <Spinner
+              animation="border"
+              variant="primary"
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        )}
+        {!loggedIn && (
+          <div className="overlay z-3 vstack gap-2">
+            <span className="fw-bold">
+              Sign up for free and start managing your habits with
+              detailed statistics!
+            </span>
+            <Link to="/login">
+              <Button className="pe-auto" variant="primary" size="sm">
+                Sign up
+              </Button>
+            </Link>
+          </div>
+        )}
         <div className="container-lg px-4">
           <Row className="col-gap justify-content-between align-items-stretch mb-3">
             <StatContainer xs={3}>
@@ -143,7 +186,7 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
                     This month
                   </span>
                   <span className="fw-bold">
-                    {data?.timesCompleted?.month ?? 'N/A'}
+                    {data?.timesCompleted?.month ?? ''}
                   </span>
                 </div>
                 <div className="w-100 d-flex justify-content-between">
@@ -151,7 +194,7 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
                     This year
                   </span>
                   <span className="fw-bold">
-                    {data?.timesCompleted?.year ?? 'N/A'}
+                    {data?.timesCompleted?.year ?? ''}
                   </span>
                 </div>
               </div>
@@ -208,6 +251,27 @@ const StyledModal = styled(Modal)`
   .modal-footer {
     padding: 16px;
     margin: 0 20px;
+  }
+
+  .disabled-modal {
+    position: relative;
+    opacity: 0.5;
+    pointer-events: none; /* Disables mouse events like clicking */
+  }
+
+  .disabled-modal .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    color: white;
+    font-size: 20px;
+    text-align: center;
   }
 `;
 
