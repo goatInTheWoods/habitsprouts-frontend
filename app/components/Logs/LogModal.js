@@ -15,11 +15,15 @@ import {
   axiosCreateLog,
   axiosUpdateLog,
 } from '@/services/LogService';
+import { useLoggedIn, useActions } from '@/store/store';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 
 const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
+  const loggedIn = useLoggedIn();
+  const { openAlert } = useActions();
   const [selectedHabit, setSelectedHabit] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [alertMessage, setAlertMessage] = useState('');
   const [content, setContent] = useState('');
 
   const queryClient = useQueryClient();
@@ -52,6 +56,13 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
     e.preventDefault();
     const log = { date: selectedDate, habit: selectedHabit, content };
     try {
+      if (!selectedHabit) {
+        return setAlertMessage('Pick a habit');
+      }
+
+      if (!content) {
+        return setAlertMessage('Content is empty');
+      }
       if (selectedLog) {
         await updateLogMutation.mutate({
           id: selectedLog.id,
@@ -65,6 +76,7 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
         await createLogMutation.mutate(log);
       }
       closeModal();
+      setAlertMessage('');
     } catch (err) {
       console.log(err);
     }
@@ -100,7 +112,7 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          <Row className="mb-3">
+          <Row className="mb-3 g-2">
             <Form.Group as={Col} xs={6} controlId="formDate">
               <DatePickerInput
                 selectedDate={selectedDate}
@@ -152,7 +164,8 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
           <Form.Group controlId="formBasicEditor">
             <TipTapEditor content={content} setContent={setContent} />
           </Form.Group>
-          <div className="mt-3 d-flex justify-content-end">
+          <div className="mt-3 d-flex justify-content-end align-items-center">
+            <span className="text-danger me-3">{alertMessage}</span>
             <Button variant="primary" type="submit">
               Submit
             </Button>

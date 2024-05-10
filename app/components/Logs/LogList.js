@@ -13,6 +13,7 @@ import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 import { useLoggedIn, useUserInfo } from '@/store/store';
 import { useLocation } from 'react-router-dom';
+import NudgeMessage from '@/components/Logs/NudgeMessage';
 
 const LogList = () => {
   const loggedIn = useLoggedIn();
@@ -128,13 +129,16 @@ const LogList = () => {
           filter={filter}
           setFilter={setFilter}
         />
-        <Button
-          onClick={openLogModal}
-          className="ms-auto px-3 text-light"
-          variant="primary"
-        >
-          New Log
-        </Button>
+
+        {loggedIn && (
+          <Button
+            onClick={openLogModal}
+            className="ms-auto px-3 text-light"
+            variant="primary"
+          >
+            New Log
+          </Button>
+        )}
       </UpperContainer>
       <LogContainer className="vstack gap-3 no-scrollbar">
         {isLoadingLogs && (
@@ -148,6 +152,7 @@ const LogList = () => {
             </Spinner>
           </div>
         )}
+        {!loggedIn && <NudgeMessage />}
         {filteredLogs &&
           filteredLogs.map(log => {
             return (
