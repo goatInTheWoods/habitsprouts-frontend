@@ -126,7 +126,7 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
               detailed statistics!
             </span>
             <Link to="/login">
-              <Button className="pe-auto" variant="primary" size="sm">
+              <Button className="pe-auto" variant="primary">
                 Sign up
               </Button>
             </Link>
