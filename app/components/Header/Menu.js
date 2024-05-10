@@ -10,13 +10,13 @@ function Menu({ isOpen, close }) {
   const userInfo = useUserInfo();
   const menuItems = [
     { name: 'My Acount' },
-    { name: 'Dark Mode' },
-    { name: 'Share This App' },
-    { name: 'Contact Us' },
+    // { name: 'Dark Mode' },
+    // { name: 'Share This App' },
+    // { name: 'Contact Us' },
   ];
 
   const myAccountSubMenu = [
-    { name: 'Edit my info' },
+    // { name: 'Edit my info' },
     { name: 'Log out', onClick: handleLogOut },
     { name: 'Log out from all devices', onClick: handleLogOutAll },
     { name: 'Delete account', onClick: handleDeletingUser },

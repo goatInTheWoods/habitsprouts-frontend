@@ -68,7 +68,7 @@ function HeaderLoggedIn() {
         <Link
           data-for="profile"
           data-tip="My Profile"
-          to={`/profile/${userInfo.username}`}
+          // to={`/profile/${userInfo.username}`}
           className="mr-2"
         >
           {userInfo.avatar !== 'undefined' && (
