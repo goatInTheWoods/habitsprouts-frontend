@@ -67,9 +67,14 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
         await updateLogMutation.mutate({
           id: selectedLog.id,
           logData: {
-            content,
             date: selectedDate,
-            habitId: selectedHabit.id,
+            habit: {
+              currentCount: selectedHabit.totalCount,
+              id: selectedHabit.id,
+              title: selectedHabit.title,
+              unit: selectedHabit.unit,
+            },
+            content,
           },
         });
       } else {
@@ -85,7 +90,7 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
   useEffect(() => {
     if (isOpen && selectedLog && habitList) {
       const habit = habitList.find(
-        habit => habit.id === selectedLog.habit.habitId
+        habit => habit.id === selectedLog.habit.id
       );
       setSelectedHabit(habit);
       setSelectedDate(new Date(selectedLog.date));

@@ -12,7 +12,7 @@ function LogFilter({ habitList, filter, setFilter }) {
 
   useEffect(() => {
     const currentHabit = habitList?.find(
-      habit => habit.habitId === filter
+      habit => habit.id === filter
     );
     setTitle(currentHabit ? currentHabit.title : 'All');
   }, [filter]);
@@ -32,7 +32,7 @@ function LogFilter({ habitList, filter, setFilter }) {
         {habitList &&
           habitList.map((habit, i) => {
             return (
-              <Dropdown.Item data-key={habit.habitId} key={i}>
+              <Dropdown.Item data-key={habit.id} key={i}>
                 {habit.title}
               </Dropdown.Item>
             );

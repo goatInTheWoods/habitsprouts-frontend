@@ -70,9 +70,7 @@ const LogList = () => {
 
   function filterLogs(logs) {
     if (!filter) return setFilteredLogs(logs); // Ensure there is a filter set
-    const filteredLogs = logs.filter(
-      log => log.habit.habitId === filter
-    );
+    const filteredLogs = logs.filter(log => log.habit.id === filter);
     setFilteredLogs(filteredLogs);
   }
 
@@ -80,7 +78,7 @@ const LogList = () => {
     const checkDuplicates = new Set();
     const uniqueHabits = logs
       .filter(log => {
-        const habitId = log.habit.habitId;
+        const habitId = log.habit.id;
         if (checkDuplicates.has(habitId)) {
           return false;
         } else {
@@ -89,6 +87,7 @@ const LogList = () => {
         }
       })
       .map(log => log.habit);
+
     setFilterList(uniqueHabits);
   }
 
