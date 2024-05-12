@@ -26,16 +26,9 @@ import About from '@/pages/About';
 import Terms from '@/pages/Terms';
 import ResetPassword from '@/components/Auth/ResetPassword';
 import ForgotPassword from '@/components/Auth/ForgotPassword';
-// const CreatePost = React.lazy(() =>
-//   import('./components/CreatePost')
-// );
-// const ViewSinglePost = React.lazy(() =>
-//   import('./components/ViewSinglePost')
-// );
 import AlertMessages from '@/components/common/AlertMessages';
-import Profile from '@/components/Profile';
-// import EditPost from './components/EditPost';
 import NotFound from '@/pages/NotFound';
+import Share from '@/pages/Share';
 import ConfirmationModal from '@/components/common/Modal/ConfirmationModal';
 import LoadingDotsIcon from '@/components/common/LoadingDotsIcon';
 import Collapse from 'react-bootstrap/Collapse';
@@ -105,15 +98,8 @@ function Main() {
                   <Route path="/habits" element={<HabitList />} />
                   <Route path="/logs" element={<LogList />} />
                   <Route path="/about-us" element={<About />} />
-                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/share" element={<Share />} />
                   <Route path="/policy" element={<Terms />} />
-                  {/* <Route path="/create-post" element={<CreatePost />} />
-              <Route path="/post/:id" element={<ViewSinglePost />} />
-              <Route path="/post/:id/edit" element={<EditPost />} /> */}
-                  <Route
-                    path="/profile/:username/*"
-                    element={<Profile />}
-                  />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
