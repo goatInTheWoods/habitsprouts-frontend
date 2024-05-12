@@ -13,7 +13,7 @@ const Navbar = () => {
         <i className="fas fa-pen-square"></i>
         <p>Logs</p>
       </NavLink>
-      <NavLink className="nav-link" to="/terms">
+      <NavLink className="nav-link" to="/share">
         <i className="fas fa-users"></i>
         <p>Share</p>
       </NavLink>
