@@ -65,8 +65,8 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
   }, [popperElement]);
 
   return (
-    <div>
-      <div ref={popperRef}>
+    <div style={{ width: '100%' }}>
+      <div ref={popperRef} style={{ width: '100%' }}>
         <Container
           type="text"
           placeholder={format(new Date(selectedDate), 'y-MM-dd')}
@@ -103,6 +103,7 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
 }
 
 const Container = styled.input`
+  width: 100%;
   all: unset;
   background: #fbfbfb;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.03);

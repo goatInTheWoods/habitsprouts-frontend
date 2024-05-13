@@ -493,12 +493,6 @@ textarea.tall-textarea {
   }
 }
 
-.small-header-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 16px;
-}
-
 .custom-tooltip {
   padding: 8px 10px !important;
 }

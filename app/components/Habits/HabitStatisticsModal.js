@@ -133,7 +133,7 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
           </div>
         )}
         <div className="container-lg px-4">
-          <Row className="col-gap justify-content-between align-items-stretch mb-3">
+          <Row className="justify-content-between align-items-stretch mb-3">
             <StatContainer xs={3}>
               <Stack gap={0} className="text-center">
                 <span className="fw-bold text-color-greenGrey">

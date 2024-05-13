@@ -6,9 +6,11 @@ import Button from 'react-bootstrap/Button';
 import Menu from './Menu';
 import User from '../../images/user.svg';
 import { useUserInfo } from '../../store/store';
+import styled from 'styled-components';
 
 function HeaderLoggedIn() {
   const userInfo = useUserInfo();
+  const [hasError, setHasError] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = () => setIsMenuOpen(false);
@@ -22,80 +24,39 @@ function HeaderLoggedIn() {
   //   appDispatch({ type: 'toggleChat' });
   // }
 
+  const renderProfileImage = () => {
+    if (hasError || userInfo.avatar === 'undefined') {
+      return (
+        <UserIcon src="../../images/user.svg" alt="Profile Image" />
+      );
+    }
+    return (
+      <ProfileImage
+        src={userInfo.avatar}
+        alt="Profile Image"
+        onError={() => setHasError(true)}
+      />
+    );
+  };
+
   return (
     <>
       {isMenuOpen && <Menu isOpen={isMenuOpen} close={closeMenu} />}
       <div className="d-flex flex-row my-3 my-md-0 gap-3">
-        {/* <a
-        data-for="search"
-        data-tip="Search"
-        onClick={handleSearchIcon}
-        href="#"
-        className="text-white mr-2 header-search-icon"
-      >
-        <i className="fas fa-search"></i>
-      </a>
-      <ReactTooltip
-        place="bottom"
-        id="search"
-        className="custom-tooltip"
-      />{' '}
-      <span
-        data-for="chat"
-        data-tip="Chat"
-        onClick={handleChat}
-        className={
-          'mr-2 header-chat-icon ' +
-          (appState.unreadChatCount ? 'text-danger' : 'text-white')
-        }
-      >
-        <i className="fas fa-comment"></i>
-        {appState.unreadChatCount ? (
-          <span className="chat-count-badge text-white">
-            {appState.unreadChatCount < 10
-              ? appState.unreadChatCount
-              : '9+'}
-          </span>
-        ) : (
-          ''
-        )}
-      </span>
-      <ReactTooltip
-        place="bottom"
-        id="chat"
-        className="custom-tooltip"
-      />{' '} */}
-        <Link
+        <StyledLink
+          StyledLink
           data-for="profile"
-          data-tip="My Profile"
+          data-tip={userInfo.username}
           // to={`/profile/${userInfo.username}`}
           className="mr-2"
         >
-          {userInfo.avatar !== 'undefined' && (
-            <img
-              className="small-header-avatar"
-              src={userInfo.avatar}
-            />
-          )}
-          {userInfo.avatar === 'undefined' && <User />}
-        </Link>{' '}
+          {renderProfileImage()}
+        </StyledLink>
         <ReactTooltip
           place="bottom"
           id="profile"
           className="custom-tooltip"
         />
-        {/* <Link
-        className="btn btn-sm btn-outline-secondary mr-2"
-        to="/create-post"
-      >
-        Create Log
-      </Link>{' '}
-      <button
-        onClick={handleLogOut}
-        className="btn btn-sm btn-secondary"
-      >
-        Sign Out
-      </button> */}
         <Button onClick={openMenu} className="bg-white">
           <Bars />
         </Button>
@@ -103,5 +64,26 @@ function HeaderLoggedIn() {
     </>
   );
 }
+
+const StyledLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+`;
+
+const ProfileImage = styled.img`
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 50%;
+`;
+
+const UserIcon = styled.img`
+  width: 100%;
+  height: 100%;
+  transform: translate(12px, 10px) scale(1.2);
+`;
 
 export default HeaderLoggedIn;

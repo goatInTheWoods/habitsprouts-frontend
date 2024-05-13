@@ -25,7 +25,6 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [alertMessage, setAlertMessage] = useState('');
   const [content, setContent] = useState('');
-
   const queryClient = useQueryClient();
 
   const createLogMutation = useMutation({
@@ -117,15 +116,15 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          <Row className="mb-3 g-2">
-            <Form.Group as={Col} xs={6} controlId="formDate">
+          <Row className="mb-3">
+            <Form.Group as={Col} xs={6} md={6} controlId="formDate">
               <DatePickerInput
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate}
               />
             </Form.Group>
 
-            <Form.Group as={Col} xs={6} controlId="formFilter">
+            <Form.Group as={Col} xs={6} md={6} controlId="formFilter">
               <DropDownBtn
                 id="dropdown-basic-button"
                 variant={'secondary'}
@@ -135,7 +134,7 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
                   <>
                     {selectedHabit ? (
                       <>
-                        <span className="px-2 me-3 text-color-greenGrey bg-lightGreen fst-italic fw-lighter">
+                        <span className="flex-shrink-1 px-2 me-3 text-color-greenGrey bg-lightGreen fst-italic fw-lighter">
                           {selectedHabit?.totalCount}{' '}
                           {selectedHabit?.unit}
                         </span>{' '}
