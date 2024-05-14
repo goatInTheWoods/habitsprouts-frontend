@@ -4,6 +4,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate,
 } from 'react-router-dom';
 
 import AxiosWrapper from '@/components/Auth/AxiosWrapper';
@@ -85,7 +86,10 @@ function Main() {
             <MainContainer>
               <Suspense fallback={<LoadingDotsIcon />}>
                 <Routes>
-                  <Route path="/" element={<HabitList />} />
+                  <Route
+                    path="/"
+                    element={<Navigate to="/habits" replace />}
+                  />
                   <Route path="/login" element={<Login />} />
                   <Route
                     path="/forgot-password"
