@@ -94,6 +94,9 @@ const LogList = () => {
   useEffect(() => {
     if (loggedIn && userInfo.token) {
       setAllowedToFetch(true);
+    } else {
+      setFilterList([]);
+      setFilteredLogs([]);
     }
   }, [loggedIn, userInfo.token]);
 

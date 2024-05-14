@@ -3,11 +3,14 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios';
 import { useUserInfo, useActions } from '../../store/store';
+import { useQueryClient } from '@tanstack/react-query';
 
 function Menu({ isOpen, close }) {
   const { logout, openAlert, openConfirm, closeConfirm } =
     useActions();
   const userInfo = useUserInfo();
+  const queryClient = useQueryClient();
+
   const menuItems = [
     { name: 'My Acount' },
     // { name: 'Dark Mode' },
@@ -22,12 +25,22 @@ function Menu({ isOpen, close }) {
     { name: 'Delete account', onClick: handleDeletingUser },
   ];
 
+  async function removeQueries() {
+    await queryClient.removeQueries('logs', {
+      removeInactive: true,
+    });
+    await queryClient.removeQueries('habits', {
+      removeInactive: true,
+    });
+  }
+
   async function deleteUser() {
     try {
       const response = await axios.delete('/users/me');
       if (response.status === 200) {
         closeConfirm();
         logout();
+        removeQueries();
         openAlert({
           type: 'success',
           text: 'Your account has been removed. See you next time!',
@@ -64,6 +77,7 @@ function Menu({ isOpen, close }) {
 
       if (response.status === 204 || response.status === 200) {
         logout();
+        removeQueries();
         openAlert({
           type: 'success',
           text: 'You have successfully logged out.',
@@ -79,6 +93,7 @@ function Menu({ isOpen, close }) {
       const response = await axios.post('/users/logoutAll', userInfo);
       if (response.status === 204 || response.status === 200) {
         logout();
+        removeQueries();
         openAlert({
           type: 'success',
           text: 'You have successfully logged out from all devices.',
