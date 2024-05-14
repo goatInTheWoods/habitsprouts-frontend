@@ -11,6 +11,7 @@ const useSetupAxiosInterceptors = navigateTo => {
   const logout = useStore(state => state.actions.logout);
 
   useEffect(() => {
+    console.log('Axios Base URL:', Axios.defaults.baseURL);
     const requestInterceptor = Axios.interceptors.request.use(
       config => {
         if (userInfo.token) {
