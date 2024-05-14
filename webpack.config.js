@@ -35,7 +35,7 @@ config = {
     filename: 'bundled.js',
   },
   plugins: [
-    new Dotenv(),
+    new Dotenv({ systemvars: true }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'app/index-template.html',
@@ -110,7 +110,10 @@ if (currentTask == 'webpackDev' || currentTask == 'dev') {
 if (currentTask == 'webpackBuild') {
   config.plugins.push(
     new CleanWebpackPlugin(),
-    new RunAfterCompile()
+    new RunAfterCompile(),
+    new Dotenv({
+      systemvars: true, // Ensures that system environment variables are used
+    })
   );
   config.mode = 'production';
   config.output = {
