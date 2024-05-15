@@ -109,7 +109,7 @@ function Main() {
                 </Routes>
               </Suspense>
             </MainContainer>
-            <Navbar />
+            <NavbarStyles />
           </Container>
         </AxiosWrapper>
       </Router>
@@ -144,4 +144,13 @@ const MainContainer = styled.div`
   padding: 0 16px;
   flex-grow: 1;
   overflow-y: hidden;
+`;
+
+const NavbarStyles = styled(Navbar)`
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  width: 100%;
 `;
