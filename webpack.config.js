@@ -4,35 +4,31 @@ const Dotenv = require('dotenv-webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const fse = require('fs-extra');
 
-/*
-  Because I didn't bother making CSS part of our
-  webpack workflow for this project I'm just
-  manually copying our CSS file to the DIST folder.
-*/
 class RunAfterCompile {
   apply(compiler) {
     compiler.hooks.done.tap('Copy files', function () {
       fse.copySync('./app/main.css', './dist/main.css');
-
-      /*
-        If you needed to copy another file or folder
-        such as your "images" folder, you could just
-        call fse.copySync() as many times as you need
-        to here to cover all of your files/folders.
-      */
     });
   }
 }
 
-config = {
-  mode: 'development',
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
+const config = {
+  mode: isDevelopment ? 'development' : 'production',
   entry: './app/main.js',
   output: {
     publicPath: '/',
-    path: path.resolve(__dirname, 'app'),
-    filename: 'bundled.js',
+    path: isDevelopment
+      ? path.resolve(__dirname, 'app')
+      : path.resolve(__dirname, 'dist'),
+    filename: isDevelopment ? 'bundled.js' : '[name].[chunkhash].js',
+    chunkFilename: isDevelopment
+      ? undefined
+      : '[name].[chunkhash].js',
   },
   plugins: [
     new Dotenv({ systemvars: true }),
@@ -53,21 +49,26 @@ config = {
           options: {
             presets: [
               '@babel/preset-react',
-              ['@babel/preset-env', { targets: { node: '12' } }],
+              [
+                '@babel/preset-env',
+                {
+                  targets: isDevelopment
+                    ? { node: 'current' }
+                    : 'defaults',
+                },
+              ],
             ],
             plugins: ['babel-plugin-inline-react-svg'],
           },
         },
       },
       {
-        test: /\.(scss)$/,
+        test: /\.(scss|css)$/,
         use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-          },
+          isDevelopment
+            ? 'style-loader'
+            : MiniCssExtractPlugin.loader,
+          'css-loader',
           {
             loader: 'postcss-loader',
             options: {
@@ -76,14 +77,8 @@ config = {
               },
             },
           },
-          {
-            loader: 'sass-loader',
-          },
+          'sass-loader',
         ],
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
       },
     ],
   },
@@ -94,7 +89,7 @@ config = {
   },
 };
 
-if (currentTask == 'webpackDev' || currentTask == 'dev') {
+if (isDevelopment) {
   config.devtool = 'source-map';
   config.devServer = {
     port: 3000,
@@ -105,23 +100,14 @@ if (currentTask == 'webpackDev' || currentTask == 'dev') {
     liveReload: false,
     historyApiFallback: { index: 'index.html' },
   };
-}
-
-if (currentTask == 'webpackBuild') {
+} else {
   config.plugins.push(
     new CleanWebpackPlugin(),
-    new RunAfterCompile(),
-    new Dotenv({
-      systemvars: true, // Ensures that system environment variables are used
-    })
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css',
+    }),
+    new RunAfterCompile()
   );
-  config.mode = 'production';
-  config.output = {
-    publicPath: '/',
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[chunkhash].js',
-    chunkFilename: '[name].[chunkhash].js',
-  };
 }
 
 module.exports = config;
