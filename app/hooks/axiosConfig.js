@@ -11,18 +11,8 @@ const useSetupAxiosInterceptors = navigateTo => {
   const logout = useStore(state => state.actions.logout);
 
   useEffect(() => {
-    // Debug: Log the Axios base URL to verify it's correctly set
-    console.log(
-      'Axios Base URL:',
-      Axios.defaults.baseURL,
-      process.env.BACKENDURL
-    );
-
     const requestInterceptor = Axios.interceptors.request.use(
       config => {
-        // Debug: Log each request to see what URL Axios is targeting
-        console.log('Making request to:', config.url);
-
         if (userInfo.token) {
           config.headers[
             'Authorization'
@@ -55,63 +45,12 @@ const useSetupAxiosInterceptors = navigateTo => {
     );
 
     return () => {
-      // Eject interceptors on cleanup
       Axios.interceptors.request.eject(requestInterceptor);
       Axios.interceptors.response.eject(responseInterceptor);
     };
-  }, [userInfo.token, loggedIn, logout, navigateTo]); // Ensure dependencies are correctly listed
+  }, [userInfo.token, loggedIn, logout, navigateTo]);
 
   return;
 };
 
 export default useSetupAxiosInterceptors;
-
-// const useSetupAxiosInterceptors = navigateTo => {
-//   const loggedIn = useStore(state => state.loggedIn);
-//   const userInfo = useStore(state => state.userInfo);
-//   const logout = useStore(state => state.actions.logout);
-
-//   useEffect(() => {
-//     console.log('Axios Base URL:', Axios.defaults.baseURL);
-//     const requestInterceptor = Axios.interceptors.request.use(
-//       config => {
-//         if (userInfo.token) {
-//           config.headers[
-//             'Authorization'
-//           ] = `Bearer ${userInfo.token}`;
-//         }
-
-//         if (config.url && config.url.startsWith('/habits')) {
-//           config.headers['User-Time-Zone'] = getUserTimeZone();
-//         }
-
-//         return config;
-//       },
-//       error => {
-//         return Promise.reject(error);
-//       }
-//     );
-
-//     // users will be redirected to login page whenever they get 401 error
-//     const responseInterceptor = Axios.interceptors.response.use(
-//       response => response,
-//       error => {
-//         if (error.response && error.response.status === 401) {
-//           if (loggedIn) {
-//             logout();
-//           }
-//           navigateTo('/login?from=401');
-//         }
-
-//         return Promise.reject(error);
-//       }
-//     );
-
-//     return () => {
-//       Axios.interceptors.request.eject(requestInterceptor);
-//       Axios.interceptors.response.eject(responseInterceptor);
-//     };
-//   }, [userInfo.token, logout]);
-// };
-
-// export default useSetupAxiosInterceptors;
