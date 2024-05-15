@@ -40,6 +40,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import disableReactDevTools from 'disable-react-devtools';
 
 function Main() {
   const queryClient = new QueryClient();
@@ -115,6 +116,10 @@ function Main() {
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
+}
+
+if (process.env.NODE_ENV === 'production') {
+  disableReactDevTools();
 }
 
 const app = '#app';

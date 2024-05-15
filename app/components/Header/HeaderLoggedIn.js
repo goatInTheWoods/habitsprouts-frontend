@@ -25,9 +25,12 @@ function HeaderLoggedIn() {
   // }
 
   const renderProfileImage = () => {
+    console.log(userInfo.avatar);
     if (hasError || userInfo.avatar === 'undefined') {
+      console.log(1);
       return <UserIcon />;
     }
+    console.log(2);
     return (
       <ProfileImage
         src={userInfo.avatar}
