@@ -9,9 +9,20 @@ const fse = require('fs-extra');
 
 class RunAfterCompile {
   apply(compiler) {
-    compiler.hooks.done.tap('Copy files', function () {
-      fse.copySync('./app/main.css', './dist/main.css');
-      fse.copySync('./app/images/user.svg', './dist/images/user.svg');
+    compiler.hooks.done.tap('Copy files', () => {
+      // Ensure the destination directory exists before copying
+      fs.ensureDirSync('./dist/images');
+
+      try {
+        fs.copySync('./app/main.css', './dist/main.css');
+        fs.copySync(
+          './app/images/user.svg',
+          './dist/images/user.svg'
+        );
+        console.log('Files copied successfully!');
+      } catch (err) {
+        console.error('Error copying files:', err);
+      }
     });
   }
 }
