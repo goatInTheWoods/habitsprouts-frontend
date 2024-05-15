@@ -109,7 +109,9 @@ function Main() {
                 </Routes>
               </Suspense>
             </MainContainer>
-            <NavbarStyles />
+            <NavbarContainer>
+              <Navbar />
+            </NavbarContainer>
           </Container>
         </AxiosWrapper>
       </Router>
@@ -146,7 +148,7 @@ const MainContainer = styled.div`
   overflow-y: hidden;
 `;
 
-const NavbarStyles = styled(Navbar)`
+const NavbarContainer = styled.div`
   position: fixed;
   left: 0;
   right: 0;
