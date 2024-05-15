@@ -14,16 +14,16 @@ class RunAfterCompile {
       const targetPath = './dist/images/user.svg';
 
       console.log('Creating directory: ./dist/images');
-      fs.ensureDirSync('./dist/images');
+      fse.ensureDirSync('./dist/images');
       console.log('Directory ensured.');
 
-      if (fs.existsSync(sourcePath)) {
+      if (fse.existsSync(sourcePath)) {
         console.log('Source file exists.');
       } else {
         console.log('Source file does not exist.');
       }
 
-      if (fs.existsSync(targetPath)) {
+      if (fse.existsSync(targetPath)) {
         console.log('Verification: File exists at target location.');
       } else {
         console.log(
@@ -37,7 +37,7 @@ class RunAfterCompile {
         console.log(
           `Attempting to copy ${sourcePath} to ${targetPath}`
         );
-        fs.copySync(sourcePath, targetPath);
+        fse.copySync(sourcePath, targetPath);
         console.log('File copied successfully!');
       } catch (err) {
         console.error('Error copying files:', err);
