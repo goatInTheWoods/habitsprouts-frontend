@@ -10,34 +10,14 @@ const fse = require('fs-extra');
 class RunAfterCompile {
   apply(compiler) {
     compiler.hooks.done.tap('Copy files', () => {
-      const sourcePath = './app/images/user.svg';
-      const targetPath = './dist/images/user.svg';
-
-      console.log('Creating directory: ./dist/images');
       fse.ensureDirSync('./dist/images');
-      console.log('Directory ensured.');
-
-      if (fse.existsSync(sourcePath)) {
-        console.log('Source file exists.');
-      } else {
-        console.log('Source file does not exist.');
-      }
-
-      if (fse.existsSync(targetPath)) {
-        console.log('Verification: File exists at target location.');
-      } else {
-        console.log(
-          'Verification failed: File does not exist at target location.'
-        );
-      }
 
       try {
         fse.copySync('./app/main.css', './dist/main.css');
-
-        console.log(
-          `Attempting to copy ${sourcePath} to ${targetPath}`
-        );
-        fse.copySync(sourcePath, targetPath);
+        // fse.copySync(
+        //   './app/images/user.svg',
+        //   './dist/images/user.svg'
+        // );
         console.log('File copied successfully!');
       } catch (err) {
         console.error('Error copying files:', err);

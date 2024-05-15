@@ -15,11 +15,6 @@ function HeaderLoggedIn() {
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = () => setIsMenuOpen(false);
 
-  const userSvgUrl =
-    process.env.NODE_ENV == 'production'
-      ? '/images/user.svg'
-      : '../../images/user.svg';
-
   // function handleSearchIcon(e) {
   //   e.preventDefault();
   //   appDispatch({ type: 'openSearch' });
@@ -31,7 +26,7 @@ function HeaderLoggedIn() {
 
   const renderProfileImage = () => {
     if (hasError || userInfo.avatar === 'undefined') {
-      return <UserIcon src={userSvgUrl} alt="Profile Image" />;
+      return <UserIcon />;
     }
     return (
       <ProfileImage
@@ -83,7 +78,7 @@ const ProfileImage = styled.img`
   border-radius: 50%;
 `;
 
-const UserIcon = styled.img`
+const UserIcon = styled(User)`
   width: 100%;
   height: 100%;
   transform: translate(12px, 10px) scale(1.2);
