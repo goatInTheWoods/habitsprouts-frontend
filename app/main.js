@@ -40,7 +40,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import disableReactDevTools from 'disable-react-devtools';
+import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 
 function Main() {
   const queryClient = new QueryClient();
