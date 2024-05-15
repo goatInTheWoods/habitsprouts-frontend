@@ -151,6 +151,5 @@ const NavbarStyles = styled(Navbar)`
   left: 0;
   right: 0;
   bottom: 0;
-  padding-bottom: env(safe-area-inset-bottom);
   width: 100%;
 `;
