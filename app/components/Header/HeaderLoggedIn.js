@@ -15,6 +15,11 @@ function HeaderLoggedIn() {
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = () => setIsMenuOpen(false);
 
+  const userSvgUrl =
+    process.env.NODE_ENV == 'production'
+      ? '/images/user.svg'
+      : '../../images/user.svg';
+
   // function handleSearchIcon(e) {
   //   e.preventDefault();
   //   appDispatch({ type: 'openSearch' });
@@ -26,9 +31,7 @@ function HeaderLoggedIn() {
 
   const renderProfileImage = () => {
     if (hasError || userInfo.avatar === 'undefined') {
-      return (
-        <UserIcon src="../../images/user.svg" alt="Profile Image" />
-      );
+      return <UserIcon src={userSvgUrl} alt="Profile Image" />;
     }
     return (
       <ProfileImage
