@@ -11,11 +11,11 @@ class RunAfterCompile {
   apply(compiler) {
     compiler.hooks.done.tap('Copy files', () => {
       // Ensure the destination directory exists before copying
-      fs.ensureDirSync('./dist/images');
+      fse.ensureDirSync('./dist/images');
 
       try {
-        fs.copySync('./app/main.css', './dist/main.css');
-        fs.copySync(
+        fse.copySync('./app/main.css', './dist/main.css');
+        fse.copySync(
           './app/images/user.svg',
           './dist/images/user.svg'
         );
