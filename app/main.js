@@ -137,7 +137,7 @@ if (module.hot) {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  max-height: 100dvh;
 `;
 
 const MainContainer = styled.div`
