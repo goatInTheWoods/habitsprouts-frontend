@@ -42,7 +42,6 @@ function HeaderLoggedIn() {
       {isMenuOpen && <Menu isOpen={isMenuOpen} close={closeMenu} />}
       <div className="d-flex flex-row my-3 my-md-0 gap-3">
         <StyledLink
-          StyledLink
           data-for="profile"
           data-tip={userInfo.username}
           // to={`/profile/${userInfo.username}`}
