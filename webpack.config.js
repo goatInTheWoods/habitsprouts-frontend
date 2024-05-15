@@ -17,8 +17,6 @@ class RunAfterCompile {
       fs.ensureDirSync('./dist/images');
       console.log('Directory ensured.');
 
-      const sourcePath = './app/images/user.svg';
-      const targetPath = './dist/images/user.svg';
       if (fs.existsSync(sourcePath)) {
         console.log('Source file exists.');
       } else {
