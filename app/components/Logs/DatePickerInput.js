@@ -24,14 +24,12 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
   };
 
   const handleInputChange = e => {
-    setInputValue(e.currentTarget.value);
-    const date = parse(
-      e.currentTarget.value,
-      'y-MM-dd',
-      selectedDate
-    );
-    if (isValid(date)) {
-      setSelectedDate(date);
+    const date = e.currentTarget.value;
+
+    if (isValid(new Date(date))) {
+      const parsedDate = new Date(date);
+      setInputValue(date);
+      setSelectedDate(parsedDate);
     } else {
       setSelectedDate(undefined);
     }
@@ -65,14 +63,15 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
   }, [popperElement]);
 
   return (
-    <div style={{ width: '100%' }}>
-      <div ref={popperRef} style={{ width: '100%' }}>
-        <Container
-          type="text"
+    <div>
+      <div ref={popperRef}>
+        <DateInputContainer
+          type="date"
           placeholder={format(new Date(selectedDate), 'y-MM-dd')}
           value={inputValue}
           onChange={handleInputChange}
           onClick={openPopper}
+          readOnly
         />
       </div>
       {isPopperOpen && (
@@ -102,8 +101,8 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
   );
 }
 
-const Container = styled.input`
-  width: 100%;
+const DateInputContainer = styled.input`
+  width: 100px;
   all: unset;
   background: #fbfbfb;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.03);
