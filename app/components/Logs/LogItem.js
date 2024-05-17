@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import DOMPurify from 'dompurify';
-import { formatDate } from '@/utils/util';
+import { formatDate } from '@/utils/dateUtil';
 import ItemDropdwon from '@/components/common/ItemDropdown';
 import { useActions } from '@/store/store';
 import { useQueryClient, useMutation } from '@tanstack/react-query';

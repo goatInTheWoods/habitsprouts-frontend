@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Axios from 'axios';
 import { useStore } from '@/store/store';
-import { getUserTimeZone } from '@/utils/util';
+import { getUserTimeZone } from '@/utils/dateUtil';
 
 Axios.defaults.baseURL = process.env.BACKENDURL;
 

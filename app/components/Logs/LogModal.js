@@ -53,14 +53,20 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const log = { date: selectedDate, habit: selectedHabit, content };
+
     try {
+      if (!selectedDate) {
+        return setAlertMessage(
+          'Date is not valid. Please select a date from the calendar.'
+        );
+      }
+
       if (!selectedHabit) {
-        return setAlertMessage('Pick a habit');
+        return setAlertMessage('Please pick a habit.');
       }
 
       if (!content) {
-        return setAlertMessage('Content is empty');
+        return setAlertMessage('Content is empty.');
       }
       if (selectedLog) {
         await updateLogMutation.mutate({
@@ -77,6 +83,11 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
           },
         });
       } else {
+        const log = {
+          date: selectedDate,
+          habit: selectedHabit,
+          content,
+        };
         await createLogMutation.mutate(log);
       }
       closeModal();
@@ -116,54 +127,54 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          <Row className="mb-3">
-            <Form.Group as={Col} xs={6} md={6} controlId="formDate">
-              <DatePickerInput
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
-              />
-            </Form.Group>
+          {/* <Row className="mb-3"> */}
+          <Form.Group controlId="formDate">
+            <DatePickerInput
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            />
+          </Form.Group>
 
-            <Form.Group as={Col} xs={6} md={6} controlId="formFilter">
-              <DropDownBtn
-                id="dropdown-basic-button"
-                variant={'secondary'}
-                size="sm"
-                drop="down"
-                title={
-                  <>
-                    {selectedHabit ? (
-                      <>
-                        <span className="flex-shrink-1 px-2 me-3 text-color-greenGrey bg-lightGreen fst-italic fw-lighter">
-                          {selectedHabit?.totalCount}{' '}
-                          {selectedHabit?.unit}
-                        </span>{' '}
-                        <span>{selectedHabit.title}</span>
-                      </>
-                    ) : (
-                      'Pick a Habit'
-                    )}
-                  </>
-                }
-              >
-                {habitList &&
-                  habitList.map(habit => {
-                    return (
-                      <Dropdown.Item
-                        className="d-flex justify-content-between"
-                        key={habit.id}
-                        onClick={() => hadleSelectedHabit(habit)}
-                      >
-                        <span className="px-2 text-color-greenGrey bg-lightGreen">
-                          {habit.totalCount} {habit.unit}
-                        </span>
-                        <span>{habit.title}</span>
-                      </Dropdown.Item>
-                    );
-                  })}
-              </DropDownBtn>
-            </Form.Group>
-          </Row>
+          <Form.Group controlId="formFilter">
+            <DropDownBtn
+              id="dropdown-basic-button"
+              variant={'secondary'}
+              size="sm"
+              drop="down"
+              title={
+                <>
+                  {selectedHabit ? (
+                    <>
+                      <span className="flex-shrink-1 px-2 me-3 text-color-greenGrey bg-lightGreen fst-italic fw-lighter">
+                        {selectedHabit?.totalCount}{' '}
+                        {selectedHabit?.unit}
+                      </span>{' '}
+                      <span>{selectedHabit.title}</span>
+                    </>
+                  ) : (
+                    'Pick a Habit'
+                  )}
+                </>
+              }
+            >
+              {habitList &&
+                habitList.map(habit => {
+                  return (
+                    <Dropdown.Item
+                      className="d-flex justify-content-between"
+                      key={habit.id}
+                      onClick={() => hadleSelectedHabit(habit)}
+                    >
+                      <span className="px-2 text-color-greenGrey bg-lightGreen">
+                        {habit.totalCount} {habit.unit}
+                      </span>
+                      <span>{habit.title}</span>
+                    </Dropdown.Item>
+                  );
+                })}
+            </DropDownBtn>
+          </Form.Group>
+          {/* </Row> */}
 
           <Form.Group controlId="formBasicEditor">
             <TipTapEditor content={content} setContent={setContent} />
@@ -197,6 +208,10 @@ const StyledModal = styled(Modal)`
 
     @media (min-width: 768px) {
       max-width: 720px;
+    }
+
+    @media (min-width: 992px) {
+      padding: 20% 0 0 0;
     }
   }
 

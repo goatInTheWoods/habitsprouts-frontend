@@ -9,7 +9,7 @@ import {
 import HabitCountButton from '@/components/Habits/HaibtCountButton';
 import ItemDropdown from '@/components/common/ItemDropdown';
 import Spinner from 'react-bootstrap/Spinner';
-import { getUserTimeZone, isEqualDay } from '@/utils/util';
+import { getUserTimeZone, isEqualDay } from '@/utils/dateUtil';
 
 const HabitItem = ({
   habit,
