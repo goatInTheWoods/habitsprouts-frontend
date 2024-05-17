@@ -33,13 +33,12 @@ const HabitList = () => {
   const [allowedToFetch, setAllowedToFetch] = useState(false);
 
   const queryClient = useQueryClient();
-  const { isLoading, isFetching, isError, isSuccess, data, error } =
-    useQuery({
-      queryKey: ['habits'],
-      queryFn: axiosFetchHabits,
-      enabled: allowedToFetch,
-      refetchOnWindowFocus: true,
-    });
+  const { isFetching, isError, isSuccess, data, error } = useQuery({
+    queryKey: ['habits'],
+    queryFn: axiosFetchHabits,
+    enabled: allowedToFetch,
+    refetchOnWindowFocus: true,
+  });
 
   const updateHabitOrderMutation = useMutation({
     mutationFn: axiosUpdateHabitOrder,
@@ -173,7 +172,7 @@ const HabitList = () => {
         </AddHabitButton>
       </AddHabitContainer>
       <HabitContainer className="vstack gap-3 no-scrollbar">
-        {isLoading && (
+        {isFetching && (
           <div className="d-flex justify-content-center">
             <Spinner
               animation="border"
@@ -204,7 +203,6 @@ const HabitList = () => {
                   habit={habit}
                   onClickTitle={() => handleStatModal(habit.id)}
                   editSelectedItem={editSelectedItem}
-                  isFetching={isFetching}
                 />
               </div>
             );

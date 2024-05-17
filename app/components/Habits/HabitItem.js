@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useLoggedIn, useActions } from '@/store/store';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
@@ -11,12 +11,7 @@ import ItemDropdown from '@/components/common/ItemDropdown';
 import Spinner from 'react-bootstrap/Spinner';
 import { getUserTimeZone, isEqualDay } from '@/utils/dateUtil';
 
-const HabitItem = ({
-  habit,
-  onClickTitle,
-  editSelectedItem,
-  isFetching,
-}) => {
+const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
   const loggedIn = useLoggedIn();
   const {
     editHabit,
@@ -40,7 +35,9 @@ const HabitItem = ({
   const updateHabitMutation = useMutation({
     mutationFn: axiosCountHabit,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['habits'] });
+      queryClient.invalidateQueries({
+        queryKey: ['habits'],
+      });
     },
     onError: error => {
       console.error('Error updating habit:', error);
@@ -113,7 +110,7 @@ const HabitItem = ({
       >
         <span className="fw-semibold fs-3">{habit.title}</span>
         <div>
-          {isFetching ? (
+          {updateHabitMutation.isPending ? (
             <Spinner
               as="span"
               animation="grow"
