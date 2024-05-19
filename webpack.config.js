@@ -91,6 +91,19 @@ const config = {
           'sass-loader',
         ],
       },
+      {
+        test: /\.(png|jpg|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[path][name].[ext]',
+              outputPath: 'images/',
+              publicPath: 'images/',
+            },
+          },
+        ],
+      },
     ],
   },
   resolve: {

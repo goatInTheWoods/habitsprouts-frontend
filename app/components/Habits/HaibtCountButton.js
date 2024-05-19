@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
-import Check from '../../images/check.svg';
-import Smile from '../../images/smile.svg';
+import CheckImg from '../../images/check.png';
+import SmileImg from '../../images/smile.png';
 
 const HabitCountButton = ({ isCompletedToday, onClick }) => {
   const [isSpinning, setIsSpinning] = useState(false);
@@ -15,12 +15,12 @@ const HabitCountButton = ({ isCompletedToday, onClick }) => {
   return (
     <CountButtonContainer
       iscompletedtoday={isCompletedToday}
-      className="me-lg-3 "
+      className="me-lg-3"
       onClick={handleClick}
       isspinning={isSpinning}
     >
-      {!isCompletedToday && <Check />}
-      {isCompletedToday && <Smile />}
+      {!isCompletedToday && <StyledCheck src={CheckImg} />}
+      {isCompletedToday && <StyledSmile src={SmileImg} />}
     </CountButtonContainer>
   );
 };
@@ -42,14 +42,27 @@ const CountButtonContainer = styled.button`
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  background-color: #f0ff97;
-
-  background-color: ${props =>
-    props.iscompletedtoday ? '#f0ff97' : 'rgba(243, 255, 168, 0.35)'};
   border-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   filter: drop-shadow(2px 3px 9px rgba(122, 122, 122, 0.08));
   animation: ${({ isspinning }) =>
     isspinning ? spinStyles : 'none'};
+  background-color: ${({ iscompletedtoday }) =>
+    iscompletedtoday ? '#f0ff97' : 'rgba(243, 255, 168, 0.35)'};
+`;
+
+const StyledCheck = styled.img`
+  width: 2.7rem;
+  height: 2.7rem;
+  display: block;
+`;
+
+const StyledSmile = styled.img`
+  width: 2.7rem;
+  height: 2.7rem;
+  display: block;
 `;
 
 export default HabitCountButton;
