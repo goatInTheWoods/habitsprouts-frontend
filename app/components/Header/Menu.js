@@ -12,7 +12,7 @@ function Menu({ isOpen, close }) {
   const queryClient = useQueryClient();
 
   const menuItems = [
-    { name: 'My Acount' },
+    { name: 'My Account' },
     // { name: 'Dark Mode' },
     // { name: 'Share This App' },
     // { name: 'Contact Us' },
