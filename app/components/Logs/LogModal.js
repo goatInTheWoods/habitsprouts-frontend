@@ -9,8 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import TipTapEditor from '@/components/Logs/TipTapEditor';
 import DatePickerInput from '@/components/Logs/DatePickerInput';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+import LogModalDropDownHabits from '@/components/Logs/LogModalDropDownHabits';
 import {
   axiosCreateLog,
   axiosUpdateLog,
@@ -46,10 +45,6 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
       console.error('Error updating log:', error);
     },
   });
-
-  const hadleSelectedHabit = habit => {
-    setSelectedHabit(habit);
-  };
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -127,54 +122,23 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          {/* <Row className="mb-3"> */}
-          <Form.Group controlId="formDate">
-            <DatePickerInput
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-            />
-          </Form.Group>
+          <Row className="mb-3">
+            <Form.Group as={Col} xs={6} controlId="formDate">
+              <DatePickerInput
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+              />
+            </Form.Group>
 
-          <Form.Group controlId="formFilter">
-            <DropDownBtn
-              id="dropdown-basic-button"
-              variant={'secondary'}
-              size="sm"
-              drop="down"
-              title={
-                <>
-                  {selectedHabit ? (
-                    <>
-                      <span className="flex-shrink-1 px-2 me-3 text-color-greenGrey bg-lightGreen fst-italic fw-lighter">
-                        {selectedHabit?.totalCount}{' '}
-                        {selectedHabit?.unit}
-                      </span>{' '}
-                      <span>{selectedHabit.title}</span>
-                    </>
-                  ) : (
-                    'Pick a Habit'
-                  )}
-                </>
-              }
-            >
-              {habitList &&
-                habitList.map(habit => {
-                  return (
-                    <Dropdown.Item
-                      className="d-flex justify-content-between"
-                      key={habit.id}
-                      onClick={() => hadleSelectedHabit(habit)}
-                    >
-                      <span className="px-2 text-color-greenGrey bg-lightGreen">
-                        {habit.totalCount} {habit.unit}
-                      </span>
-                      <span>{habit.title}</span>
-                    </Dropdown.Item>
-                  );
-                })}
-            </DropDownBtn>
-          </Form.Group>
-          {/* </Row> */}
+            <Form.Group as={Col} xs={6} controlId="formFilter">
+              <LogModalDropDownHabits
+                selectedHabit={selectedHabit}
+                habitList={habitList}
+                setSelectedHabit={setSelectedHabit}
+                // className="w-100"
+              />
+            </Form.Group>
+          </Row>
 
           <Form.Group controlId="formBasicEditor">
             <TipTapEditor content={content} setContent={setContent} />
@@ -238,36 +202,6 @@ const StyledModal = styled(Modal)`
 
 const CloseButton = styled.button`
   all: unset;
-`;
-
-const DropDownBtn = styled(DropdownButton)`
-  & > button {
-    width: 100% !important;
-  }
-
-  .dropdown-toggle {
-    all: unset;
-    background: #fbfbfb !important;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.03);
-    padding: 6px 0;
-    border-radius: 20px;
-    color: #71764f !important;
-    text-align: center;
-    cursor: pointer;
-
-    &:hover,
-    &:focus {
-      background: #ebebeb !important;
-    }
-  }
-
-  .dropdown-menu {
-    font-style: italic;
-    font-weight: 400;
-    font-size: 11px;
-    line-height: 13px;
-    color: #71764f;
-  }
 `;
 
 export default LogModal;
