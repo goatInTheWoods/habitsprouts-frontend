@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import CheckImg from '../../images/check.png';
 import SmileImg from '../../images/smile.png';
+import confetti from 'canvas-confetti';
 
 const HabitCountButton = ({ isCompletedToday, onClick }) => {
   const [isSpinning, setIsSpinning] = useState(false);
+  const [clicked, setClicked] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setIsSpinning(true);
-    onClick();
-    setTimeout(() => setIsSpinning(false), 1000);
+    await onClick();
+    setClicked(true);
+    setTimeout(() => setIsSpinning(false), 500);
   };
+
+  useEffect(() => {
+    if (clicked && isCompletedToday) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+      setClicked(false);
+    }
+  }, [isCompletedToday]);
 
   return (
     <CountButtonContainer
