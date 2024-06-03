@@ -42,9 +42,9 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 
-function Main() {
-  const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
+function Main() {
   const { closeAlert } = useActions();
   const alertStatus = useAlertStatus();
 
