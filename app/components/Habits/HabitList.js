@@ -18,6 +18,7 @@ import {
   useQuery,
   useQueryClient,
   useMutation,
+  useMutationState,
 } from '@tanstack/react-query';
 import {
   axiosFetchHabits,
@@ -31,15 +32,20 @@ const HabitList = () => {
   const habits = useHabits();
   const userInfo = useUserInfo();
   const [allowedToFetch, setAllowedToFetch] = useState(false);
+  const [isConfettiVisible, setIsConfettiVisible] = useState(false);
 
   const queryClient = useQueryClient();
-  const { isLoading, isFetching, isError, isSuccess, data, error } =
-    useQuery({
-      queryKey: ['habits'],
-      queryFn: axiosFetchHabits,
-      enabled: allowedToFetch,
-      refetchOnWindowFocus: true,
-    });
+  const { isLoading, isError, isSuccess, data, error } = useQuery({
+    queryKey: ['habits'],
+    queryFn: axiosFetchHabits,
+    enabled: allowedToFetch,
+    refetchOnWindowFocus: true,
+  });
+
+  const pendingCreateHabit = useMutationState({
+    filters: { mutationKey: ['createHabit'], status: 'pending' },
+    select: mutation => mutation.state.variables,
+  });
 
   const updateHabitOrderMutation = useMutation({
     mutationFn: axiosUpdateHabitOrder,
@@ -54,9 +60,9 @@ const HabitList = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isStatModalOpen, setIsStatModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
-  const [selectedHabit, setSelctedHabit] = useState(null);
+  const [selectedHabit, setSelectedHabit] = useState(null);
   // state for drag & drop
-  const [movedItem, setmovedItem] = useState(null);
+  const [movedItem, setMovedItem] = useState(null);
 
   const initialHabit = {
     id: uuidv4(),
@@ -88,7 +94,7 @@ const HabitList = () => {
     const target = habits.find(habit => {
       return habit.id === id;
     });
-    setSelctedHabit(target);
+    setSelectedHabit(target);
     openInfoModal('edit');
   }
 
@@ -96,7 +102,7 @@ const HabitList = () => {
     const target = habits.find(habit => {
       return habit.id === id;
     });
-    setSelctedHabit(target);
+    setSelectedHabit(target);
     openStatModal();
   }
 
@@ -121,7 +127,7 @@ const HabitList = () => {
         changeHabitOrder(fromIdx, toIdx);
       }
     }
-    setmovedItem(null);
+    setMovedItem(null);
   };
 
   const handleDragOver = event => {
@@ -129,7 +135,7 @@ const HabitList = () => {
   };
 
   const handleDragStart = (event, habit) => {
-    setmovedItem(habit);
+    setMovedItem(habit);
   };
 
   useEffect(() => {
@@ -173,17 +179,6 @@ const HabitList = () => {
         </AddHabitButton>
       </AddHabitContainer>
       <HabitContainer className="vstack gap-3 no-scrollbar">
-        {isLoading && (
-          <div className="d-flex justify-content-center">
-            <Spinner
-              animation="border"
-              variant="primary"
-              role="status"
-            >
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
-          </div>
-        )}
         {habits && habits.length === 0 && (
           <WelcomeCard openModal={openInfoModal} />
         )}
@@ -208,6 +203,17 @@ const HabitList = () => {
               </div>
             );
           })}
+        {(isLoading || pendingCreateHabit.length > 0) && (
+          <div className="d-flex justify-content-center">
+            <Spinner
+              animation="border"
+              variant="primary"
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        )}
       </HabitContainer>
     </Page>
   );

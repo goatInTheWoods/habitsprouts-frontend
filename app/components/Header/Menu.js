@@ -108,7 +108,7 @@ function Menu({ isOpen, close }) {
     <>
       <Offcanvas show={isOpen} onHide={close} placement="end">
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>HabitCount</Offcanvas.Title>
+          <Offcanvas.Title>HabitSprouts</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <ListGroup>

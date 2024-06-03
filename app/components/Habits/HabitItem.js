@@ -6,7 +6,7 @@ import {
   axiosDeleteHabit,
   axiosCountHabit,
 } from '@/services/HabitService';
-import HabitCountButton from '@/components/Habits/HaibtCountButton';
+import HabitCountButton from '@/components/Habits/HabitCountButton';
 import ItemDropdown from '@/components/common/ItemDropdown';
 import Spinner from 'react-bootstrap/Spinner';
 import { getUserTimeZone, isEqualDay } from '@/utils/dateUtil';
@@ -35,7 +35,7 @@ const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
   const updateHabitMutation = useMutation({
     mutationFn: axiosCountHabit,
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      queryClient.refetchQueries({
         queryKey: ['habits'],
       });
     },
@@ -43,7 +43,7 @@ const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
       console.error('Error updating habit:', error);
       openAlert({
         type: 'danger',
-        text: 'Something went wrong, counting failed. Try agian.',
+        text: 'Something went wrong, counting failed. Try again.',
       });
     },
   });
@@ -84,11 +84,10 @@ const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
   }
 
   function isCompletedToday() {
-    const Dateslength = habit?.completionDates?.length;
-
-    if (Dateslength) {
+    const datesLength = habit?.completionDates?.length;
+    if (datesLength) {
       const lastDay = new Date(
-        habit.completionDates[Dateslength - 1]
+        habit.completionDates[datesLength - 1]
       );
       const today = new Date();
       return isEqualDay(lastDay, today);
@@ -114,7 +113,7 @@ const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
             <Spinner
               as="span"
               animation="grow"
-              varient="light"
+              variant="light"
               size="sm"
               role="status"
               aria-hidden="true"

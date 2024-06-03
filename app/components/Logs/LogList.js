@@ -23,7 +23,7 @@ const LogList = () => {
   const [filter, setFilter] = useState('');
   const [filterList, setFilterList] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
-  const [selectedLog, setSelctedLog] = useState(null);
+  const [selectedLog, setSelectedLog] = useState(null);
   const [allowedToFetch, setAllowedToFetch] = useState(false);
 
   const {
@@ -40,7 +40,7 @@ const LogList = () => {
 
   const {
     isLoading: isLoadingLogs,
-    isFetching: isFetchigLogs,
+    isFetching: isFetchingLogs,
     isError: isErrorLogs,
     isSuccess: isSuccessLogs,
     data: logs,
@@ -57,14 +57,14 @@ const LogList = () => {
 
   function closeLogModal() {
     setIsCreateModalOpen(false);
-    setSelctedLog(null);
+    setSelectedLog(null);
   }
 
   function editSelectedItem(id) {
     const target = logs.find(log => {
       return log.id === id;
     });
-    setSelctedLog(target);
+    setSelectedLog(target);
     openLogModal();
   }
 
@@ -161,7 +161,7 @@ const LogList = () => {
               <div key={log.id}>
                 <LogItem
                   log={log}
-                  isFetching={isFetchigLogs}
+                  isFetching={isFetchingLogs}
                   editSelectedItem={editSelectedItem}
                 />
               </div>

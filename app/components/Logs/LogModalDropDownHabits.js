@@ -8,7 +8,7 @@ const LogModalDropDownHabits = ({
   habitList,
   setSelectedHabit,
 }) => {
-  const hadleSelectedHabit = habit => {
+  const handleSelectedHabit = habit => {
     setSelectedHabit(habit);
   };
 
@@ -38,7 +38,7 @@ const LogModalDropDownHabits = ({
             <Dropdown.Item
               className="d-flex justify-content-between"
               key={habit.id}
-              onClick={() => hadleSelectedHabit(habit)}
+              onClick={() => handleSelectedHabit(habit)}
             >
               <span className="px-2 text-color-greenGrey bg-lightGreen">
                 {habit.totalCount} {habit.unit}

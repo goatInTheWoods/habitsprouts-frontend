@@ -42,20 +42,20 @@ const Login = () => {
     navigate('/');
   }
 
-  // useEffect(() => {
-  //   // if (window.google && document.getElementById('google')) {
-  //   const google = window.google;
-  //   google.accounts.id.initialize({
-  //     client_id: process.env.GOOGLE_CLIENT_ID,
-  //     callback: handleCredentialResponse,
-  //   });
-  //   google.accounts.id.renderButton(
-  //     document.getElementById('google'),
-  //     { theme: 'filled_blue', size: 'medium', text: 'google' } // customization attributes
-  //   );
-  //   google.accounts.id.prompt(); // also display the One Tap dialog
-  //   // }
-  // }, []);
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      const google = window.google;
+      google.accounts.id.initialize({
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+      });
+      google.accounts.id.renderButton(
+        document.getElementById('google'),
+        { theme: 'filled_blue', size: 'medium', text: 'google' } // customization attributes
+      );
+      google.accounts.id.prompt(); // also display the One Tap dialog
+    }
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -207,7 +207,9 @@ const Login = () => {
                 >
                   Sign up
                 </SignupButton>
-                {/* <div id="google"></div> */}
+                {process.env.NODE_ENV === 'development' && (
+                  <div id="google"></div>
+                )}
               </div>
             </div>
           </form>

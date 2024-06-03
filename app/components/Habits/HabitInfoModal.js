@@ -19,6 +19,7 @@ function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
   const [habit, setHabit] = useState(initialHabit);
 
   const createHabitMutation = useMutation({
+    mutationKey: ['createHabit'],
     mutationFn: axiosCreateHabit,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });

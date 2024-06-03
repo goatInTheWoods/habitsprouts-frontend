@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import DOMPurify from 'dompurify';
 import { formatDate } from '@/utils/dateUtil';
-import ItemDropdwon from '@/components/common/ItemDropdown';
+import ItemDropdown from '@/components/common/ItemDropdown';
 import { useActions } from '@/store/store';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import {
@@ -10,7 +10,7 @@ import {
   axiosUpdateLog,
 } from '@/services/LogService';
 
-const LogItem = ({ log, isFetchigLogs, editSelectedItem }) => {
+const LogItem = ({ log, isFetchingLogs, editSelectedItem }) => {
   const { openConfirm, closeConfirm, openAlert } = useActions();
   const queryClient = useQueryClient();
 
@@ -61,7 +61,7 @@ const LogItem = ({ log, isFetchigLogs, editSelectedItem }) => {
         <StatusText className="px-2 ms-1 me-3 text-color-greenGrey bg-lightGreen fst-italic fw-lighter">
           {habitStatus}
         </StatusText>
-        <ItemDropdwon
+        <ItemDropdown
           onEditClick={() => {
             editSelectedItem(log.id);
           }}

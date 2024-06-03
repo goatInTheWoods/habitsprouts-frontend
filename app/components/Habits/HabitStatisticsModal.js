@@ -202,6 +202,9 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
           </Row>
         </div>
         <hr />
+        <span>
+          Edit your completions by clicking the date of the calender!
+        </span>
         <DayPickerWrapper>
           <DayPicker
             mode="multiple"

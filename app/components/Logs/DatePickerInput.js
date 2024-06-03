@@ -96,6 +96,9 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
             defaultMonth={selectedDate}
             selected={selectedDate}
             onSelect={handleDaySelect}
+            disabledDays={{
+              after: new Date(),
+            }}
             className="rdp-small"
           />
         </div>

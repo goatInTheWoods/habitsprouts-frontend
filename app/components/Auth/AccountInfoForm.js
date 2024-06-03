@@ -189,8 +189,7 @@ function AccountInfoForm({
     try {
       const response = await axios.post(
         '/users/signup/doesUsernameExist',
-        { username: state.username.value },
-        { cancelToken: ourRequest.token }
+        { username: state.username.value }
       );
       dispatch({
         type: 'usernameUniqueResults',
@@ -326,7 +325,6 @@ function AccountInfoForm({
   function inputCheck(input) {
     return useEffect(() => {
       if (state[input].value) {
-        console.log('inputcheck');
         const delay = setTimeout(() => {
           dispatch({ type: `${input}AfterDelay` });
         }, 800);
