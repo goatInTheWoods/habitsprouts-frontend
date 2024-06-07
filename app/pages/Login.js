@@ -3,8 +3,16 @@ import Page from '@/components/common/Page';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Button from 'react-bootstrap/Button';
 import Signup from '@/components/Auth/Signup';
 import { useActions } from '@/store/store';
+import { useMutation } from '@tanstack/react-query';
+import {
+  axiosLogInUser,
+  axiosGoogleLogInUser,
+} from '@/services/UserService';
+import { auth, signInWithPopup, googleProvider } from '@/firebase';
+import GoogleButton from '../images/google-login.png';
 
 const Login = () => {
   const { login, openAlert } = useActions();
@@ -20,6 +28,50 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [passwordInvalid, setPasswordInvalid] = useState(false);
+
+  const logInUserMutation = useMutation({
+    mutationFn: axiosLogInUser,
+    onSuccess: res => {
+      login(res.data);
+      openAlert({
+        type: 'success',
+        text: 'Congrats! You are logged in.',
+      });
+      navigate('/');
+    },
+    onError: error => {
+      console.log('There was a problem logging in', error);
+      openAlert({
+        type: 'danger',
+        text: 'Failed to log in',
+      });
+    },
+    onSettled: () => {
+      setEmail('');
+      setPassword('');
+      setEmailInvalid(false);
+      setPasswordInvalid(false);
+    },
+  });
+
+  const googleLogInUserMutation = useMutation({
+    mutationFn: axiosGoogleLogInUser,
+    onSuccess: data => {
+      login(data);
+      openAlert({
+        type: 'success',
+        text: 'Congrats! You are logged in.',
+      });
+      navigate('/');
+    },
+    onError: error => {
+      console.log('There was a problem logging in', error);
+      openAlert({
+        type: 'danger',
+        text: 'Failed to log in',
+      });
+    },
+  });
 
   async function handleCredentialResponse(response) {
     const token = response.credential;
@@ -57,6 +109,25 @@ const Login = () => {
     }
   }, []);
 
+  const signInWithGoogle = async () => {
+    try {
+      const userCredential = await signInWithPopup(
+        auth,
+        googleProvider
+      );
+      const user = userCredential.user;
+      const uid = user.uid;
+      const token = await user.getIdToken();
+
+      googleLogInUserMutation.mutate({
+        token,
+        uid,
+      });
+    } catch (error) {
+      console.error('Error signing in with Google:', error);
+    }
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -69,32 +140,10 @@ const Login = () => {
       return;
     }
 
-    try {
-      const response = await axios.post('users/login', {
-        email,
-        password,
-      });
-
-      setEmail('');
-      setPassword('');
-      setEmailInvalid(false);
-      setPasswordInvalid(false);
-
-      if (response.status === 204 || response.status === 201) {
-        login(response.data);
-        openAlert({
-          type: 'success',
-          text: 'Congrats! You are logged in.',
-        });
-        navigate('/');
-      }
-    } catch (e) {
-      openAlert({
-        type: 'danger',
-        text: 'Incorrect email/password.',
-      });
-      console.log('There was a problem', e);
-    }
+    await logInUserMutation.mutate({
+      email,
+      password,
+    });
   }
 
   return (
@@ -169,20 +218,6 @@ const Login = () => {
             </div>
 
             <div className="mt-3 vstack gap-3 mx-auto">
-              {/* <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  value=""
-                  id="flexCheckDefault"
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor="flexCheckDefault"
-                >
-                  Remember me
-                </label>
-              </div> */}
               <button
                 type="submit"
                 className="btn btn-md btn-primary"
@@ -201,14 +236,17 @@ const Login = () => {
               </div>
 
               <div className="hstack gap-2 justify-content-between">
-                <SignupButton
+                <Button
+                  variant="secondary"
                   onClick={() => openSignup()}
-                  className="btn btn-md btn-secondary"
                 >
                   Sign up
-                </SignupButton>
+                </Button>
                 {process.env.NODE_ENV === 'development' && (
-                  <div id="google"></div>
+                  <StyledGoogle
+                    src={GoogleButton}
+                    onClick={signInWithGoogle}
+                  />
                 )}
               </div>
             </div>
@@ -219,14 +257,15 @@ const Login = () => {
   );
 };
 
-const SignupButton = styled.button`
-  font-size: 14px;
-`;
-
 const ForgotPassword = styled.div`
   text-align: center;
   .link {
     text-decoration: underline;
   }
+`;
+
+const StyledGoogle = styled.img`
+  width: 197px;
+  height: 40px;
 `;
 export default Login;

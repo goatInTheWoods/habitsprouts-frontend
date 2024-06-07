@@ -30,7 +30,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const config = {
   mode: isDevelopment ? 'development' : 'production',
-  entry: './app/main.js',
+  entry: './app/App.js',
   output: {
     publicPath: '/',
     path: isDevelopment

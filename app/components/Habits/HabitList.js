@@ -182,7 +182,17 @@ const HabitList = () => {
         {habits && habits.length === 0 && (
           <WelcomeCard openModal={openInfoModal} />
         )}
-
+        {(isLoading || pendingCreateHabit.length > 0) && (
+          <div className="d-flex justify-content-center">
+            <Spinner
+              animation="border"
+              variant="primary"
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        )}
         {habits &&
           habits.map(habit => {
             return (
@@ -203,17 +213,6 @@ const HabitList = () => {
               </div>
             );
           })}
-        {(isLoading || pendingCreateHabit.length > 0) && (
-          <div className="d-flex justify-content-center">
-            <Spinner
-              animation="border"
-              variant="primary"
-              role="status"
-            >
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
-          </div>
-        )}
       </HabitContainer>
     </Page>
   );
