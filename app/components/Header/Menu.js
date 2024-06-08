@@ -4,7 +4,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios';
 import { useUserInfo, useActions } from '../../store/store';
 import { useQueryClient } from '@tanstack/react-query';
-import { googleSignOut } from '@/firebase';
+import { googleSignOut } from '../../firebase';
 
 function Menu({ isOpen, close }) {
   const { logout, openAlert, openConfirm, closeConfirm } =
