@@ -57,7 +57,7 @@ const Login = () => {
   const googleLogInUserMutation = useMutation({
     mutationFn: axiosGoogleLogInUser,
     onSuccess: data => {
-      login(data);
+      login({ ...data, authBy: 'google' });
       openAlert({
         type: 'success',
         text: 'Congrats! You are logged in.',
@@ -93,21 +93,6 @@ const Login = () => {
     }
     navigate('/');
   }
-
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      const google = window.google;
-      google.accounts.id.initialize({
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse,
-      });
-      google.accounts.id.renderButton(
-        document.getElementById('google'),
-        { theme: 'filled_blue', size: 'medium', text: 'google' } // customization attributes
-      );
-      google.accounts.id.prompt(); // also display the One Tap dialog
-    }
-  }, []);
 
   const signInWithGoogle = async () => {
     try {

@@ -15,6 +15,7 @@ export const useStore = create(
             token: null,
             username: null,
             avatar: null,
+            authBy: null,
           },
           alertStatus: {
             isOn: false,
@@ -37,6 +38,7 @@ export const useStore = create(
                   token: data?.token,
                   username: data?.username,
                   avatar: data?.avatar,
+                  authBy: data?.authBy || 'email',
                 };
                 state.loggedIn = !!data?.token;
               });

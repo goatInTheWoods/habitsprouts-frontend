@@ -4,6 +4,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios';
 import { useUserInfo, useActions } from '../../store/store';
 import { useQueryClient } from '@tanstack/react-query';
+import { googleSignOut } from '@/firebase';
 
 function Menu({ isOpen, close }) {
   const { logout, openAlert, openConfirm, closeConfirm } =
@@ -36,7 +37,11 @@ function Menu({ isOpen, close }) {
 
   async function deleteUser() {
     try {
+      if (userInfo.authBy === 'google') {
+        await googleSignOut();
+      }
       const response = await axios.delete('/users/me');
+
       if (response.status === 200) {
         closeConfirm();
         logout();
