@@ -227,12 +227,10 @@ const Login = () => {
                 >
                   Sign up
                 </Button>
-                {process.env.NODE_ENV === 'development' && (
-                  <StyledGoogle
-                    src={GoogleButton}
-                    onClick={signInWithGoogle}
-                  />
-                )}
+                <StyledGoogle
+                  src={GoogleButton}
+                  onClick={signInWithGoogle}
+                />
               </div>
             </div>
           </form>
