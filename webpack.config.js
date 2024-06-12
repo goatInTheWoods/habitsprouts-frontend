@@ -53,6 +53,11 @@ const config = {
   module: {
     rules: [
       {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
         test: /\.js$/,
         exclude: /(node_modules)/,
         use: {
@@ -107,6 +112,7 @@ const config = {
     ],
   },
   resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
       '@': path.resolve(__dirname, 'app/'),
     },
