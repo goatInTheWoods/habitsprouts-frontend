@@ -55,6 +55,8 @@
     "@tanstack/react-query-devtools": "^5.8.4",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@typescript-eslint/parser": "^7.13.0",
     "autoprefixer": "^10.4.14",
     "babel-loader": "^8.2.5",
     "babel-plugin-inline-react-svg": "^2.0.2",
