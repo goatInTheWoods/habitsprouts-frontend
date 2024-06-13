@@ -45,7 +45,13 @@
       "@/*": ["app/*"],
     }
   },
-  "include": ["app/**/*","decs.d.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+    "ts-node": {
+    "esm": true,
+    "compilerOptions": {
+      "module": "NodeNext",
+    }
+  },
+  "include": ["app/**/*", "generateHtml.js"],
+  "exclude": ["node_modules"]
 
 }

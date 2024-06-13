@@ -31,7 +31,8 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const config = {
   mode: isDevelopment ? 'development' : 'production',
-  entry: './app/App.js',
+  entry: './app/App.tsx',
+  devtool: 'inline-source-map',
   output: {
     publicPath: '/',
     path: isDevelopment
@@ -56,6 +57,11 @@ const config = {
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
+        options: {
+          compilerOptions: {
+            noEmit: false,
+          },
+        },
         exclude: /node_modules/,
       },
       {
@@ -75,7 +81,6 @@ const config = {
                 },
               ],
             ],
-            plugins: ['babel-plugin-inline-react-svg'],
           },
         },
       },
@@ -109,6 +114,10 @@ const config = {
             },
           },
         ],
+      },
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
       },
     ],
   },
