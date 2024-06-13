@@ -6,9 +6,9 @@ import styled from 'styled-components';
 const LogModalDropDownHabits = ({
   selectedHabit,
   habitList,
-  setSelectedHabit,
-}) => {
-  const handleSelectedHabit = habit => {
+  setSelectedHabit
+}: $TSFixMe) => {
+  const handleSelectedHabit = (habit: $TSFixMe) => {
     setSelectedHabit(habit);
   };
 
@@ -33,7 +33,7 @@ const LogModalDropDownHabits = ({
       }
     >
       {habitList &&
-        habitList.map(habit => {
+        habitList.map((habit: $TSFixMe) => {
           return (
             <Dropdown.Item
               className="d-flex justify-content-between"

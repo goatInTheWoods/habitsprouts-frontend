@@ -8,7 +8,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState();
   const [errorMsg, setErrorMsg] = useState();
   const [onSendingSuccess, setOnSendingSuccess] = useState(false);
-  async function handleSubmit(e) {
+  async function handleSubmit(e: $TSFixMe) {
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -22,6 +22,7 @@ const ForgotPassword = () => {
         setOnSendingSuccess(true);
       }
     } catch (e) {
+      // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
       setErrorMsg(e.message);
     }
   }
@@ -42,7 +43,7 @@ const ForgotPassword = () => {
                 type="email"
                 placeholder="Enter email"
                 defaultValue={email}
-                onChange={e => {
+                onChange={(e: $TSFixMe) => {
                   setEmail(e.target.value);
                 }}
               />

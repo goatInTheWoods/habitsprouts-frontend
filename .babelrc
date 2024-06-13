@@ -4,5 +4,6 @@
     "@babel/preset-react",
     "@babel/preset-typescript"
   ],
-  // Other configurations...
+  "plugins": [
+  ]
 }

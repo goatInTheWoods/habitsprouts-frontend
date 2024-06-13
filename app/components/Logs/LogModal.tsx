@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-bootstrap/Modal';
+// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/x.svg' or its cor... Remove this comment to see the full error message
 import X from '../../images/x.svg';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
@@ -17,7 +18,12 @@ import {
 import { useLoggedIn, useActions } from '@/store/store';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 
-const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
+const LogModal = ({
+  isOpen,
+  closeModal,
+  habitList,
+  selectedLog
+}: $TSFixMe) => {
   const loggedIn = useLoggedIn();
   const { openAlert } = useActions();
   const [selectedHabit, setSelectedHabit] = useState(null);
@@ -31,7 +37,7 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['logs'] });
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.error('Error creating log:', error);
     },
   });
@@ -41,12 +47,12 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['logs'] });
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.error('Error updating log:', error);
     },
   });
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e: $TSFixMe) => {
     e.preventDefault();
 
     try {
@@ -69,9 +75,13 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
           logData: {
             date: selectedDate,
             habit: {
+              // @ts-expect-error TS(2339) FIXME: Property 'totalCount' does not exist on type 'neve... Remove this comment to see the full error message
               currentCount: selectedHabit.totalCount,
+              // @ts-expect-error TS(2339) FIXME: Property 'id' does not exist on type 'never'.
               id: selectedHabit.id,
+              // @ts-expect-error TS(2339) FIXME: Property 'title' does not exist on type 'never'.
               title: selectedHabit.title,
+              // @ts-expect-error TS(2339) FIXME: Property 'unit' does not exist on type 'never'.
               unit: selectedHabit.unit,
             },
             content,
@@ -95,7 +105,7 @@ const LogModal = ({ isOpen, closeModal, habitList, selectedLog }) => {
   useEffect(() => {
     if (isOpen && selectedLog && habitList) {
       const habit = habitList.find(
-        habit => habit.id === selectedLog.habit.id
+        (habit: $TSFixMe) => habit.id === selectedLog.habit.id
       );
       setSelectedHabit(habit);
       setSelectedDate(new Date(selectedLog.date));

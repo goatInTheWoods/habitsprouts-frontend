@@ -3,7 +3,9 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import styled from 'styled-components';
 
-const WelcomeCard = ({ openModal }) => {
+const WelcomeCard = ({
+  openModal
+}: $TSFixMe) => {
   return (
     <Container>
       <Card border="light" className="text-center">

@@ -1,7 +1,7 @@
 import React from 'react';
 import Alert from 'react-bootstrap/Alert';
 
-function AlertMessages(props) {
+function AlertMessages(props: $TSFixMe) {
   return (
     <Alert
       key={props.type}

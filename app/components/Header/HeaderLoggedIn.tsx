@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
+// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/bars.svg' or its ... Remove this comment to see the full error message
 import Bars from '../../images/bars.svg';
 import Button from 'react-bootstrap/Button';
 import Menu from './Menu';
+// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/user.svg' or its ... Remove this comment to see the full error message
 import User from '../../images/user.svg';
 import { useUserInfo } from '../../store/store';
 import styled from 'styled-components';
@@ -44,8 +46,9 @@ function HeaderLoggedIn() {
         <StyledLink
           data-for="profile"
           data-tip={userInfo.username}
-          // to={`/profile/${userInfo.username}`}
-          className="mr-2"
+          to={`/profile/${userInfo.username}`}
+          className="mr-2 pe-none"
+          aria-disabled="true"
         >
           {renderProfileImage()}
         </StyledLink>

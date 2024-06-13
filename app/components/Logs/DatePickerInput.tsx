@@ -4,7 +4,10 @@ import { format, isValid, parse } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
 import { usePopper } from 'react-popper';
 
-function DatePickerDialog({ selectedDate, setSelectedDate }) {
+function DatePickerDialog({
+  selectedDate,
+  setSelectedDate
+}: $TSFixMe) {
   const [inputValue, setInputValue] = useState('');
   const [isPopperOpen, setIsPopperOpen] = useState(false);
 
@@ -23,7 +26,7 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
     setIsPopperOpen(false);
   };
 
-  const handleInputChange = e => {
+  const handleInputChange = (e: $TSFixMe) => {
     const date = parse(
       e.currentTarget.value,
       'y-MM-dd',
@@ -38,7 +41,7 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
     }
   };
 
-  const handleDaySelect = date => {
+  const handleDaySelect = (date: $TSFixMe) => {
     setSelectedDate(date);
     if (date) {
       setInputValue(format(date, 'y-MM-dd'));
@@ -49,11 +52,13 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
   };
 
   useEffect(() => {
-    const handleClickOutside = event => {
+    const handleClickOutside = (event: $TSFixMe) => {
       if (
         popperRef.current &&
+        // @ts-expect-error TS(2339) FIXME: Property 'contains' does not exist on type 'never'... Remove this comment to see the full error message
         !popperRef.current.contains(event.target) &&
         popperElement &&
+        // @ts-expect-error TS(2339) FIXME: Property 'contains' does not exist on type 'never'... Remove this comment to see the full error message
         !popperElement.contains(event.target)
       ) {
         closePopper();
@@ -86,6 +91,7 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
           }}
           className="dialog-sheet"
           {...popper.attributes.popper}
+          // @ts-expect-error TS(2322) FIXME: Type 'Dispatch<SetStateAction<null>>' is not assig... Remove this comment to see the full error message
           ref={setPopperElement}
           role="dialog"
           aria-label="DayPicker calendar"
@@ -96,6 +102,7 @@ function DatePickerDialog({ selectedDate, setSelectedDate }) {
             defaultMonth={selectedDate}
             selected={selectedDate}
             onSelect={handleDaySelect}
+            // @ts-expect-error TS(2322) FIXME: Type '{ initialFocus: true; mode: "single"; defaul... Remove this comment to see the full error message
             disabledDays={{
               after: new Date(),
             }}

@@ -1,7 +1,7 @@
-export const debounce = (func, wait) => {
-  let timeout;
+export const debounce = (func: $TSFixMe, wait: $TSFixMe) => {
+  let timeout: $TSFixMe;
 
-  return function executedFunction(...args) {
+  return function executedFunction(...args: $TSFixMe[]) {
     const later = () => {
       clearTimeout(timeout);
       func(...args);

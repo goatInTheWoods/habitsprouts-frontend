@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/x.svg' or its cor... Remove this comment to see the full error message
 import X from '../../images/x.svg';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
@@ -21,7 +22,11 @@ import { DayPicker } from 'react-day-picker';
 import { getUserTimeZone, convertTimezone } from '@/utils/dateUtil';
 import { useLoggedIn, useUserInfo } from '@/store/store';
 
-function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
+function HabitStatisticsModal({
+  habitId,
+  isOpen,
+  closeModal
+}: $TSFixMe) {
   const loggedIn = useLoggedIn();
   const userInfo = useUserInfo();
   const [days, setDays] = useState([]);
@@ -40,12 +45,12 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
       queryClient.invalidateQueries({ queryKey: ['singleHabit'] });
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.error('Error updating habit:', error);
     },
   });
 
-  const handleDayClick = date => {
+  const handleDayClick = (date: $TSFixMe) => {
     updateCompleteDate.mutate({
       id: habitId,
       habitData: {
@@ -64,7 +69,7 @@ function HabitStatisticsModal({ habitId, isOpen, closeModal }) {
   useEffect(() => {
     if (isSuccess && data) {
       const dateObjects = data.completionDates.map(
-        dateString => new Date(dateString)
+        (dateString: $TSFixMe) => new Date(dateString)
       );
       setDays(dateObjects);
     }

@@ -60,24 +60,24 @@ const LogList = () => {
     setSelectedLog(null);
   }
 
-  function editSelectedItem(id) {
-    const target = logs.find(log => {
+  function editSelectedItem(id: $TSFixMe) {
+    const target = logs.find((log: $TSFixMe) => {
       return log.id === id;
     });
     setSelectedLog(target);
     openLogModal();
   }
 
-  function filterLogs(logs) {
+  function filterLogs(logs: $TSFixMe) {
     if (!filter) return setFilteredLogs(logs); // Ensure there is a filter set
-    const filteredLogs = logs.filter(log => log.habit.id === filter);
+    const filteredLogs = logs.filter((log: $TSFixMe) => log.habit.id === filter);
     setFilteredLogs(filteredLogs);
   }
 
-  function handleFilterList(logs) {
+  function handleFilterList(logs: $TSFixMe) {
     const checkDuplicates = new Set();
     const uniqueHabits = logs
-      .filter(log => {
+      .filter((log: $TSFixMe) => {
         const habitId = log.habit.id;
         if (checkDuplicates.has(habitId)) {
           return false;
@@ -86,7 +86,7 @@ const LogList = () => {
           return true;
         }
       })
-      .map(log => log.habit);
+      .map((log: $TSFixMe) => log.habit);
 
     setFilterList(uniqueHabits);
   }
@@ -158,6 +158,7 @@ const LogList = () => {
         {filteredLogs &&
           filteredLogs.map(log => {
             return (
+              // @ts-expect-error TS(2339) FIXME: Property 'id' does not exist on type 'never'.
               <div key={log.id}>
                 <LogItem
                   log={log}

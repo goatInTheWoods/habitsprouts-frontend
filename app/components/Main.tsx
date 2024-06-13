@@ -25,12 +25,14 @@ import NotFound from '@/pages/NotFound';
 import Share from '@/pages/Share';
 import Login from '@/pages/Login';
 
-const Main = ({ queryClient }) => {
+const Main = ({
+  queryClient
+}: $TSFixMe) => {
   const { closeAlert } = useActions();
   const alertStatus = useAlertStatus();
 
   useEffect(() => {
-    let timeout;
+    let timeout: $TSFixMe;
     if (alertStatus?.isOn) {
       timeout = setTimeout(() => {
         closeAlert();

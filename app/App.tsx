@@ -16,6 +16,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const app = '#app';
+// @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
 const root = ReactDOM.createRoot(document.querySelector(app));
 root.render(
   <StrictMode>
@@ -23,6 +24,8 @@ root.render(
   </StrictMode>
 );
 
+// @ts-expect-error TS(2339) FIXME: Property 'hot' does not exist on type 'NodeModule'... Remove this comment to see the full error message
 if (module.hot) {
+  // @ts-expect-error TS(2339) FIXME: Property 'hot' does not exist on type 'NodeModule'... Remove this comment to see the full error message
   module.hot.accept();
 }

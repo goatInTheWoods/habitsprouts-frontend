@@ -6,6 +6,7 @@ const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const fse = require('fs-extra');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 class RunAfterCompile {
   apply(compiler) {
@@ -113,6 +114,9 @@ const config = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    plugins: [
+      new TsconfigPathsPlugin({ configFile: './tsconfig.json' }),
+    ],
     alias: {
       '@': path.resolve(__dirname, 'app/'),
     },

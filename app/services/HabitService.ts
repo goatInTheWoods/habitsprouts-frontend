@@ -5,7 +5,7 @@ export const axiosFetchHabits = async () => {
   return data;
 };
 
-export const axiosFetchSingleHabit = async habitId => {
+export const axiosFetchSingleHabit = async (habitId: $TSFixMe) => {
   const { data } = await axios.get(`/habits/${habitId}`);
   return data;
 };
@@ -15,28 +15,34 @@ export const axiosFetchHabitList = async () => {
   return data;
 };
 
-export const axiosCreateHabit = async habitData => {
+export const axiosCreateHabit = async (habitData: $TSFixMe) => {
   const { data } = await axios.post('/habit', habitData);
   return data;
 };
 
-export const axiosUpdateHabit = async ({ id, habitData }) => {
+export const axiosUpdateHabit = async ({
+  id,
+  habitData
+}: $TSFixMe) => {
   const { data } = await axios.patch(`/habits/${id}`, habitData);
   return data;
 };
 
-export const axiosUpdateHabitOrder = async ({ id, indices }) => {
+export const axiosUpdateHabitOrder = async ({
+  id,
+  indices
+}: $TSFixMe) => {
   console.log(id);
   const { data } = await axios.patch(`/habits/order/${id}`, indices);
   return data;
 };
 
-export const axiosCountHabit = async id => {
+export const axiosCountHabit = async (id: $TSFixMe) => {
   const { data } = await axios.patch(`/habits/count/${id}`);
   return data;
 };
 
-export const axiosDeleteHabit = async id => {
+export const axiosDeleteHabit = async (id: $TSFixMe) => {
   const { data } = await axios.delete(`/habits/${id}`);
   return data;
 };

@@ -11,8 +11,9 @@ function ConfirmationModal() {
     closeConfirm();
   }
 
-  function handleKeyPress(event) {
+  function handleKeyPress(event: $TSFixMe) {
     if (event.key === 'Enter') {
+      // @ts-expect-error TS(2304) FIXME: Cannot find name 'handleSubmit'.
       handleSubmit(event);
     }
   }

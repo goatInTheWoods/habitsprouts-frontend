@@ -12,6 +12,7 @@ import {
   axiosGoogleLogInUser,
 } from '@/services/UserService';
 import { auth, signInWithPopup, googleProvider } from '@/firebase';
+// @ts-expect-error TS(2307) FIXME: Cannot find module '../images/google-login.png' or... Remove this comment to see the full error message
 import GoogleButton from '../images/google-login.png';
 
 const Login = () => {
@@ -31,7 +32,7 @@ const Login = () => {
 
   const logInUserMutation = useMutation({
     mutationFn: axiosLogInUser,
-    onSuccess: res => {
+    onSuccess: (res: $TSFixMe) => {
       login(res.data);
       openAlert({
         type: 'success',
@@ -39,7 +40,7 @@ const Login = () => {
       });
       navigate('/');
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.log('There was a problem logging in', error);
       openAlert({
         type: 'danger',
@@ -56,7 +57,7 @@ const Login = () => {
 
   const googleLogInUserMutation = useMutation({
     mutationFn: axiosGoogleLogInUser,
-    onSuccess: data => {
+    onSuccess: (data: $TSFixMe) => {
       login({ ...data, authBy: 'google' });
       openAlert({
         type: 'success',
@@ -64,7 +65,7 @@ const Login = () => {
       });
       navigate('/');
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.log('There was a problem logging in', error);
       openAlert({
         type: 'danger',
@@ -73,7 +74,7 @@ const Login = () => {
     },
   });
 
-  async function handleCredentialResponse(response) {
+  async function handleCredentialResponse(response: $TSFixMe) {
     const token = response.credential;
 
     const res = await axios.post('/api/auth', { token });
@@ -113,7 +114,7 @@ const Login = () => {
     }
   };
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: $TSFixMe) {
     e.preventDefault();
 
     if (!email) {

@@ -12,7 +12,12 @@ import {
 } from '@/services/HabitService';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 
-function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
+function HabitInfoModal({
+  type,
+  initialHabit,
+  isOpen,
+  closeModal,
+}: $TSFixMe) {
   const loggedIn = useLoggedIn();
   const { addHabit, editHabit, closeConfirm } = useActions();
   const queryClient = useQueryClient();
@@ -24,7 +29,7 @@ function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.error('Error creating habit:', error);
     },
   });
@@ -34,14 +39,14 @@ function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.error('Error updating habit:', error);
     },
   });
 
-  function handleInput({ target }) {
-    setHabit(current =>
-      produce(current, draft => {
+  function handleInput({ target }: $TSFixMe) {
+    setHabit((current: $TSFixMe) =>
+      produce(current, (draft: $TSFixMe) => {
         if (
           target.id === 'totalCount' ||
           target.id === 'dailyCountLimit'
@@ -65,7 +70,7 @@ function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
     closeModal();
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: $TSFixMe) {
     e.preventDefault();
     const { id, ...habitRest } = habit;
     try {
@@ -102,7 +107,7 @@ function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
     handleClose();
   }
 
-  function handleKeyPress(event) {
+  function handleKeyPress(event: $TSFixMe) {
     if (event.key === 'Enter') {
       handleSubmit(event);
     }
@@ -137,51 +142,6 @@ function HabitInfoModal({ type, initialHabit, isOpen, closeModal }) {
                 defaultValue={habit?.title}
               />
             </Form.Group>
-            {!loggedIn && (
-              <Row className="row-gap-3 mb-2">
-                <Col
-                  as="span"
-                  className="d-flex align-items-center"
-                  xs={7}
-                  sm="auto"
-                >
-                  Starts from day
-                </Col>
-                <Form.Group
-                  as={Col}
-                  sm={3}
-                  xs={6}
-                  controlId="totalCount"
-                >
-                  <Form.Control
-                    type="number"
-                    defaultValue={habit?.totalCount}
-                    onChange={handleInput}
-                    min="0"
-                  />
-                </Form.Group>
-                <Form.Group
-                  className="pe-0"
-                  as={Col}
-                  xs={5}
-                  sm="auto"
-                  controlId="isIncrementCount"
-                >
-                  <select
-                    className="form-select"
-                    id="isIncrementCount"
-                    aria-label="Default select example"
-                    onChange={handleInput}
-                    defaultValue={habit?.isIncrementCount}
-                  >
-                    <option defaultValue value="true">
-                      + Count Up
-                    </option>
-                    <option value="false">- Count Down </option>
-                  </select>
-                </Form.Group>
-              </Row>
-            )}
           </Form>
         </Modal.Body>
         <Modal.Footer>

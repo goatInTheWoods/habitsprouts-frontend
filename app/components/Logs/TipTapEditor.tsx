@@ -3,16 +3,23 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import styled from 'styled-components';
 
-const TipTapEditor = ({ content, setContent }) => {
+const TipTapEditor = ({
+  content,
+  setContent
+}: $TSFixMe) => {
   const editor = useEditor({
     extensions: [
       StarterKit, // This includes the 'doc' node, paragraph, text, and other basic formatting options.
     ],
     content: content,
-    onCreate: ({ editor }) => {
+    onCreate: ({
+      editor
+    }: $TSFixMe) => {
       editor.commands.setContent(content);
     },
-    onUpdate: ({ editor }) => {
+    onUpdate: ({
+      editor
+    }: $TSFixMe) => {
       const html = editor.getHTML();
       setContent(html);
     },

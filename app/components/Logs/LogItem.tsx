@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'domp... Remove this comment to see the full error message
 import DOMPurify from 'dompurify';
 import { formatDate } from '@/utils/dateUtil';
 import ItemDropdown from '@/components/common/ItemDropdown';
@@ -10,7 +11,11 @@ import {
   axiosUpdateLog,
 } from '@/services/LogService';
 
-const LogItem = ({ log, isFetchingLogs, editSelectedItem }) => {
+const LogItem = ({
+  log,
+  isFetchingLogs,
+  editSelectedItem
+}: $TSFixMe) => {
   const { openConfirm, closeConfirm, openAlert } = useActions();
   const queryClient = useQueryClient();
 
@@ -22,17 +27,17 @@ const LogItem = ({ log, isFetchingLogs, editSelectedItem }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['logs'] });
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.error('Error deleting log:', error);
     },
   });
 
-  async function handleDelete(id) {
+  async function handleDelete(id: $TSFixMe) {
     await deleteLogMutation.mutate(id);
     closeConfirm();
   }
 
-  function handleDeleteConfirm(id) {
+  function handleDeleteConfirm(id: $TSFixMe) {
     openConfirm({
       title: 'Delete Your Log',
       content: `
@@ -43,7 +48,9 @@ const LogItem = ({ log, isFetchingLogs, editSelectedItem }) => {
     });
   }
 
-  const SafeHtmlContent = ({ htmlContent }) => {
+  const SafeHtmlContent = ({
+    htmlContent
+  }: $TSFixMe) => {
     const sanitizedContent = DOMPurify.sanitize(htmlContent);
 
     return (

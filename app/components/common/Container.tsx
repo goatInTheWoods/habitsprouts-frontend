@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Container = props => {
+const Container = (props: $TSFixMe) => {
   return (
     <Div
       className={

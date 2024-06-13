@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Container from '@/components/common/Container';
 
-const Page = props => {
+const Page = (props: $TSFixMe) => {
   useEffect(() => {
     document.title = `${props.title} | HabitSprouts`;
     window.scrollTo(0, 0);

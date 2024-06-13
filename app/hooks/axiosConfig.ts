@@ -5,14 +5,14 @@ import { getUserTimeZone } from '@/utils/dateUtil';
 
 Axios.defaults.baseURL = process.env.BACKENDURL;
 
-const useSetupAxiosInterceptors = navigateTo => {
-  const loggedIn = useStore(state => state.loggedIn);
-  const userInfo = useStore(state => state.userInfo);
-  const logout = useStore(state => state.actions.logout);
+const useSetupAxiosInterceptors = (navigateTo: $TSFixMe) => {
+  const loggedIn = useStore((state: $TSFixMe) => state.loggedIn);
+  const userInfo = useStore((state: $TSFixMe) => state.userInfo);
+  const logout = useStore((state: $TSFixMe) => state.actions.logout);
 
   useEffect(() => {
     const requestInterceptor = Axios.interceptors.request.use(
-      config => {
+      (config: $TSFixMe) => {
         if (userInfo.token) {
           config.headers[
             'Authorization'
@@ -25,14 +25,14 @@ const useSetupAxiosInterceptors = navigateTo => {
 
         return config;
       },
-      error => {
+      (error: $TSFixMe) => {
         return Promise.reject(error);
       }
     );
 
     const responseInterceptor = Axios.interceptors.response.use(
-      response => response,
-      error => {
+      (response: $TSFixMe) => response,
+      (error: $TSFixMe) => {
         if (error.response && error.response.status === 401) {
           if (loggedIn) {
             logout();

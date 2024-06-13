@@ -5,8 +5,10 @@ import HabitStatisticsModal from '@/components/Habits/HabitStatisticsModal';
 import HabitItem from '@/components/Habits/HabitItem';
 import WelcomeCard from '@/components/Habits/WelcomeCard';
 import Spinner from 'react-bootstrap/Spinner';
+// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/plus.svg' or its ... Remove this comment to see the full error message
 import Plus from '../../images/plus.svg';
 import styled from 'styled-components';
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'uuid... Remove this comment to see the full error message
 import { v4 as uuidv4 } from 'uuid';
 import {
   useLoggedIn,
@@ -44,7 +46,7 @@ const HabitList = () => {
 
   const pendingCreateHabit = useMutationState({
     filters: { mutationKey: ['createHabit'], status: 'pending' },
-    select: mutation => mutation.state.variables,
+    select: (mutation: $TSFixMe) => mutation.state.variables,
   });
 
   const updateHabitOrderMutation = useMutation({
@@ -52,7 +54,7 @@ const HabitList = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.error('Error updating habit indices:', error);
     },
   });
@@ -73,7 +75,7 @@ const HabitList = () => {
     dailyCountLimit: 1,
   };
 
-  function openInfoModal(type) {
+  function openInfoModal(type: $TSFixMe) {
     setModalType(type);
     setIsInfoModalOpen(true);
   }
@@ -90,38 +92,41 @@ const HabitList = () => {
     setIsStatModalOpen(false);
   }
 
-  function editSelectedItem(id) {
-    const target = habits.find(habit => {
+  function editSelectedItem(id: $TSFixMe) {
+    const target = habits.find((habit: $TSFixMe) => {
       return habit.id === id;
     });
     setSelectedHabit(target);
     openInfoModal('edit');
   }
 
-  function handleStatModal(id) {
-    const target = habits.find(habit => {
+  function handleStatModal(id: $TSFixMe) {
+    const target = habits.find((habit: $TSFixMe) => {
       return habit.id === id;
     });
     setSelectedHabit(target);
     openStatModal();
   }
 
-  const handleDrop = async (event, targetOrderHabit) => {
+  const handleDrop = async (event: $TSFixMe, targetOrderHabit: $TSFixMe) => {
     event.preventDefault();
     if (loggedIn) {
       await updateHabitOrderMutation.mutate({
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         id: movedItem.id,
         indices: {
+          // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
           oldOrderIndex: movedItem.orderIndex,
           newOrderIndex: targetOrderHabit.orderIndex,
         },
       });
     } else {
       const fromIdx = habits?.findIndex(
-        habit => habit.id === movedItem.id
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
+        (habit: $TSFixMe) => habit.id === movedItem.id
       );
       const toIdx = habits?.findIndex(
-        habit => habit.id === targetOrderHabit.id
+        (habit: $TSFixMe) => habit.id === targetOrderHabit.id
       );
       if (fromIdx !== -1 && toIdx !== -1) {
         changeHabitOrder(fromIdx, toIdx);
@@ -130,11 +135,11 @@ const HabitList = () => {
     setMovedItem(null);
   };
 
-  const handleDragOver = event => {
+  const handleDragOver = (event: $TSFixMe) => {
     event.preventDefault();
   };
 
-  const handleDragStart = (event, habit) => {
+  const handleDragStart = (event: $TSFixMe, habit: $TSFixMe) => {
     setMovedItem(habit);
   };
 
@@ -168,6 +173,7 @@ const HabitList = () => {
       )}
       {isStatModalOpen && (
         <HabitStatisticsModal
+          // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
           habitId={selectedHabit.id}
           isOpen={isStatModalOpen}
           closeModal={closeStatModal}
@@ -194,7 +200,7 @@ const HabitList = () => {
           </div>
         )}
         {habits &&
-          habits.map(habit => {
+          habits.map((habit: $TSFixMe) => {
             return (
               <div
                 key={habit.id}

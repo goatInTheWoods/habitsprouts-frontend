@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import fs from 'fs';
-import Header from './app/components/Header/Header';
-import Navbar from './app/components/Footer/Navbar';
+import Header from './app/components/Header/Header.tsx';
+import Navbar from './app/components/Footer/Navbar.tsx';
 import LoadingDotsIcon from './app/components/common/LoadingDotsIcon';
 import { StaticRouter as Router } from 'react-router-dom/server';
 
 function Shell() {
   return (
     <Router>
-      <Header staticEmpty={true} />
+      {/* <Header staticEmpty={true} /> */}
       <div className="py-5 my-5 text-center">
         <LoadingDotsIcon />
       </div>

@@ -8,13 +8,16 @@ import { useActions } from '@/store/store';
 import { useMutation } from '@tanstack/react-query';
 import { axiosCreateUser } from '@/services/UserService';
 
-function Signup({ isOpen, close }) {
+function Signup({
+  isOpen,
+  close
+}: $TSFixMe) {
   const { login, openAlert } = useActions();
   const navigate = useNavigate();
 
   const createUserMutation = useMutation({
     mutationFn: axiosCreateUser,
-    onSuccess: data => {
+    onSuccess: (data: $TSFixMe) => {
       close();
       navigate('/');
       login(data);
@@ -23,7 +26,7 @@ function Signup({ isOpen, close }) {
         text: 'Congrats! Welcome to your new account.',
       });
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.error('Sign Up error:', error);
       openAlert({
         type: 'danger',
@@ -41,14 +44,14 @@ function Signup({ isOpen, close }) {
 
   const [triggerValidation, setTriggerValidation] = useState(false);
 
-  function handleAccountInfoUpdate(updatedInfo) {
+  function handleAccountInfoUpdate(updatedInfo: $TSFixMe) {
     setAccountInfo(prevState => ({
       ...prevState,
       ...updatedInfo,
     }));
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e: $TSFixMe) {
     e.preventDefault();
     setTriggerValidation(prev => !prev);
   }
@@ -63,7 +66,7 @@ function Signup({ isOpen, close }) {
     }
   }, [accountInfo.isAllInfoClear]);
 
-  function handleKeyPress(event) {
+  function handleKeyPress(event: $TSFixMe) {
     if (event.key === 'Enter') {
       handleSubmit(event);
     }

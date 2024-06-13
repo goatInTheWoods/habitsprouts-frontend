@@ -11,7 +11,11 @@ import ItemDropdown from '@/components/common/ItemDropdown';
 import Spinner from 'react-bootstrap/Spinner';
 import { getUserTimeZone, isEqualDay } from '@/utils/dateUtil';
 
-const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
+const HabitItem = ({
+  habit,
+  onClickTitle,
+  editSelectedItem
+}: $TSFixMe) => {
   const loggedIn = useLoggedIn();
   const {
     editHabit,
@@ -27,7 +31,7 @@ const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.error('Error creating habit:', error);
     },
   });
@@ -39,7 +43,7 @@ const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
         queryKey: ['habits'],
       });
     },
-    onError: error => {
+    onError: (error: $TSFixMe) => {
       console.error('Error updating habit:', error);
       openAlert({
         type: 'danger',
@@ -63,7 +67,7 @@ const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
     await updateHabitMutation.mutate(habit.id);
   }
 
-  async function handleDelete(id) {
+  async function handleDelete(id: $TSFixMe) {
     if (!loggedIn) {
       deleteHabit(id);
     } else {
@@ -72,7 +76,7 @@ const HabitItem = ({ habit, onClickTitle, editSelectedItem }) => {
     closeConfirm();
   }
 
-  function handleDeleteConfirm(id) {
+  function handleDeleteConfirm(id: $TSFixMe) {
     openConfirm({
       title: 'Delete Your Habit',
       content: `

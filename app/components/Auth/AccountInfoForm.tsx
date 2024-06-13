@@ -12,8 +12,8 @@ function AccountInfoForm({
   accountInfo,
   onAccountInfoUpdate,
   triggerValidation,
-  autoFocusInput,
-}) {
+  autoFocusInput
+}: $TSFixMe) {
   const usernameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -48,7 +48,7 @@ function AccountInfoForm({
     isAllInfoClear: accountInfo.isAllInfoClear,
   };
 
-  function ourReducer(draft, action) {
+  function ourReducer(draft: $TSFixMe, action: $TSFixMe) {
     switch (action.type) {
       case 'usernameImmediately':
         draft.username.hasErrors = false;
@@ -185,7 +185,7 @@ function AccountInfoForm({
 
   const [state, dispatch] = useImmerReducer(ourReducer, initialState);
 
-  async function fetchDoesUsernameExist(ourRequest) {
+  async function fetchDoesUsernameExist(ourRequest: $TSFixMe) {
     try {
       const response = await axios.post(
         '/users/signup/doesUsernameExist',
@@ -213,7 +213,7 @@ function AccountInfoForm({
     }
   }, [state.username.checkCount]);
 
-  async function fetchDoesEmailExist(ourRequest) {
+  async function fetchDoesEmailExist(ourRequest: $TSFixMe) {
     try {
       const response = await axios.post(
         '/users/signup/doesEmailExist',
@@ -301,18 +301,21 @@ function AccountInfoForm({
     switch (autoFocusInput) {
       case 'username':
         if (usernameRef.current) {
+          // @ts-expect-error TS(2339) FIXME: Property 'focus' does not exist on type 'never'.
           usernameRef.current.focus();
         }
         break;
 
       case 'email':
         if (emailRef.current) {
+          // @ts-expect-error TS(2339) FIXME: Property 'focus' does not exist on type 'never'.
           emailRef.current.focus();
         }
         break;
 
       case 'password':
         if (passwordRef.current) {
+          // @ts-expect-error TS(2339) FIXME: Property 'focus' does not exist on type 'never'.
           passwordRef.current.focus();
         }
         break;
@@ -322,8 +325,9 @@ function AccountInfoForm({
     }
   }, [autoFocusInput]);
 
-  function inputCheck(input) {
+  function inputCheck(input: $TSFixMe) {
     return useEffect(() => {
+      // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       if (state[input].value) {
         const delay = setTimeout(() => {
           dispatch({ type: `${input}AfterDelay` });
@@ -333,6 +337,7 @@ function AccountInfoForm({
           clearTimeout(delay);
         };
       }
+    // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     }, [state[input].value]);
   }
 
@@ -340,162 +345,156 @@ function AccountInfoForm({
   inputCheck('email');
   inputCheck('password');
 
-  return (
-    <>
-      <Form>
-        {isInputVisible.username && (
-          <Form.Group className="mb-3" controlId="username-register">
-            <Form.Control
-              ref={usernameRef}
-              type="text"
-              onChange={e =>
-                dispatch({
-                  type: 'usernameImmediately',
-                  value: e.target.value,
-                })
-              }
-              name="username"
-              placeholder="Username"
-              required
-            />
-            <CSSTransition
-              in={state.username.hasErrors}
-              timeout={280}
-              classNames="liveValidateMessage"
-              unmountOnExit
-            >
-              <div className="alert alert-danger p-2 small liveValidateMessage">
-                {state.username.message}
-              </div>
-            </CSSTransition>
-          </Form.Group>
-        )}
-        {isInputVisible.email && (
-          <Form.Group className="mb-3" controlId="email-register">
-            <Form.Control
-              ref={emailRef}
-              onChange={e =>
-                dispatch({
-                  type: 'emailImmediately',
-                  value: e.target.value,
-                })
-              }
-              name="email"
-              type="email"
-              placeholder="Email"
-              autoComplete="off"
-            />
-            <CSSTransition
-              in={state.email.hasErrors}
-              timeout={280}
-              classNames="liveValidateMessage"
-              unmountOnExit
-            >
-              <div className="alert alert-danger p-2 small liveValidateMessage">
-                {state.email.message}
-              </div>
-            </CSSTransition>
-          </Form.Group>
-        )}
-        {isInputVisible.password && (
-          <Form.Group
-            className="mb-3 position-relative"
-            controlId="password-register"
+  return <>
+    <Form>
+      {isInputVisible.username && (
+        <Form.Group className="mb-3" controlId="username-register">
+          <Form.Control
+            ref={usernameRef}
+            type="text"
+            onChange={(e: $TSFixMe) => dispatch({
+              type: 'usernameImmediately',
+              value: e.target.value,
+            })
+            }
+            name="username"
+            placeholder="Username"
+            required
+          />
+          <CSSTransition
+            in={state.username.hasErrors}
+            timeout={280}
+            classNames="liveValidateMessage"
+            unmountOnExit
           >
-            <Form.Control
-              ref={passwordRef}
-              onChange={e =>
-                dispatch({
-                  type: 'passwordImmediately',
-                  value: e.target.value,
-                })
-              }
-              name="password"
-              type={state.password.visible ? 'text' : 'password'}
-              placeholder="Password"
-            />
-            <PasswordEye
-              onClick={() => {
-                dispatch({
-                  type: 'togglePasswordVisible',
-                });
-              }}
-              className="position-absolute custom-pointer"
-            >
-              {!state.password.visible && (
-                <span>
-                  <i className="fas fa-solid fa-eye"></i>
-                </span>
-              )}
-              {state.password.visible && (
-                <span>
-                  <i className="fas fa-solid fa-eye-slash"></i>
-                </span>
-              )}
-            </PasswordEye>
+            <div className="alert alert-danger p-2 small liveValidateMessage">
+              {state.username.message}
+            </div>
+          </CSSTransition>
+        </Form.Group>
+      )}
+      {isInputVisible.email && (
+        <Form.Group className="mb-3" controlId="email-register">
+          <Form.Control
+            ref={emailRef}
+            onChange={(e: $TSFixMe) => dispatch({
+              type: 'emailImmediately',
+              value: e.target.value,
+            })
+            }
+            name="email"
+            type="email"
+            placeholder="Email"
+            autoComplete="off"
+          />
+          <CSSTransition
+            in={state.email.hasErrors}
+            timeout={280}
+            classNames="liveValidateMessage"
+            unmountOnExit
+          >
+            <div className="alert alert-danger p-2 small liveValidateMessage">
+              {state.email.message}
+            </div>
+          </CSSTransition>
+        </Form.Group>
+      )}
+      {isInputVisible.password && (
+        <Form.Group
+          className="mb-3 position-relative"
+          controlId="password-register"
+        >
+          <Form.Control
+            ref={passwordRef}
+            onChange={(e: $TSFixMe) => dispatch({
+              type: 'passwordImmediately',
+              value: e.target.value,
+            })
+            }
+            name="password"
+            type={state.password.visible ? 'text' : 'password'}
+            placeholder="Password"
+          />
+          <PasswordEye
+            onClick={() => {
+              dispatch({
+                type: 'togglePasswordVisible',
+              });
+            }}
+            className="position-absolute custom-pointer"
+          >
+            {!state.password.visible && (
+              <span>
+                <i className="fas fa-solid fa-eye"></i>
+              </span>
+            )}
+            {state.password.visible && (
+              <span>
+                <i className="fas fa-solid fa-eye-slash"></i>
+              </span>
+            )}
+          </PasswordEye>
 
-            <CSSTransition
-              in={state.password.hasErrors}
-              timeout={280}
-              classNames="liveValidateMessage"
-              unmountOnExit
-            >
-              <div className="alert alert-danger p-2 small liveValidateMessage">
-                {state.password.message}
-              </div>
-            </CSSTransition>
-          </Form.Group>
-        )}
-        {isInputVisible.rePassword && (
-          <Form.Group
-            className="mb-3 position-relative"
-            controlId="repeat-password-register"
+          <CSSTransition
+            in={state.password.hasErrors}
+            timeout={280}
+            classNames="liveValidateMessage"
+            unmountOnExit
           >
-            <Form.Control
-              onChange={e =>
-                dispatch({
-                  type: 'rePasswordImmediately',
-                  value: e.target.value,
-                })
-              }
-              name="rePassword"
-              type={state.rePassword.visible ? 'text' : 'password'}
-              placeholder="Repeat password"
-            />
-            <PasswordEye
-              onClick={() => {
-                dispatch({
-                  type: 'toggleRepasswordVisible',
-                });
-              }}
-              className="position-absolute custom-pointer"
-            >
-              {!state.rePassword.visible && (
-                <span>
-                  <i className="fas fa-solid fa-eye"></i>
-                </span>
-              )}
-              {state.rePassword.visible && (
-                <span>
-                  <i className="fas fa-solid fa-eye-slash"></i>
-                </span>
-              )}
-            </PasswordEye>
-            <CSSTransition
-              in={state.rePassword.hasErrors}
-              timeout={280}
-              classNames="liveValidateMessage"
-              unmountOnExit
-            >
-              <div className="alert alert-danger p-2 small liveValidateMessage">
-                {state.rePassword.message}
-              </div>
-            </CSSTransition>
-          </Form.Group>
-        )}
-      </Form>
-    </>
-  );
+            <div className="alert alert-danger p-2 small liveValidateMessage">
+              {state.password.message}
+            </div>
+          </CSSTransition>
+        </Form.Group>
+      )}
+      {isInputVisible.rePassword && (
+        <Form.Group
+          className="mb-3 position-relative"
+          controlId="repeat-password-register"
+        >
+          <Form.Control
+            onChange={(e: $TSFixMe) => dispatch({
+              type: 'rePasswordImmediately',
+              value: e.target.value,
+            })
+            }
+            name="rePassword"
+            type={state.rePassword.visible ? 'text' : 'password'}
+            placeholder="Repeat password"
+          />
+          <PasswordEye
+            onClick={() => {
+              dispatch({
+                type: 'toggleRepasswordVisible',
+              });
+            }}
+            className="position-absolute custom-pointer"
+          >
+            {!state.rePassword.visible && (
+              <span>
+                <i className="fas fa-solid fa-eye"></i>
+              </span>
+            )}
+            {state.rePassword.visible && (
+              <span>
+                <i className="fas fa-solid fa-eye-slash"></i>
+              </span>
+            )}
+          </PasswordEye>
+          <CSSTransition
+            in={state.rePassword.hasErrors}
+            timeout={280}
+            classNames="liveValidateMessage"
+            unmountOnExit
+          >
+            <div className="alert alert-danger p-2 small liveValidateMessage">
+              {state.rePassword.message}
+            </div>
+          </CSSTransition>
+        </Form.Group>
+      )}
+    </Form>
+  </>;
 }
 
 const PasswordEye = styled.span`

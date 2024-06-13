@@ -30,19 +30,19 @@ const ResetPassword = () => {
   const failureMessage =
     'Your password reset attempt has failed. Contact our customer service.';
 
-  function handleAccountInfoUpdate(updatedInfo) {
+  function handleAccountInfoUpdate(updatedInfo: $TSFixMe) {
     setAccountInfo(prevState => ({
       ...prevState,
       ...updatedInfo,
     }));
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e: $TSFixMe) {
     e.preventDefault();
     setTriggerValidation(!triggerValidation);
   }
 
-  async function fetchRegister(ourRequest) {
+  async function fetchRegister(ourRequest: $TSFixMe) {
     try {
       const response = await axios.post(
         '/users/reset-password',
@@ -81,7 +81,7 @@ const ResetPassword = () => {
     }
   }, [accountInfo.isAllInfoClear]);
 
-  function handleKeyPress(event) {
+  function handleKeyPress(event: $TSFixMe) {
     if (event.key === 'Enter') {
       handleSubmit(event);
     }

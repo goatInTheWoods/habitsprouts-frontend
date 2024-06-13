@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes, css } from 'styled-components';
+// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/check.png' or its... Remove this comment to see the full error message
 import CheckImg from '../../images/check.png';
+// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/smile.png' or its... Remove this comment to see the full error message
 import SmileImg from '../../images/smile.png';
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'canv... Remove this comment to see the full error message
 import confetti from 'canvas-confetti';
 
-const HabitCountButton = ({ isCompletedToday, onClick }) => {
+const HabitCountButton = ({
+  isCompletedToday,
+  onClick
+}: $TSFixMe) => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [clicked, setClicked] = useState(false);
 
@@ -28,6 +34,7 @@ const HabitCountButton = ({ isCompletedToday, onClick }) => {
 
   return (
     <CountButtonContainer
+      // @ts-expect-error TS(2769) FIXME: No overload matches this call.
       iscompletedtoday={isCompletedToday}
       className="me-lg-3"
       onClick={handleClick}
@@ -61,9 +68,13 @@ const CountButtonContainer = styled.button`
   align-items: center;
   justify-content: center;
   filter: drop-shadow(2px 3px 9px rgba(122, 122, 122, 0.08));
-  animation: ${({ isspinning }) =>
+  animation: ${({
+  isspinning
+}: $TSFixMe) =>
     isspinning ? spinStyles : 'none'};
-  background-color: ${({ iscompletedtoday }) =>
+  background-color: ${({
+  iscompletedtoday
+}: $TSFixMe) =>
     iscompletedtoday ? '#f0ff97' : 'rgba(243, 255, 168, 0.35)'};
 `;
 

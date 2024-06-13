@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
+// @ts-expect-error TS(2307) FIXME: Cannot find module './Page' or its corresponding t... Remove this comment to see the full error message
 import Page from './Page';
 import { useImmer } from 'use-immer';
 import axios from 'axios';
 import LoadingDotsIcon from '@/components/common/LoadingDotsIcon';
+// @ts-expect-error TS(2307) FIXME: Cannot find module '@/components/Post' or its corr... Remove this comment to see the full error message
 import Post from '@/components/Post';
 import { useUserInfo } from '@/store/store';
 
@@ -20,7 +22,7 @@ function Home() {
         const response = await axios.post('/getHomeFeed', {
           token: useUserInfo().token,
         });
-        setState(draft => {
+        setState((draft: $TSFixMe) => {
           draft.isLoading = false;
           draft.feed = response.data;
         });
@@ -48,7 +50,8 @@ function Home() {
             The Latest From Those You Follow
           </h2>
           <div className="list-group">
-            {state.feed.map(post => {
+            // @ts-expect-error TS(2304): Cannot find name '$TSFixMe'.
+            {state.feed.map((post: $TSFixMe) => {
               return <Post post={post} key={post._id} />;
             })}
           </div>

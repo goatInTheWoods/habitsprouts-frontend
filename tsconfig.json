@@ -8,8 +8,8 @@
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
-    "verbatimModuleSyntax": true,
-    "jsx": "react",
+    // "verbatimModuleSyntax": true,
+    "jsx": "react-jsx",
     /* Strictness */
     "strict": true,
     "noUncheckedIndexedAccess": true,
@@ -29,7 +29,7 @@
     "declarationMap": true,
 
     /* If NOT transpiling with TypeScript: */
-    "module": "preserve",
+    "module": "ES2022",
     "noEmit": true,
 
     /* If your code runs in the DOM: */
@@ -37,7 +37,15 @@
 
     /* If your code doesn't run in the DOM: */
     // "lib": ["es2022"]
+
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["app/*"],
+    }
   },
-      "include": ["app"],
+  "include": ["app/**/*","decs.d.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 
 }

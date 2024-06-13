@@ -1,16 +1,18 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 
+// @ts-expect-error TS(2307) FIXME: Cannot find module 'react-canvas-confetti' or its ... Remove this comment to see the full error message
 import ReactCanvasConfetti from 'react-canvas-confetti';
 
 export default function Confetti() {
   const refAnimationInstance = useRef(null);
 
-  const getInstance = useCallback(instance => {
+  const getInstance = useCallback((instance: $TSFixMe) => {
     refAnimationInstance.current = instance;
   }, []);
 
-  const makeShot = useCallback((particleRatio, opts) => {
+  const makeShot = useCallback((particleRatio: $TSFixMe, opts: $TSFixMe) => {
     refAnimationInstance.current &&
+      // @ts-expect-error TS(2349) FIXME: This expression is not callable.
       refAnimationInstance.current({
         ...opts,
         origin: { y: 0.7 },
