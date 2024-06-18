@@ -4,10 +4,8 @@
   "description": "",
   "main": "test.js",
   "scripts": {
-    "dev": "NODE_ENV=development webpackDev",
-    "webpackDev": "webpack serve",
-    "build": "NODE_ENV=production webpackBuild",
-    "webpackBuild": "webpack",
+    "dev": "webpack serve --env NODE_ENV=development",
+    "build": "webpack --env NODE_ENV=production",
     "previewDist": "node previewDist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
