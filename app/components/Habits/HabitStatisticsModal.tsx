@@ -19,13 +19,12 @@ import {
   axiosUpdateHabit,
 } from '@/services/HabitService';
 import { DayPicker } from 'react-day-picker';
-import { getUserTimeZone, convertTimezone } from '@/utils/dateUtil';
 import { useLoggedIn, useUserInfo } from '@/store/store';
 
 function HabitStatisticsModal({
   habitId,
   isOpen,
-  closeModal
+  closeModal,
 }: $TSFixMe) {
   const loggedIn = useLoggedIn();
   const userInfo = useUserInfo();
