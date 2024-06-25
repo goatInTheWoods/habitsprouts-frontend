@@ -1,15 +1,22 @@
 import React, { useEffect } from 'react';
 import Container from '@/components/common/Container';
 
-const Page = (props: $TSFixMe) => {
+interface PageProps {
+  title: string;
+  wide?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}
+
+const Page = ({ title, wide, className, children }: PageProps) => {
   useEffect(() => {
-    document.title = `${props.title} | HabitSprouts`;
+    document.title = `${title} | HabitSprouts`;
     window.scrollTo(0, 0);
-  }, [props.title]);
+  }, [title]);
 
   return (
-    <Container wide={props.wide} className={props.className}>
-      {props.children}
+    <Container wide={wide} className={className}>
+      {children}
     </Container>
   );
 };
