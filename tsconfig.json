@@ -53,7 +53,7 @@
       "module": "NodeNext",
     }
   },
-  "include": ["app/**/*", "generateHtml.js"],
+  "include": ["app/**/*", "generateHtml.js", "custom.d.ts"],
   "exclude": ["node_modules"]
 
 }

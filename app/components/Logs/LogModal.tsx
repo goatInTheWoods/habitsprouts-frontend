@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-bootstrap/Modal';
-// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/x.svg' or its cor... Remove this comment to see the full error message
-import X from '../../images/x.svg';
+import { ReactComponent as X } from '../../images/x.svg';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import Col from 'react-bootstrap/Col';
@@ -22,7 +21,7 @@ const LogModal = ({
   isOpen,
   closeModal,
   habitList,
-  selectedLog
+  selectedLog,
 }: $TSFixMe) => {
   const loggedIn = useLoggedIn();
   const { openAlert } = useActions();

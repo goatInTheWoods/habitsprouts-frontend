@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
-// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/bars.svg' or its ... Remove this comment to see the full error message
-import Bars from '../../images/bars.svg';
 import Button from 'react-bootstrap/Button';
 import Menu from './Menu';
-// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/user.svg' or its ... Remove this comment to see the full error message
-import User from '../../images/user.svg';
+import { ReactComponent as Bars } from '../../images/bars.svg';
+import { ReactComponent as User } from '../../images/user.svg';
 import { useUserInfo } from '../../store/store';
 import styled from 'styled-components';
 

@@ -15,7 +15,7 @@ import Navbar from '@/components/Footer/Navbar';
 import ConfirmationModal from '@/components/common/Modal/ConfirmationModal';
 import LoadingDotsIcon from '@/components/common/LoadingDotsIcon';
 import AxiosWrapper from '@/components/Auth/AxiosWrapper';
-import HabitList from '@/components/Habits/HabitList';
+import Habits from '@/pages/Habits';
 import LogList from '@/components/Logs/LogList';
 import About from '@/pages/About';
 import Terms from '@/pages/Terms';
@@ -25,9 +25,7 @@ import NotFound from '@/pages/NotFound';
 import Share from '@/pages/Share';
 import Login from '@/pages/Login';
 
-const Main = ({
-  queryClient
-}: $TSFixMe) => {
+const Main = ({ queryClient }: $TSFixMe) => {
   const { closeAlert } = useActions();
   const alertStatus = useAlertStatus();
 
@@ -79,7 +77,7 @@ const Main = ({
                     path="/reset-password"
                     element={<ResetPassword />}
                   />
-                  <Route path="/habits" element={<HabitList />} />
+                  <Route path="/habits" element={<Habits />} />
                   <Route path="/logs" element={<LogList />} />
                   <Route path="/about-us" element={<About />} />
                   <Route path="/share" element={<Share />} />

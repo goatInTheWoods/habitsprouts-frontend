@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import HeaderLoggedOut from './HeaderLoggedOut';
 import HeaderLoggedIn from './HeaderLoggedIn';
-// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/logo.svg' or its ... Remove this comment to see the full error message
-import Logo from '../../images/logo.svg';
-// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/logo-white.svg' o... Remove this comment to see the full error message
-import LogoWhite from '../../images/logo-white.svg';
+import { ReactComponent as LogoWhite } from '../../images/logo-white.svg';
 import { useLoggedIn } from '../../store/store';
 
 function Header(props: $TSFixMe) {
