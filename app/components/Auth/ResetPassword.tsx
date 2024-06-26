@@ -88,7 +88,7 @@ const ResetPassword = () => {
   }
 
   return (
-    <Page onKeyPress={handleKeyPress} title="Reset Password">
+    <Page title="Reset Password">
       <h2>Reset Your Password</h2>
       {isInputVisible && accountInfo && (
         <AccountInfoForm
