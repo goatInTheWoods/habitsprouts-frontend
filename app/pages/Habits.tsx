@@ -5,10 +5,8 @@ import HabitStatisticsModal from '@/components/Habits/HabitStatisticsModal';
 import HabitItem from '@/components/Habits/HabitItem';
 import WelcomeCard from '@/components/Habits/WelcomeCard';
 import Spinner from 'react-bootstrap/Spinner';
-// @ts-expect-error TS(2307) FIXME: Cannot find module '../../images/plus.svg' or its ... Remove this comment to see the full error message
-import Plus from '../../images/plus.svg';
+import { ReactComponent as Plus } from '../images/plus.svg';
 import styled from 'styled-components';
-// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'uuid... Remove this comment to see the full error message
 import { v4 as uuidv4 } from 'uuid';
 import {
   useLoggedIn,
@@ -24,17 +22,15 @@ import {
 } from '@tanstack/react-query';
 import {
   axiosFetchHabits,
-  axiosUpdateHabit,
   axiosUpdateHabitOrder,
 } from '@/services/HabitService';
 
-const HabitList = () => {
+const Habits = () => {
   const { changeHabitOrder, setHabits } = useActions();
   const loggedIn = useLoggedIn();
   const habits = useHabits();
   const userInfo = useUserInfo();
   const [allowedToFetch, setAllowedToFetch] = useState(false);
-  const [isConfettiVisible, setIsConfettiVisible] = useState(false);
 
   const queryClient = useQueryClient();
   const { isLoading, isError, isSuccess, data, error } = useQuery({
@@ -46,7 +42,7 @@ const HabitList = () => {
 
   const pendingCreateHabit = useMutationState({
     filters: { mutationKey: ['createHabit'], status: 'pending' },
-    select: (mutation: $TSFixMe) => mutation.state.variables,
+    select: mutation => mutation.state.variables,
   });
 
   const updateHabitOrderMutation = useMutation({
@@ -54,14 +50,16 @@ const HabitList = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
-    onError: (error: $TSFixMe) => {
+    onError: error => {
       console.error('Error updating habit indices:', error);
     },
   });
 
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isStatModalOpen, setIsStatModalOpen] = useState(false);
-  const [modalType, setModalType] = useState(null);
+  const [modalType, setModalType] = useState<'add' | 'edit' | null>(
+    null
+  );
   const [selectedHabit, setSelectedHabit] = useState(null);
   // state for drag & drop
   const [movedItem, setMovedItem] = useState(null);
@@ -75,7 +73,7 @@ const HabitList = () => {
     dailyCountLimit: 1,
   };
 
-  function openInfoModal(type: $TSFixMe) {
+  function openInfoModal(type: 'add' | 'edit') {
     setModalType(type);
     setIsInfoModalOpen(true);
   }
@@ -92,7 +90,7 @@ const HabitList = () => {
     setIsStatModalOpen(false);
   }
 
-  function editSelectedItem(id: $TSFixMe) {
+  function editSelectedItem(id: string) {
     const target = habits.find((habit: $TSFixMe) => {
       return habit.id === id;
     });
@@ -100,7 +98,7 @@ const HabitList = () => {
     openInfoModal('edit');
   }
 
-  function handleStatModal(id: $TSFixMe) {
+  function handleStatModal(id: string) {
     const target = habits.find((habit: $TSFixMe) => {
       return habit.id === id;
     });
@@ -108,7 +106,10 @@ const HabitList = () => {
     openStatModal();
   }
 
-  const handleDrop = async (event: $TSFixMe, targetOrderHabit: $TSFixMe) => {
+  const handleDrop = async (
+    event: $TSFixMe,
+    targetOrderHabit: $TSFixMe
+  ) => {
     event.preventDefault();
     if (loggedIn) {
       await updateHabitOrderMutation.mutate({
@@ -245,4 +246,4 @@ const HabitContainer = styled.div`
   overflow-anchor: none;
 `;
 
-export default HabitList;
+export default Habits;
