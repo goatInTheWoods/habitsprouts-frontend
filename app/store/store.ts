@@ -1,149 +1,159 @@
 // store.js
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { persist } from 'zustand/middleware';
-import { devtools } from 'zustand/middleware';
-import { subscribeWithSelector } from 'zustand/middleware';
+import { persist, devtools } from 'zustand/middleware';
+import { State } from '../types/globalTypes';
+import type {} from '@redux-devtools/extension'; //
 
-export const useStore = create(
+export const useStore = create<State>()(
   devtools(
-    subscribeWithSelector(
-      persist(
-        immer((set, get) => ({
-          loggedIn: false,
+    persist(
+      immer(set => ({
+        loggedIn: false,
 
-          userInfo: {
-            token: null,
-            username: null,
-            avatar: null,
-            authBy: null,
+        userInfo: {
+          token: null,
+          username: null,
+          avatar: null,
+          authBy: null,
+        },
+
+        alertStatus: {
+          isOn: false,
+          type: 'success',
+          text: null,
+        },
+
+        confirmStatus: {
+          isOn: false,
+          title: null,
+          content: null,
+          submitBtnText: 'confirm',
+          submitFn: null,
+        },
+
+        habits: [],
+
+        actions: {
+          login: data => {
+            set(state => {
+              state.userInfo = {
+                token: data?.token ?? null,
+                username: data?.username ?? null,
+                avatar: data?.avatar ?? null,
+                authBy: data?.authBy || 'email',
+              };
+              state.loggedIn = !!data?.token;
+            });
           },
-
-          alertStatus: {
-            isOn: false,
-            type: 'success',
-            text: null,
+          logout: () => {
+            set(state => {
+              state.loggedIn = false;
+              state.userInfo = {
+                token: null,
+                username: null,
+                avatar: null,
+                authBy: null,
+              };
+              state.habits = [];
+            });
           },
-
-          confirmStatus: {
-            isOn: false,
-            isLoading: false,
-            title: null,
-            content: null,
-            submitBtnText: 'confirm',
-            submitFn: null,
+          openAlert: ({ type, text }) => {
+            set(state => {
+              state.alertStatus.type = type;
+              state.alertStatus.text = text;
+              state.alertStatus.isOn = true;
+            });
           },
-
-          habits: [],
-
-          actions: {
-            login: (data: $TSFixMe) => {
-              set((state: $TSFixMe) => {
-                state.userInfo = {
-                  token: data?.token,
-                  username: data?.username,
-                  avatar: data?.avatar,
-                  authBy: data?.authBy || 'email',
-                };
-                state.loggedIn = !!data?.token;
-              });
-            },
-            logout: () => {
-              set((state: $TSFixMe) => {
-                state.loggedIn = false;
-                state.userInfo = {
-                  token: null,
-                  username: null,
-                  avatar: null,
-                };
-                state.habits = [];
-              });
-            },
-            openAlert: ({
-              type,
-              text
-            }: $TSFixMe) => {
-              set((state: $TSFixMe) => {
-                state.alertStatus.type = type;
-                state.alertStatus.text = text;
-                state.alertStatus.isOn = true;
-              });
-            },
-            closeAlert: () =>
-              set((state: $TSFixMe) => {
-                state.alertStatus.isOn = false;
-              }),
-            openConfirm: ({
-              title,
-              content,
-              submitBtnText,
-              submitFn
-            }: $TSFixMe) => {
-              set((state: $TSFixMe) => {
-                state.confirmStatus.title = title;
-                state.confirmStatus.content = content;
-                state.confirmStatus.submitBtnText = submitBtnText;
-                state.confirmStatus.submitFn = submitFn;
-                state.confirmStatus.isOn = true;
-              });
-            },
-            closeConfirm: () =>
-              set((state: $TSFixMe) => {
-                state.confirmStatus.isOn = false;
-                state.confirmStatus.title = null;
-                state.confirmStatus.content = null;
-                state.confirmStatus.submitBtnText = 'confirm';
-                state.confirmStatus.submitFn = null;
-              }),
-            setHabits: (habits: $TSFixMe) => set((state: $TSFixMe) => {
+          closeAlert: () =>
+            set(state => {
+              state.alertStatus.isOn = false;
+            }),
+          openConfirm: ({
+            title,
+            content,
+            submitBtnText,
+            submitFn,
+          }) => {
+            set(state => {
+              state.confirmStatus.title = title;
+              state.confirmStatus.content = content;
+              state.confirmStatus.submitBtnText = submitBtnText;
+              state.confirmStatus.submitFn = submitFn;
+              state.confirmStatus.isOn = true;
+            });
+          },
+          closeConfirm: () =>
+            set(state => {
+              state.confirmStatus.isOn = false;
+              state.confirmStatus.title = null;
+              state.confirmStatus.content = null;
+              state.confirmStatus.submitBtnText = 'confirm';
+              state.confirmStatus.submitFn = null;
+            }),
+          setHabits: habits =>
+            set(state => {
               state.habits = habits;
             }),
-            addHabit: (habit: $TSFixMe) => set((state: $TSFixMe) => {
+          addHabit: habit =>
+            set(state => {
               state.habits.push(habit);
             }),
-            editHabit: (updatedHabit: $TSFixMe) => set((state: $TSFixMe) => {
+          editHabit: updatedHabit =>
+            set(state => {
               const habitIndex = state.habits.findIndex(
-                (habit: $TSFixMe) => habit.id === updatedHabit.id
+                habit => habit.id === updatedHabit.id
               );
               if (habitIndex !== -1) {
                 state.habits[habitIndex] = updatedHabit;
               }
             }),
-            deleteHabit: (habitId: $TSFixMe) => set((state: $TSFixMe) => {
+          deleteHabit: habitId =>
+            set(state => {
               const habitIndex = state.habits.findIndex(
-                (habit: $TSFixMe) => habit.id === habitId
+                habit => habit.id === habitId
               );
               if (habitIndex !== -1) {
                 state.habits.splice(habitIndex, 1);
               }
             }),
-            changeHabitOrder: (fromId: $TSFixMe, toId: $TSFixMe) =>
-              set((state: $TSFixMe) => {
-                const habits = [...state.habits];
-                const [movedHabit] = habits.splice(fromId, 1);
-                habits.splice(toId, 0, movedHabit);
-                return { ...state, habits };
-              }),
-          }
-        })),
-        {
-          name: 'habitcount-storage',
-          partialize: (state: $TSFixMe) => ({
-            userInfo: state.userInfo,
-            habits: state.habits
-          }),
-        }
-      )
+          // changeHabitOrder: (fromIndex, toIndex) =>
+          //   set(state => {
+          //     const habitsCopied = [...state.habits];
+          //     if (
+          //       fromIndex < 0 ||
+          //       fromIndex >= habitsCopied.length ||
+          //       toIndex < 0 ||
+          //       toIndex >= habitsCopied.length
+          //     ) {
+          //       return;
+          //     }
+          //     const [movedHabit] = habitsCopied.splice(fromIndex, 1);
+          //     habitsCopied.splice(toIndex, 0, movedHabit);
+          //     state.habits = habitsCopied;
+          //   }),
+        },
+      })),
+      {
+        name: 'habitcount-storage',
+        partialize: state => ({
+          userInfo: state.userInfo,
+          habits: state.habits,
+        }),
+      }
     )
   )
 );
 
 export const useLoggedIn = () =>
-  useStore((state: $TSFixMe) => Boolean(state.userInfo.token));
+  useStore((state: State) => Boolean(state.userInfo.token));
 export const useAlertStatus = () =>
-  useStore((state: $TSFixMe) => state.alertStatus);
+  useStore((state: State) => state.alertStatus);
 export const useConfirmStatus = () =>
-  useStore((state: $TSFixMe) => state.confirmStatus);
-export const useUserInfo = () => useStore((state: $TSFixMe) => state.userInfo);
-export const useHabits = () => useStore((state: $TSFixMe) => state.habits);
-export const useActions = () => useStore((state: $TSFixMe) => state.actions);
+  useStore((state: State) => state.confirmStatus);
+export const useUserInfo = () =>
+  useStore((state: State) => state.userInfo);
+export const useHabits = () =>
+  useStore((state: State) => state.habits);
+export const useActions = () =>
+  useStore((state: State) => state.actions);
