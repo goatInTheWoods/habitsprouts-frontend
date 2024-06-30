@@ -24,9 +24,10 @@ import {
   axiosFetchHabits,
   axiosUpdateHabitOrder,
 } from '@/services/HabitService';
+import { Habit } from '@/types/globalTypes';
 
 const Habits = () => {
-  const { changeHabitOrder, setHabits } = useActions();
+  const { setHabits } = useActions();
   const loggedIn = useLoggedIn();
   const habits = useHabits();
   const userInfo = useUserInfo();
@@ -60,9 +61,11 @@ const Habits = () => {
   const [modalType, setModalType] = useState<'add' | 'edit' | null>(
     null
   );
-  const [selectedHabit, setSelectedHabit] = useState(null);
+  const [selectedHabit, setSelectedHabit] = useState<Habit | null>(
+    null
+  );
   // state for drag & drop
-  const [movedItem, setMovedItem] = useState(null);
+  const [movedItem, setMovedItem] = useState<Habit | null>(null);
 
   const initialHabit = {
     id: uuidv4(),
@@ -91,56 +94,63 @@ const Habits = () => {
   }
 
   function editSelectedItem(id: string) {
-    const target = habits.find((habit: $TSFixMe) => {
-      return habit.id === id;
-    });
+    const target =
+      habits.find((habit: Habit) => {
+        return habit.id === id;
+      }) || null;
     setSelectedHabit(target);
     openInfoModal('edit');
   }
 
   function handleStatModal(id: string) {
-    const target = habits.find((habit: $TSFixMe) => {
-      return habit.id === id;
-    });
+    const target =
+      habits.find((habit: Habit) => {
+        return habit.id === id;
+      }) || null;
     setSelectedHabit(target);
     openStatModal();
   }
 
   const handleDrop = async (
-    event: $TSFixMe,
-    targetOrderHabit: $TSFixMe
+    event: React.DragEvent<HTMLDivElement>,
+    targetOrderHabit: Habit
   ) => {
     event.preventDefault();
-    if (loggedIn) {
+    if (!movedItem) {
+      return;
+    }
+
+    if (loggedIn && movedItem) {
       await updateHabitOrderMutation.mutate({
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         id: movedItem.id,
         indices: {
-          // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
           oldOrderIndex: movedItem.orderIndex,
           newOrderIndex: targetOrderHabit.orderIndex,
         },
       });
     } else {
       const fromIdx = habits?.findIndex(
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        (habit: $TSFixMe) => habit.id === movedItem.id
+        (habit: Habit) => habit.id === movedItem.id
       );
       const toIdx = habits?.findIndex(
-        (habit: $TSFixMe) => habit.id === targetOrderHabit.id
+        (habit: Habit) => habit.id === targetOrderHabit.id
       );
-      if (fromIdx !== -1 && toIdx !== -1) {
-        changeHabitOrder(fromIdx, toIdx);
-      }
+      // if (fromIdx !== -1 && toIdx !== -1) {
+      //   changeHabitOrder(fromIdx, toIdx);
+      // }
     }
     setMovedItem(null);
   };
 
-  const handleDragOver = (event: $TSFixMe) => {
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   };
 
-  const handleDragStart = (event: $TSFixMe, habit: $TSFixMe) => {
+  const handleDragStart = (
+    event: React.DragEvent<HTMLDivElement>,
+    habit: Habit
+  ) => {
+    event.preventDefault();
     setMovedItem(habit);
   };
 
@@ -174,8 +184,7 @@ const Habits = () => {
       )}
       {isStatModalOpen && (
         <HabitStatisticsModal
-          // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-          habitId={selectedHabit.id}
+          habitId={selectedHabit?.id}
           isOpen={isStatModalOpen}
           closeModal={closeStatModal}
         />
@@ -201,7 +210,7 @@ const Habits = () => {
           </div>
         )}
         {habits &&
-          habits.map((habit: $TSFixMe) => {
+          habits.map((habit: Habit) => {
             return (
               <div
                 key={habit.id}
