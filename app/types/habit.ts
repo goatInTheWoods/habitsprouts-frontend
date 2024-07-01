@@ -11,3 +11,10 @@ export interface Habit {
   currentStreak?: number;
   bestStreak?: number;
 }
+
+export interface HabitFilter {
+  title: string;
+  totalCount: number;
+  unit: string;
+  id: string;
+}
