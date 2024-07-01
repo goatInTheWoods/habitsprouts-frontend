@@ -10,7 +10,7 @@ import HabitCountButton from '@/components/Habits/HabitCountButton';
 import ItemDropdown from '@/components/common/ItemDropdown';
 import Spinner from 'react-bootstrap/Spinner';
 import { isEqualDay } from '@/utils/dateUtil';
-import { Habit } from '@/types/globalTypes';
+import { Habit } from '@/types/habit';
 
 interface HabitItemProps {
   habit: Habit;

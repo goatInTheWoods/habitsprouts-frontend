@@ -16,7 +16,7 @@ import ConfirmationModal from '@/components/common/Modal/ConfirmationModal';
 import LoadingDotsIcon from '@/components/common/LoadingDotsIcon';
 import AxiosWrapper from '@/components/Auth/AxiosWrapper';
 import Habits from '@/pages/Habits';
-import LogList from '@/components/Logs/LogList';
+import Logs from '@/pages/Logs';
 import About from '@/pages/About';
 import Terms from '@/pages/Terms';
 import ResetPassword from '@/components/Auth/ResetPassword';
@@ -78,7 +78,7 @@ const Main = ({ queryClient }: $TSFixMe) => {
                     element={<ResetPassword />}
                   />
                   <Route path="/habits" element={<Habits />} />
-                  <Route path="/logs" element={<LogList />} />
+                  <Route path="/logs" element={<Logs />} />
                   <Route path="/about-us" element={<About />} />
                   <Route path="/share" element={<Share />} />
                   <Route path="/policy" element={<Terms />} />

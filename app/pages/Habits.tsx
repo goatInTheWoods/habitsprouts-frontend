@@ -24,7 +24,7 @@ import {
   axiosFetchHabits,
   axiosUpdateHabitOrder,
 } from '@/services/HabitService';
-import { Habit } from '@/types/globalTypes';
+import { Habit } from '@/types/habit';
 
 const Habits = () => {
   const { setHabits } = useActions();
