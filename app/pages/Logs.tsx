@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Page from '@/components/common/Page';
 import LogFilter from '@/components/Logs/LogFilter';
 import Button from 'react-bootstrap/Button';
-import Stack from 'react-bootstrap/Stack';
 import LogModal from '@/components/Logs/LogModal';
-import DatePickerInput from '@/components/Logs/DatePickerInput';
 import LogItem from '@/components/Logs/LogItem';
 import Spinner from 'react-bootstrap/Spinner';
 import { axiosFetchHabitList } from '@/services/HabitService';
@@ -14,24 +12,23 @@ import styled from 'styled-components';
 import { useLoggedIn, useUserInfo } from '@/store/store';
 import { useLocation } from 'react-router-dom';
 import NudgeMessage from '@/components/Logs/NudgeMessage';
+import { Log, HabitDetail } from '@/types/log';
 
-const LogList = () => {
+const Logs = () => {
   const loggedIn = useLoggedIn();
   const userInfo = useUserInfo();
   const location = useLocation();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [filter, setFilter] = useState('');
-  const [filterList, setFilterList] = useState([]);
-  const [filteredLogs, setFilteredLogs] = useState([]);
-  const [selectedLog, setSelectedLog] = useState(null);
+  const [filterList, setFilterList] = useState<HabitDetail[]>([]);
+  const [filteredLogs, setFilteredLogs] = useState<Log[]>([]);
+  const [selectedLog, setSelectedLog] = useState<Log | null>(null);
   const [allowedToFetch, setAllowedToFetch] = useState(false);
 
   const {
     isLoading: isLoadingHabitList,
     isError: isErrorHabitList,
-    isSuccess: isSuccessHabitList,
     data: habitList,
-    error: habitListError,
   } = useQuery({
     queryKey: ['habitList'],
     queryFn: axiosFetchHabitList,
@@ -42,7 +39,6 @@ const LogList = () => {
     isLoading: isLoadingLogs,
     isFetching: isFetchingLogs,
     isError: isErrorLogs,
-    isSuccess: isSuccessLogs,
     data: logs,
     error: logsError,
   } = useQuery({
@@ -60,24 +56,26 @@ const LogList = () => {
     setSelectedLog(null);
   }
 
-  function editSelectedItem(id: $TSFixMe) {
-    const target = logs.find((log: $TSFixMe) => {
+  function editSelectedItem(id: string) {
+    const target = logs.find((log: Log) => {
       return log.id === id;
     });
     setSelectedLog(target);
     openLogModal();
   }
 
-  function filterLogs(logs: $TSFixMe) {
+  function filterLogs(logs: Log[]) {
     if (!filter) return setFilteredLogs(logs); // Ensure there is a filter set
-    const filteredLogs = logs.filter((log: $TSFixMe) => log.habit.id === filter);
+    const filteredLogs = logs.filter(
+      (log: Log) => log.habit.id === filter
+    );
     setFilteredLogs(filteredLogs);
   }
 
-  function handleFilterList(logs: $TSFixMe) {
+  function handleFilterList(logs: Log[]) {
     const checkDuplicates = new Set();
     const uniqueHabits = logs
-      .filter((log: $TSFixMe) => {
+      .filter((log: Log) => {
         const habitId = log.habit.id;
         if (checkDuplicates.has(habitId)) {
           return false;
@@ -86,7 +84,7 @@ const LogList = () => {
           return true;
         }
       })
-      .map((log: $TSFixMe) => log.habit);
+      .map((log: Log) => log.habit);
 
     setFilterList(uniqueHabits);
   }
@@ -116,7 +114,7 @@ const LogList = () => {
   }, []);
 
   return (
-    <Page title="LogList" className="d-flex flex-column">
+    <Page title="Logs" className="d-flex flex-column">
       {isCreateModalOpen && (
         <LogModal
           isOpen={isCreateModalOpen}
@@ -158,7 +156,6 @@ const LogList = () => {
         {filteredLogs &&
           filteredLogs.map(log => {
             return (
-              // @ts-expect-error TS(2339) FIXME: Property 'id' does not exist on type 'never'.
               <div key={log.id}>
                 <LogItem
                   log={log}
@@ -189,4 +186,4 @@ const LogContainer = styled.div`
   overflow-anchor: none;
 `;
 
-export default LogList;
+export default Logs;
