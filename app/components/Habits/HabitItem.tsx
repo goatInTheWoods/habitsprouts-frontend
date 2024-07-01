@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useLoggedIn, useActions } from '@/store/store';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
@@ -9,13 +9,20 @@ import {
 import HabitCountButton from '@/components/Habits/HabitCountButton';
 import ItemDropdown from '@/components/common/ItemDropdown';
 import Spinner from 'react-bootstrap/Spinner';
-import { getUserTimeZone, isEqualDay } from '@/utils/dateUtil';
+import { isEqualDay } from '@/utils/dateUtil';
+import { Habit } from '@/types/globalTypes';
+
+interface HabitItemProps {
+  habit: Habit;
+  onClickTitle: () => void;
+  editSelectedItem: (id: string) => void;
+}
 
 const HabitItem = ({
   habit,
   onClickTitle,
-  editSelectedItem
-}: $TSFixMe) => {
+  editSelectedItem,
+}: HabitItemProps) => {
   const loggedIn = useLoggedIn();
   const {
     editHabit,
@@ -31,7 +38,7 @@ const HabitItem = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
-    onError: (error: $TSFixMe) => {
+    onError: error => {
       console.error('Error creating habit:', error);
     },
   });
@@ -43,7 +50,7 @@ const HabitItem = ({
         queryKey: ['habits'],
       });
     },
-    onError: (error: $TSFixMe) => {
+    onError: error => {
       console.error('Error updating habit:', error);
       openAlert({
         type: 'danger',
@@ -60,14 +67,14 @@ const HabitItem = ({
           habit.isIncrementCount === true
             ? habit.totalCount + 1
             : habit.totalCount > 0
-            ? habit.totalCount - 1
-            : habit.totalCount,
+              ? habit.totalCount - 1
+              : habit.totalCount,
       });
     }
     await updateHabitMutation.mutate(habit.id);
   }
 
-  async function handleDelete(id: $TSFixMe) {
+  async function handleDelete(id: string) {
     if (!loggedIn) {
       deleteHabit(id);
     } else {
@@ -76,7 +83,7 @@ const HabitItem = ({
     closeConfirm();
   }
 
-  function handleDeleteConfirm(id: $TSFixMe) {
+  function handleDeleteConfirm(id: string) {
     openConfirm({
       title: 'Delete Your Habit',
       content: `
@@ -88,11 +95,11 @@ const HabitItem = ({
   }
 
   function isCompletedToday() {
-    const datesLength = habit?.completionDates?.length;
+    const datesLength = habit?.completionDates?.length ?? 0;
     if (datesLength) {
-      const lastDay = new Date(
-        habit.completionDates[datesLength - 1]
-      );
+      const lastDateString =
+        habit?.completionDates?.[datesLength - 1] ?? '';
+      const lastDay = new Date(lastDateString);
       const today = new Date();
       return isEqualDay(lastDay, today);
     } else {

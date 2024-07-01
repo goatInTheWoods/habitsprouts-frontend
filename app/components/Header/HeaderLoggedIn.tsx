@@ -25,12 +25,12 @@ function HeaderLoggedIn() {
   // }
 
   const renderProfileImage = () => {
-    if (hasError || userInfo.avatar === undefined) {
+    if (hasError || userInfo.avatar == null) {
       return <UserIcon />;
     }
     return (
       <ProfileImage
-        src={userInfo.avatar}
+        src={userInfo!.avatar}
         alt="Profile Image"
         onError={() => setHasError(true)}
       />

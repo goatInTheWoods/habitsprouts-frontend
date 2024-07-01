@@ -11,26 +11,16 @@ function ConfirmationModal() {
     closeConfirm();
   }
 
-  function handleKeyPress(event: $TSFixMe) {
-    if (event.key === 'Enter') {
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'handleSubmit'.
-      handleSubmit(event);
-    }
-  }
-
   return (
     <>
-      <Modal
-        show={confirmStatus.isOn}
-        onHide={handleClose}
-        onKeyPress={handleKeyPress}
-        centered
-      >
+      <Modal show={confirmStatus.isOn} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>{confirmStatus.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body
-          dangerouslySetInnerHTML={{ __html: confirmStatus.content }}
+          dangerouslySetInnerHTML={{
+            __html: confirmStatus.content || '',
+          }}
         />
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -38,7 +28,9 @@ function ConfirmationModal() {
           </Button>
           <Button
             variant="primary"
-            onClick={() => confirmStatus.submitFn()}
+            onClick={() =>
+              confirmStatus.submitFn && confirmStatus.submitFn()
+            }
           >
             {confirmStatus.submitBtnText}
           </Button>
