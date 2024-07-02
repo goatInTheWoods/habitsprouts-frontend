@@ -10,7 +10,7 @@ import { Log } from '@/types/log';
 
 interface LogItem {
   log: Log;
-  editSelectedItem: (id: string) => void;
+  editSelectedItem?: (id: string) => void;
 }
 
 const LogItem = ({ log, editSelectedItem }: LogItem) => {
@@ -45,10 +45,11 @@ const LogItem = ({ log, editSelectedItem }: LogItem) => {
       submitFn: () => handleDelete(id),
     });
   }
+  interface SafeHtmlContentProps {
+    htmlContent: string;
+  }
 
-  const SafeHtmlContent: React.FC<{ htmlContent: string }> = ({
-    htmlContent,
-  }) => {
+  const SafeHtmlContent = ({ htmlContent }: SafeHtmlContentProps) => {
     const sanitizedContent = DOMPurify.sanitize(htmlContent);
 
     return (
@@ -68,7 +69,7 @@ const LogItem = ({ log, editSelectedItem }: LogItem) => {
         </StatusText>
         <ItemDropdown
           onEditClick={() => {
-            editSelectedItem(log.id);
+            editSelectedItem && editSelectedItem(log.id);
           }}
           onDeleteClick={() => {
             handleDeleteConfirm(log.id);
