@@ -33,7 +33,9 @@ const LogModal = ({
 }: LogModalProps) => {
   const [selectedHabit, setSelectedHabit] =
     useState<HabitFilter | null>(null);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
   const [alertMessage, setAlertMessage] = useState('');
   const [content, setContent] = useState('');
   const queryClient = useQueryClient();
