@@ -1,21 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'domp... Remove this comment to see the full error message
 import DOMPurify from 'dompurify';
 import { formatLogDate } from '@/utils/dateUtil';
 import ItemDropdown from '@/components/common/ItemDropdown';
 import { useActions } from '@/store/store';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
-import {
-  axiosDeleteLog,
-  axiosUpdateLog,
-} from '@/services/LogService';
+import { axiosDeleteLog } from '@/services/LogService';
+import { Log } from '@/types/log';
 
-const LogItem = ({
-  log,
-  isFetchingLogs,
-  editSelectedItem,
-}: $TSFixMe) => {
+interface LogItem {
+  log: Log;
+  editSelectedItem: (id: string) => void;
+}
+
+const LogItem = ({ log, editSelectedItem }: LogItem) => {
   const { openConfirm, closeConfirm, openAlert } = useActions();
   const queryClient = useQueryClient();
 
@@ -27,17 +25,17 @@ const LogItem = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['logs'] });
     },
-    onError: (error: $TSFixMe) => {
+    onError: error => {
       console.error('Error deleting log:', error);
     },
   });
 
-  async function handleDelete(id: $TSFixMe) {
+  async function handleDelete(id: string) {
     await deleteLogMutation.mutate(id);
     closeConfirm();
   }
 
-  function handleDeleteConfirm(id: $TSFixMe) {
+  function handleDeleteConfirm(id: string) {
     openConfirm({
       title: 'Delete Your Log',
       content: `
@@ -48,7 +46,9 @@ const LogItem = ({
     });
   }
 
-  const SafeHtmlContent = ({ htmlContent }: $TSFixMe) => {
+  const SafeHtmlContent: React.FC<{ htmlContent: string }> = ({
+    htmlContent,
+  }) => {
     const sanitizedContent = DOMPurify.sanitize(htmlContent);
 
     return (
