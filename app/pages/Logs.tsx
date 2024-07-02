@@ -125,7 +125,7 @@ const Logs = () => {
       )}
       <UpperContainer className="mb-3 hstack gap-3">
         <LogFilter
-          habitList={filterList}
+          habitFilterList={filterList}
           filter={filter}
           setFilter={setFilter}
         />
