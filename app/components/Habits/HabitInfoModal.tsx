@@ -11,13 +11,21 @@ import {
   axiosUpdateHabit,
 } from '@/services/HabitService';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { Habit } from '@/types/habit';
+
+interface HabitInfoModalProps {
+  type: 'add' | 'edit' | null;
+  initialHabit: Habit;
+  isOpen: boolean;
+  closeModal: () => void;
+}
 
 function HabitInfoModal({
   type,
   initialHabit,
   isOpen,
   closeModal,
-}: $TSFixMe) {
+}: HabitInfoModalProps) {
   const loggedIn = useLoggedIn();
   const { addHabit, editHabit, closeConfirm } = useActions();
   const queryClient = useQueryClient();
@@ -29,7 +37,7 @@ function HabitInfoModal({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
-    onError: (error: $TSFixMe) => {
+    onError: error => {
       console.error('Error creating habit:', error);
     },
   });
@@ -39,38 +47,17 @@ function HabitInfoModal({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
-    onError: (error: $TSFixMe) => {
+    onError: error => {
       console.error('Error updating habit:', error);
     },
   });
-
-  function handleInput({ target }: $TSFixMe) {
-    setHabit((current: $TSFixMe) =>
-      produce(current, (draft: $TSFixMe) => {
-        if (
-          target.id === 'totalCount' ||
-          target.id === 'dailyCountLimit'
-        ) {
-          let inputValue = Number(target.value);
-          if (inputValue < 0) {
-            inputValue = 0; // Set to 0 if negative
-          }
-          draft[target.id] = inputValue;
-        } else if (target.id === 'isIncrementCount') {
-          draft[target.id] = target.value === 'true'; // compare string and assign boolean
-        } else {
-          draft[target.id] = target.value;
-        }
-      })
-    );
-  }
 
   function handleClose() {
     setHabit(initialHabit);
     closeModal();
   }
 
-  async function handleSubmit(e: $TSFixMe) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const { id, ...habitRest } = habit;
     try {
@@ -107,9 +94,13 @@ function HabitInfoModal({
     handleClose();
   }
 
-  function handleKeyPress(event: $TSFixMe) {
+  function handleKeyPress(
+    event: React.KeyboardEvent<HTMLDivElement>
+  ) {
     if (event.key === 'Enter') {
-      handleSubmit(event);
+      handleSubmit(
+        event as unknown as React.FormEvent<HTMLFormElement>
+      );
     }
   }
 
@@ -136,7 +127,6 @@ function HabitInfoModal({
               <Form.Control
                 type="text"
                 placeholder="Journaling"
-                onChange={handleInput}
                 autoFocus
                 required
                 defaultValue={habit?.title}
@@ -148,11 +138,7 @@ function HabitInfoModal({
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            onClick={handleSubmit}
-          >
+          <Button type="submit" variant="primary">
             <i className="bi bi-check"></i>
             Save
           </Button>
