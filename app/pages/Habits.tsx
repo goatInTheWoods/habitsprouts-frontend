@@ -27,11 +27,19 @@ import {
 import { Habit } from '@/types/habit';
 
 const Habits = () => {
-  const { setHabits } = useActions();
+  const { setHabits, openAlert } = useActions();
   const loggedIn = useLoggedIn();
   const habits = useHabits();
   const userInfo = useUserInfo();
   const [allowedToFetch, setAllowedToFetch] = useState(false);
+
+  const initialHabit = {
+    id: uuidv4(),
+    title: '',
+    isIncrementCount: true,
+    unit: 'days',
+    totalCount: 0,
+  };
 
   const queryClient = useQueryClient();
   const { isLoading, isError, isSuccess, data, error } = useQuery({
@@ -61,20 +69,10 @@ const Habits = () => {
   const [modalType, setModalType] = useState<'add' | 'edit' | null>(
     null
   );
-  const [selectedHabit, setSelectedHabit] = useState<Habit | null>(
-    null
-  );
+  const [selectedHabit, setSelectedHabit] =
+    useState<Habit>(initialHabit);
   // state for drag & drop
   const [movedItem, setMovedItem] = useState<Habit | null>(null);
-
-  const initialHabit = {
-    id: uuidv4(),
-    title: '',
-    isIncrementCount: true,
-    unit: 'days',
-    totalCount: 0,
-    dailyCountLimit: 1,
-  };
 
   function openInfoModal(type: 'add' | 'edit') {
     setModalType(type);
@@ -94,19 +92,33 @@ const Habits = () => {
   }
 
   function editSelectedItem(id: string) {
-    const target =
-      habits.find((habit: Habit) => {
-        return habit.id === id;
-      }) || null;
+    const target = habits.find((habit: Habit) => {
+      return habit.id === id;
+    });
+
+    if (!target) {
+      openAlert({
+        type: 'warning',
+        text: 'Habit not found. Please try again.',
+      });
+      return;
+    }
     setSelectedHabit(target);
     openInfoModal('edit');
   }
 
   function handleStatModal(id: string) {
-    const target =
-      habits.find((habit: Habit) => {
-        return habit.id === id;
-      }) || null;
+    const target = habits.find((habit: Habit) => {
+      return habit.id === id;
+    });
+
+    if (!target) {
+      openAlert({
+        type: 'warning',
+        text: 'Habit not found. Please try again.',
+      });
+      return;
+    }
     setSelectedHabit(target);
     openStatModal();
   }
