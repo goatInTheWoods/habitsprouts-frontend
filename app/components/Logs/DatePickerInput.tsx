@@ -4,15 +4,23 @@ import { format, isValid, parse } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
 import { usePopper } from 'react-popper';
 
+interface DatePickerDialogProps {
+  selectedDate: Date | undefined;
+  setSelectedDate: React.Dispatch<
+    React.SetStateAction<Date | undefined>
+  >;
+}
+
 function DatePickerDialog({
   selectedDate,
-  setSelectedDate
-}: $TSFixMe) {
+  setSelectedDate,
+}: DatePickerDialogProps) {
   const [inputValue, setInputValue] = useState('');
   const [isPopperOpen, setIsPopperOpen] = useState(false);
 
-  const popperRef = useRef(null);
-  const [popperElement, setPopperElement] = useState(null);
+  const popperRef = useRef<HTMLDivElement>(null);
+  const [popperElement, setPopperElement] =
+    useState<HTMLElement | null>(null);
 
   const popper = usePopper(popperRef.current, popperElement, {
     placement: 'bottom-start',
@@ -26,22 +34,20 @@ function DatePickerDialog({
     setIsPopperOpen(false);
   };
 
-  const handleInputChange = (e: $TSFixMe) => {
-    const date = parse(
-      e.currentTarget.value,
-      'y-MM-dd',
-      selectedDate
-    );
+  const handleInputChange = (
+    e: React.FormEvent<HTMLInputElement>
+  ) => {
+    const date = selectedDate
+      ? parse(e.currentTarget.value, 'y-MM-dd', selectedDate)
+      : undefined;
 
     if (isValid(date)) {
       setInputValue(e.currentTarget.value);
-      setSelectedDate(date);
-    } else {
-      setSelectedDate(undefined);
     }
+    setSelectedDate(date);
   };
 
-  const handleDaySelect = (date: $TSFixMe) => {
+  const handleDaySelect = (date: Date | undefined) => {
     setSelectedDate(date);
     if (date) {
       setInputValue(format(date, 'y-MM-dd'));
@@ -52,14 +58,13 @@ function DatePickerDialog({
   };
 
   useEffect(() => {
-    const handleClickOutside = (event: $TSFixMe) => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
       if (
         popperRef.current &&
-        // @ts-expect-error TS(2339) FIXME: Property 'contains' does not exist on type 'never'... Remove this comment to see the full error message
-        !popperRef.current.contains(event.target) &&
+        !popperRef.current.contains(target) &&
         popperElement &&
-        // @ts-expect-error TS(2339) FIXME: Property 'contains' does not exist on type 'never'... Remove this comment to see the full error message
-        !popperElement.contains(event.target)
+        !popperElement.contains(target)
       ) {
         closePopper();
       }
@@ -75,7 +80,11 @@ function DatePickerDialog({
       <div ref={popperRef}>
         <DateInputContainer
           type="text"
-          placeholder={format(new Date(selectedDate), 'y-MM-dd')}
+          placeholder={
+            selectedDate
+              ? format(new Date(selectedDate), 'y-MM-dd')
+              : 'Wrong Date'
+          }
           value={inputValue}
           onChange={handleInputChange}
           onClick={openPopper}
@@ -91,7 +100,6 @@ function DatePickerDialog({
           }}
           className="dialog-sheet"
           {...popper.attributes.popper}
-          // @ts-expect-error TS(2322) FIXME: Type 'Dispatch<SetStateAction<null>>' is not assig... Remove this comment to see the full error message
           ref={setPopperElement}
           role="dialog"
           aria-label="DayPicker calendar"
@@ -102,8 +110,7 @@ function DatePickerDialog({
             defaultMonth={selectedDate}
             selected={selectedDate}
             onSelect={handleDaySelect}
-            // @ts-expect-error TS(2322) FIXME: Type '{ initialFocus: true; mode: "single"; defaul... Remove this comment to see the full error message
-            disabledDays={{
+            disabled={{
               after: new Date(),
             }}
             className="rdp-small"
