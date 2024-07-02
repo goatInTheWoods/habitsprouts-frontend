@@ -8,20 +8,26 @@ const NudgeMessage = () => {
   const exampleLogs = [
     {
       habit: {
+        id: '1',
         currentCount: 5,
         title: 'Running',
         unit: 'days',
       },
-      date: new Date('2024-01-23'),
+      id: '1',
+      visibility: 'public' as 'public',
+      date: new Date('2024-01-23').toString(),
       content: '<p>Now I can run 30 minutes without stopping!</p>',
     },
     {
       habit: {
+        id: '2',
         currentCount: 1,
         title: 'Running',
         unit: 'days',
       },
-      date: new Date('2024-01-07'),
+      id: '2',
+      visibility: 'public' as 'public',
+      date: new Date('2024-01-07').toString(),
       content: "<p>I've just started running. Feels good!</p>",
     },
   ];
