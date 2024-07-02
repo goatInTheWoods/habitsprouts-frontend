@@ -159,7 +159,6 @@ const Logs = () => {
               <div key={log.id}>
                 <LogItem
                   log={log}
-                  isFetching={isFetchingLogs}
                   editSelectedItem={editSelectedItem}
                 />
               </div>
