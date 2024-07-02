@@ -3,7 +3,6 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist, devtools } from 'zustand/middleware';
 import { State } from '../types/globalTypes';
-import type {} from '@redux-devtools/extension'; //
 
 export const useStore = create<State>()(
   devtools(
