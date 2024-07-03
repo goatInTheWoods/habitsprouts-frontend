@@ -251,5 +251,6 @@ const ForgotPassword = styled.div`
 const StyledGoogle = styled.img`
   width: 197px;
   height: 40px;
+  cursor: pointer;
 `;
 export default Login;
