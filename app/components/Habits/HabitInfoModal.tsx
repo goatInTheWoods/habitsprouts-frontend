@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import produce from 'immer';
 import { useLoggedIn, useActions } from '@/store/store';
 import {
   axiosCreateHabit,
@@ -57,6 +54,15 @@ function HabitInfoModal({
     closeModal();
   }
 
+  const handleInput = ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    setHabit(current => ({
+      ...current,
+      title: target.value,
+    }));
+  };
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const { id, ...habitRest } = habit;
@@ -105,34 +111,33 @@ function HabitInfoModal({
   }
 
   return (
-    <>
-      <Modal
-        show={isOpen}
-        onHide={handleClose}
-        backdrop="static"
-        centered
-        onKeyPress={handleKeyPress}
-      >
+    <Modal
+      show={isOpen}
+      onHide={handleClose}
+      backdrop="static"
+      centered
+      onKeyPress={handleKeyPress}
+    >
+      <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
           <Modal.Title>
             {type === 'add' ? 'Add a New Habit' : 'Edit The Habit'}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="title">
-              <Form.Label>
-                What habit are you trying to build?
-              </Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Journaling"
-                autoFocus
-                required
-                defaultValue={habit?.title}
-              />
-            </Form.Group>
-          </Form>
+          <Form.Group className="mb-3" controlId="title">
+            <Form.Label>
+              What habit are you trying to build?
+            </Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Journaling"
+              onChange={handleInput}
+              autoFocus
+              required
+              defaultValue={habit?.title}
+            />
+          </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -143,8 +148,8 @@ function HabitInfoModal({
             Save
           </Button>
         </Modal.Footer>
-      </Modal>
-    </>
+      </Form>
+    </Modal>
   );
 }
 
