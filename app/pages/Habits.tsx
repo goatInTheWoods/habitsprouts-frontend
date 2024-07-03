@@ -136,8 +136,9 @@ const Habits = () => {
       await updateHabitOrderMutation.mutate({
         id: movedItem.id,
         indices: {
-          oldOrderIndex: movedItem.orderIndex,
-          newOrderIndex: targetOrderHabit.orderIndex,
+          oldOrderIndex: (movedItem as Required<Habit>).orderIndex,
+          newOrderIndex: (targetOrderHabit as Required<Habit>)
+            .orderIndex,
         },
       });
     } else {
