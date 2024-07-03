@@ -4,10 +4,15 @@ import CheckImg from '../../images/check.png';
 import SmileImg from '../../images/smile.png';
 import confetti from 'canvas-confetti';
 
+interface HabitCountButtonProps {
+  isCompletedToday: boolean;
+  onClick: () => Promise<void>;
+}
+
 const HabitCountButton = ({
   isCompletedToday,
   onClick,
-}: $TSFixMe) => {
+}: HabitCountButtonProps) => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [clicked, setClicked] = useState(false);
 
@@ -31,7 +36,6 @@ const HabitCountButton = ({
 
   return (
     <CountButtonContainer
-      // @ts-expect-error TS(2769) FIXME: No overload matches this call.
       iscompletedtoday={isCompletedToday}
       className="me-lg-3"
       onClick={handleClick}
@@ -53,10 +57,15 @@ const spin = keyframes`
 `;
 
 const spinStyles = css`
-  ${spin} 1s linear
+  animation: ${spin} 1s linear infinite;
 `;
 
-const CountButtonContainer = styled.button`
+interface CountButtonContainerProps {
+  isspinning: boolean;
+  iscompletedtoday: boolean;
+}
+
+const CountButtonContainer = styled.button<CountButtonContainerProps>`
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
@@ -65,9 +74,9 @@ const CountButtonContainer = styled.button`
   align-items: center;
   justify-content: center;
   filter: drop-shadow(2px 3px 9px rgba(122, 122, 122, 0.08));
-  animation: ${({ isspinning }: $TSFixMe) =>
+  animation: ${({ isspinning }) =>
     isspinning ? spinStyles : 'none'};
-  background-color: ${({ iscompletedtoday }: $TSFixMe) =>
+  background-color: ${({ iscompletedtoday }) =>
     iscompletedtoday ? '#f0ff97' : 'rgba(243, 255, 168, 0.35)'};
 `;
 
