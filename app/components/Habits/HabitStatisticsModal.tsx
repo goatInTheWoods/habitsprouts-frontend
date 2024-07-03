@@ -20,11 +20,17 @@ import {
 import { DayPicker } from 'react-day-picker';
 import { useLoggedIn, useUserInfo } from '@/store/store';
 
+interface HabitStatisticsModalProps {
+  habitId: string;
+  isOpen: boolean;
+  closeModal: () => void;
+}
+
 function HabitStatisticsModal({
   habitId,
   isOpen,
   closeModal,
-}: $TSFixMe) {
+}: HabitStatisticsModalProps) {
   const loggedIn = useLoggedIn();
   const userInfo = useUserInfo();
   const [days, setDays] = useState([]);
@@ -43,12 +49,12 @@ function HabitStatisticsModal({
       queryClient.invalidateQueries({ queryKey: ['singleHabit'] });
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
-    onError: (error: $TSFixMe) => {
+    onError: error => {
       console.error('Error updating habit:', error);
     },
   });
 
-  const handleDayClick = (date: $TSFixMe) => {
+  const handleDayClick = (date: Date) => {
     updateCompleteDate.mutate({
       id: habitId,
       habitData: {
@@ -67,7 +73,7 @@ function HabitStatisticsModal({
   useEffect(() => {
     if (isSuccess && data) {
       const dateObjects = data.completionDates.map(
-        (dateString: $TSFixMe) => new Date(dateString)
+        (dateString: string) => new Date(dateString)
       );
       setDays(dateObjects);
     }
