@@ -4,3 +4,7 @@ declare module '*.svg' {
   >;
   export { ReactComponent };
 }
+declare module '*.png' {
+  const value: string;
+  export default value;
+}

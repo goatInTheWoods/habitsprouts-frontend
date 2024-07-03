@@ -12,7 +12,6 @@ import {
   axiosGoogleLogInUser,
 } from '@/services/UserService';
 import { auth, signInWithPopup, googleProvider } from '@/firebase';
-// @ts-expect-error TS(2307) FIXME: Cannot find module '../images/google-login.png' or... Remove this comment to see the full error message
 import GoogleButton from '../images/google-login.png';
 
 const Login = () => {
