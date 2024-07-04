@@ -7,7 +7,7 @@
     "dev": "webpack serve --env NODE_ENV=development",
     "build": "npm-run-all -s generate webpackBuild",
     "webpackBuild": "webpack --env NODE_ENV=production",
-    "generate": "babel-node --extensions '.ts,.tsx,.js,.jsx' --presets=@babel/preset-react,@babel/preset-env,@babel/preset-typescript generateHtml.js",
+    "generate": "babel-node --extensions '.ts,.tsx,.js,.jsx' --presets=@babel/preset-react,@babel/preset-env,@babel/preset-typescript --plugins=babel-plugin-inline-react-svg generateHtml.js",
     "previewDist": "node previewDist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "type-coverage": "type-coverage"
