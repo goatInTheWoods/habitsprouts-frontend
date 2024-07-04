@@ -5,10 +5,12 @@
   "main": "test.js",
   "scripts": {
     "dev": "webpack serve --env NODE_ENV=development",
-    "build": "webpack --env NODE_ENV=production",
+    "build": "npm-run-all -s generate webpackBuild",
+    "webpackBuild": "webpack --env NODE_ENV=production",
+    "generate": "babel-node --presets=@babel/preset-react,@babel/preset-env generateHtml.js",
     "previewDist": "node previewDist",
     "test": "echo \"Error: no test specified\" && exit 1",
-     "type-coverage": "type-coverage"
+    "type-coverage": "type-coverage"
   },
   "keywords": [],
   "author": "",
