@@ -4,7 +4,9 @@
   "description": "",
   "main": "test.js",
   "scripts": {
-    "dev": "webpack serve --env NODE_ENV=development",
+    "dev": "NODE_ENV=development npm-run-all -s generate webpackDev",
+    "webpackDev": "webpack serve",
+
     "build": "NODE_ENV=production npm-run-all -s generate webpackBuild",
     "webpackBuild": "webpack",
     "generate": "babel-node --extensions '.ts,.tsx,.js,.jsx' --presets=@babel/preset-react,@babel/preset-env,@babel/preset-typescript --plugins=babel-plugin-inline-react-svg generateHtml.js",
