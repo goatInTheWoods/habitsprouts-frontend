@@ -32,7 +32,6 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 const config = {
   mode: isDevelopment ? 'development' : 'production',
   entry: './app/App.tsx',
-  devtool: 'inline-source-map',
   output: {
     publicPath: '/',
     path: isDevelopment
