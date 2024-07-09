@@ -25,5 +25,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleSignOut = signOut(auth);
 const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 export { auth, googleSignOut, signInWithPopup, googleProvider };
