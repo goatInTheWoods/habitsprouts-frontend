@@ -29,7 +29,6 @@ import {
   DndContext,
   closestCenter,
   PointerSensor,
-  TouchSensor,
   useSensor,
   useSensors,
   DragEndEvent,
@@ -48,10 +47,7 @@ const Habits = () => {
   const userInfo = useUserInfo();
   const [allowedToFetch, setAllowedToFetch] = useState(false);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(TouchSensor)
-  );
+  const sensors = useSensors(useSensor(PointerSensor));
 
   const initialHabit = {
     id: uuidv4(),
