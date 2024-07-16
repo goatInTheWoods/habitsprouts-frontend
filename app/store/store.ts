@@ -116,21 +116,6 @@ export const useStore = create<State>()(
                 state.habits.splice(habitIndex, 1);
               }
             }),
-          // changeHabitOrder: (fromIndex, toIndex) =>
-          //   set(state => {
-          //     const habitsCopied = [...state.habits];
-          //     if (
-          //       fromIndex < 0 ||
-          //       fromIndex >= habitsCopied.length ||
-          //       toIndex < 0 ||
-          //       toIndex >= habitsCopied.length
-          //     ) {
-          //       return;
-          //     }
-          //     const [movedHabit] = habitsCopied.splice(fromIndex, 1);
-          //     habitsCopied.splice(toIndex, 0, movedHabit);
-          //     state.habits = habitsCopied;
-          //   }),
         },
       })),
       {
