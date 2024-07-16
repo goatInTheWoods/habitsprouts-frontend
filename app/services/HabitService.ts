@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Habit } from '@/types/habit';
+import { UniqueIdentifier } from '@dnd-kit/core';
 
 export const axiosFetchHabits = async () => {
   const { data } = await axios.get('/habits');
@@ -38,7 +39,7 @@ export const axiosUpdateHabitOrder = async ({
   id,
   indices,
 }: {
-  id: string;
+  id: UniqueIdentifier;
   indices: {
     oldOrderIndex: number;
     newOrderIndex: number;

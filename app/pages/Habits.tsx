@@ -25,6 +25,21 @@ import {
   axiosUpdateHabitOrder,
 } from '@/services/HabitService';
 import { Habit } from '@/types/habit';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 
 const Habits = () => {
   const { setHabits, openAlert } = useActions();
@@ -32,6 +47,11 @@ const Habits = () => {
   const habits = useHabits();
   const userInfo = useUserInfo();
   const [allowedToFetch, setAllowedToFetch] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor)
+  );
 
   const initialHabit = {
     id: uuidv4(),
@@ -71,8 +91,6 @@ const Habits = () => {
   );
   const [selectedHabit, setSelectedHabit] =
     useState<Habit>(initialHabit);
-  // state for drag & drop
-  const [movedItem, setMovedItem] = useState<Habit | null>(null);
 
   function openInfoModal(type: 'add' | 'edit') {
     setModalType(type);
@@ -123,49 +141,45 @@ const Habits = () => {
     openStatModal();
   }
 
-  const handleDrop = async (
-    event: React.DragEvent<HTMLDivElement>,
-    targetOrderHabit: Habit
-  ) => {
-    event.preventDefault();
-    if (!movedItem) {
+  async function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeIndex = habits.findIndex(
+      item => item.id === active.id
+    );
+    const overIndex = habits.findIndex(item => item.id === over.id);
+
+    if (activeIndex === -1 || overIndex === -1) {
       return;
     }
 
-    if (loggedIn && movedItem) {
+    if (activeIndex !== overIndex) {
+      const newHabits = arrayMove<Habit>(
+        habits,
+        activeIndex,
+        overIndex
+      );
+      setHabits(newHabits);
+    }
+
+    if (loggedIn) {
+      const activeItem = habits.find(item => item.id === active.id);
+      const overItem = habits.find(item => item.id === over.id);
+
+      if (!activeItem?.orderIndex || !overItem?.orderIndex) {
+        return;
+      }
+
       await updateHabitOrderMutation.mutate({
-        id: movedItem.id,
+        id: active.id,
         indices: {
-          oldOrderIndex: (movedItem as Required<Habit>).orderIndex,
-          newOrderIndex: (targetOrderHabit as Required<Habit>)
-            .orderIndex,
+          oldOrderIndex: activeItem.orderIndex,
+          newOrderIndex: overItem.orderIndex,
         },
       });
-    } else {
-      const fromIdx = habits?.findIndex(
-        (habit: Habit) => habit.id === movedItem.id
-      );
-      const toIdx = habits?.findIndex(
-        (habit: Habit) => habit.id === targetOrderHabit.id
-      );
-      // if (fromIdx !== -1 && toIdx !== -1) {
-      //   changeHabitOrder(fromIdx, toIdx);
-      // }
     }
-    setMovedItem(null);
-  };
-
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-  };
-
-  const handleDragStart = (
-    event: React.DragEvent<HTMLDivElement>,
-    habit: Habit
-  ) => {
-    event.preventDefault();
-    setMovedItem(habit);
-  };
+  }
 
   useEffect(() => {
     if (loggedIn && userInfo.token) {
@@ -222,26 +236,28 @@ const Habits = () => {
             </Spinner>
           </div>
         )}
-        {habits &&
-          habits.map((habit: Habit) => {
-            return (
-              <div
-                key={habit.id}
-                draggable={true}
-                onDragStart={event => handleDragStart(event, habit)}
-                onDrop={event => {
-                  handleDrop(event, habit);
-                }}
-                onDragOver={handleDragOver}
-              >
-                <HabitItem
-                  habit={habit}
-                  onClickTitle={() => handleStatModal(habit.id)}
-                  editSelectedItem={editSelectedItem}
-                />
-              </div>
-            );
-          })}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={habits}
+            strategy={verticalListSortingStrategy}
+          >
+            {habits &&
+              habits.map((habit: Habit) => {
+                return (
+                  <HabitItem
+                    key={habit.id}
+                    habit={habit}
+                    onClickTitle={() => handleStatModal(habit.id)}
+                    editSelectedItem={editSelectedItem}
+                  />
+                );
+              })}
+          </SortableContext>
+        </DndContext>
       </HabitContainer>
     </Page>
   );

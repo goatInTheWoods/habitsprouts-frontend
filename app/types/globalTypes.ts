@@ -36,7 +36,6 @@ export interface Actions {
   addHabit: (habit: Habit) => void;
   editHabit: (updatedHabit: Habit) => void;
   deleteHabit: (habitId: string) => void;
-  // changeHabitOrder: (fromIndex: number, toIndex: number) => void;
 }
 
 export interface State {

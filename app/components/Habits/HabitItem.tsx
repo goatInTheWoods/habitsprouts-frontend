@@ -11,6 +11,9 @@ import ItemDropdown from '@/components/common/ItemDropdown';
 import Spinner from 'react-bootstrap/Spinner';
 import { isEqualDay } from '@/utils/dateUtil';
 import { Habit } from '@/types/habit';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
 interface HabitItemProps {
   habit: Habit;
   onClickTitle: () => void;
@@ -30,7 +33,14 @@ const HabitItem = ({
     closeConfirm,
     openAlert,
   } = useActions();
+
   const queryClient = useQueryClient();
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: habit.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   const deleteHabitMutation = useMutation({
     mutationFn: axiosDeleteHabit,
@@ -107,7 +117,13 @@ const HabitItem = ({
   }
 
   return (
-    <Container className="d-flex align-items-center px-3 py-2 w-100 position-relative">
+    <Container
+      className="d-flex align-items-center px-3 py-2 w-100 position-relative"
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
       <HabitCountButton
         isCompletedToday={isCompletedToday()}
         onClick={handleCount}
