@@ -286,8 +286,7 @@ const Habits = () => {
           </SortableContext>
           <DragOverlay>
             {activeItem ? (
-              <DragOverlayHabitItem>
-                {' '}
+              <DragOverlayHabitItem isDragging>
                 <HabitItem key={activeItem.id} habit={activeItem} />
               </DragOverlayHabitItem>
             ) : null}
