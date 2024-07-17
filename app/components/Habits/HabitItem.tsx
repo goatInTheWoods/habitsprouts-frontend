@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef, HTMLAttributes } from 'react';
 import styled from 'styled-components';
 import { useLoggedIn, useActions } from '@/store/store';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
@@ -13,11 +13,12 @@ import { isEqualDay } from '@/utils/dateUtil';
 import { Habit } from '@/types/habit';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import DragOverlayHabitItem from './DragOverlayHabitItem';
 
 interface HabitItemProps {
   habit: Habit;
-  onClickTitle: () => void;
-  editSelectedItem: (id: string) => void;
+  onClickTitle?: () => void;
+  editSelectedItem?: (id: string) => void;
 }
 
 const HabitItem = ({
@@ -117,51 +118,52 @@ const HabitItem = ({
   }
 
   return (
-    <Container
-      className="d-flex align-items-center px-3 py-2 w-100 position-relative"
+    <DragOverlayHabitItem
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
     >
-      <HabitCountButton
-        isCompletedToday={isCompletedToday()}
-        onClick={handleCount}
-      />
+      <Container className="d-flex align-items-center px-3 py-2 w-100 position-relative">
+        <HabitCountButton
+          isCompletedToday={isCompletedToday()}
+          onClick={handleCount}
+        />
 
-      <div
-        className="d-flex flex-column flex-grow-1 text-center mx-4 custom-pointer"
-        onClick={onClickTitle}
-      >
-        <span className="fw-semibold fs-3">{habit.title}</span>
-        <div>
-          {updateHabitMutation.isPending ? (
-            <Spinner
-              as="span"
-              animation="grow"
-              variant="light"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-          ) : (
-            <HabitTotalCount>
-              {habit.isIncrementCount
-                ? `${habit.totalCount} ${habit.unit}!`
-                : `${habit.totalCount} ${habit.unit} to go!`}
-            </HabitTotalCount>
-          )}
+        <div
+          className="d-flex flex-column flex-grow-1 text-center mx-4 custom-pointer"
+          onClick={onClickTitle}
+        >
+          <span className="fw-semibold fs-3">{habit.title}</span>
+          <div>
+            {updateHabitMutation.isPending ? (
+              <Spinner
+                as="span"
+                animation="grow"
+                variant="light"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            ) : (
+              <HabitTotalCount>
+                {habit.isIncrementCount
+                  ? `${habit.totalCount} ${habit.unit}!`
+                  : `${habit.totalCount} ${habit.unit} to go!`}
+              </HabitTotalCount>
+            )}
+          </div>
         </div>
-      </div>
-      <ItemDropdown
-        onEditClick={() => {
-          editSelectedItem(habit.id);
-        }}
-        onDeleteClick={() => {
-          handleDeleteConfirm(habit.id);
-        }}
-      />
-    </Container>
+        <ItemDropdown
+          onEditClick={() => {
+            editSelectedItem && editSelectedItem(habit.id);
+          }}
+          onDeleteClick={() => {
+            handleDeleteConfirm(habit.id);
+          }}
+        />
+      </Container>
+    </DragOverlayHabitItem>
   );
 };
 
