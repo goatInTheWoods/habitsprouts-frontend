@@ -36,8 +36,14 @@ const HabitItem = ({
   } = useActions();
 
   const queryClient = useQueryClient();
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: habit.id });
+  const {
+    attributes,
+    isDragging,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: habit.id });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -121,6 +127,7 @@ const HabitItem = ({
     <DragOverlayHabitItem
       ref={setNodeRef}
       style={style}
+      isOpacityEnabled={isDragging}
       {...attributes}
       {...listeners}
     >
