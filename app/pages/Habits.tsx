@@ -33,7 +33,9 @@ import {
   KeyboardSensor,
   useSensor,
   useSensors,
+  DragStartEvent,
   DragEndEvent,
+  DragOverlay,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -41,6 +43,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import DragOverlayHabitItem from '@/components/Habits/DragOverlayHabitItem';
 
 const Habits = () => {
   const { setHabits, openAlert } = useActions();
@@ -75,6 +78,7 @@ const Habits = () => {
     unit: 'days',
     totalCount: 0,
   };
+  const [activeItem, setActiveItem] = useState<Habit>(initialHabit);
 
   const queryClient = useQueryClient();
   const { isLoading, isError, isSuccess, data, error } = useQuery({
@@ -154,6 +158,13 @@ const Habits = () => {
     }
     setSelectedHabit(target);
     openStatModal();
+  }
+
+  function handleDragStart(event: DragStartEvent) {
+    const { active } = event;
+    setActiveItem(
+      habits.find(habit => habit.id === active.id) || initialHabit
+    );
   }
 
   async function handleDragEnd(event: DragEndEvent) {
@@ -254,6 +265,7 @@ const Habits = () => {
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
           <SortableContext
@@ -272,6 +284,13 @@ const Habits = () => {
                 );
               })}
           </SortableContext>
+          <DragOverlay>
+            {activeItem ? (
+              <DragOverlayHabitItem isDragging>
+                <HabitItem key={activeItem.id} habit={activeItem} />
+              </DragOverlayHabitItem>
+            ) : null}
+          </DragOverlay>
         </DndContext>
       </HabitContainer>
     </Page>
