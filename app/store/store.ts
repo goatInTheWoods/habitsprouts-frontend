@@ -42,7 +42,7 @@ export const useStore = create<State>()(
                 avatar: data?.avatar ?? null,
                 authBy: data?.authBy || 'email',
               };
-              state.loggedIn = !!data?.token;
+              state.loggedIn = Boolean(data?.token);
             });
           },
           logout: () => {

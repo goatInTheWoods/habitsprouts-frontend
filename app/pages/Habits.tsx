@@ -100,6 +100,11 @@ const Habits = () => {
     },
     onError: error => {
       console.error('Error updating habit indices:', error);
+      openAlert({
+        type: 'warning',
+        text: 'Error updating habit indices. Please try again.',
+      });
+      return;
     },
   });
 
@@ -169,7 +174,10 @@ const Habits = () => {
 
   async function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-    if (!over) return;
+    if (!over) {
+      console.warn('Drag ended without a valid drop target');
+      return;
+    }
 
     const activeIndex = habits.findIndex(
       item => item.id === active.id
@@ -177,6 +185,9 @@ const Habits = () => {
     const overIndex = habits.findIndex(item => item.id === over.id);
 
     if (activeIndex === -1 || overIndex === -1) {
+      console.error(
+        'Invalid drag operation: Could not find active or over item.'
+      );
       return;
     }
 
@@ -193,7 +204,13 @@ const Habits = () => {
       const activeItem = habits.find(item => item.id === active.id);
       const overItem = habits.find(item => item.id === over.id);
 
-      if (!activeItem?.orderIndex || !overItem?.orderIndex) {
+      if (
+        activeItem?.orderIndex === undefined ||
+        overItem?.orderIndex === undefined
+      ) {
+        console.error(
+          'Invalid order indices. Ensure all habits have a valid orderIndex.'
+        );
         return;
       }
 
